@@ -1,7 +1,7 @@
 import Sortable from 'sortablejs'
 import {nextTick, ref} from 'vue'
 import {findComponentById} from './findComponentById'
-import {createComponent, getSelectDOM, renderComponentToCanvas} from './rendererUtils.js'
+import {createComponent, getSelectDOM} from './rendererUtils.js'
 import {setData} from './setData'
 import teleportStore from "@/store/teleport.js";
 import componentMapStore from "@/store/componentMap.js";
@@ -31,16 +31,16 @@ export function createSortableManager() {
      * @param {Object} [options.componentJSON=null] - 组件JSON对象
      */
     function initSortable({id = '', el = null, componentJSON = null}) {
-        if(sortableMap[id]) return;
+        if (sortableMap[id]) return;
         if (!el && !id) {
             console.error('必须提供 id 或 el');
             return;
         }
 
-        if (componentJSON) {
-            const node = findComponentById(schema.value.components, componentJSON.parentId);
-            node.children.push(JSON.parse(JSON.stringify(componentJSON)))
-        }
+        // if (componentJSON) {
+        //     const node = findComponentById(schema.value.components, componentJSON.parentId);
+        //     node.children.push(JSON.parse(JSON.stringify(componentJSON)))
+        // }
 
         let element = el || document.querySelector(`[data-id='${id}']`);
         if (element?.dataset?.component === 'ElCard') {
@@ -99,18 +99,20 @@ export function createSortableManager() {
         if (!compConfig) return;
 
         let newComp = createComponent(compConfig, itemId); // 创建新组件配置对象
-        if (!newComp.noUseForm){
+        // newComp.version = 0
+        if (!newComp.noUseForm) {
             const name = newComp.componentName
             const id = newComp.id
             newComp = {
                 componentName: 'ElFormItem',
                 props: {label: newComp.text, prop: `field${id}`},
+                // version:0,
                 on: {
                     onClick: (e) => {
                         if (name !== 'ElRadioGroup' && name !== 'ElCheckboxGroup') e.preventDefault();
                     }
                 },
-                id:generateRandomId(),
+                id: generateRandomId(),
                 children: [newComp]
             }
         }
@@ -167,6 +169,8 @@ export function createSortableManager() {
         const oldParentId = oldParentElement?.dataset.id || null;
         const newParentId = newParentElement?.dataset.id || null;
 
+        // const json = JSON.parse(JSON.stringify(schema.value.components))
+
         const oldParent = oldParentId ? findComponentById(schema.value.components, oldParentId) : {children: schema.value.components};
         const newParent = newParentId ? findComponentById(schema.value.components, newParentId) : {children: schema.value.components};
 
@@ -174,9 +178,19 @@ export function createSortableManager() {
         let [movedItem] = oldParent.children.splice(evt.oldDraggableIndex, 1);
         // 添加
         newParent.children.splice(evt.newIndex, 0, movedItem);
+        // newParent.children.forEach((item) => {
+        //     item.version++
+        //     item.children?.forEach(child => {
+        //         child.version++
+        //     })
+        // })
 
-        console.log(schema.value.components);
+        // console.log(json);
         showToolbar(getSelectDOM());
+        // schema.value.components = []
+        // nextTick(()=>{
+        //     schema.value.components = json
+        // })
     }
 
     return {
@@ -198,4 +212,8 @@ export function resetSortable() {
             delete sortableMap[key];
         }
     });
+}
+
+export function getSchema() {
+    return schema.value.components;
 }

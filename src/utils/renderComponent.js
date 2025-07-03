@@ -1,4 +1,4 @@
-import {h, isReactive, reactive} from 'vue'
+import {h} from 'vue'
 import * as ElementPlus from 'element-plus'
 import divComponent from "@/components/divComponent.vue";
 import formStore from "../store/form.js";
@@ -20,6 +20,7 @@ export function createRenderer(options = {}) {
     const names = namesStore                             // 不需要双向绑定的组件名列表，默认值为空数组
     const {labelWidth} = formStore.formOptions            // 表单 label 宽度，默认值为 null
     const saveId = new Set()
+    const useWrappedNames = ['ElFormItem', 'ElTabs', 'ElButton', 'ElTable']
 
     /**
      * 渲染组件
@@ -28,7 +29,7 @@ export function createRenderer(options = {}) {
      * @returns 渲染后的组件对象
      */
     function renderComponent(value) {
-        if (!isReactive(value)) value = reactive(value || {})
+        // if (!isReactive(value)) value = reactive(value || {})
 
         if (!value.parentId) {
             componentDataStore.SET_COMPONENT_DATA_MAP(value.id, value)
@@ -93,15 +94,18 @@ export function createRenderer(options = {}) {
 
         const componentName = value.componentName === 'ElFormItem' ? value.children?.[0]?.componentName : value.componentName
 
+
+        // const key = `${value.componentName}-${value.id}-${value.version || 0}`
+        // console.log(key)
         const rawComponent = h(ElementPlus[value.componentName], {
             ...props,
             ...events
         }, defaultData)
 
-        const wrappedComponent = h(divComponent, {componentData: {...value, componentName}}, {
+        const wrappedComponent = h(divComponent, {componentData: {...value, componentName}, key: value.id}, {
             default: () => [h(ElementPlus[value.componentName], {
                 ...props,
-                ...(labelWidth ? {'label-width': labelWidth} : {}),
+                ...(labelWidth ? {'label-width': labelWidth || 'auto'} : {}),
                 ...events
             }, defaultData)]
         })
@@ -109,7 +113,7 @@ export function createRenderer(options = {}) {
         //     return rawComponent
         // }
         // if (!isTemplate) {
-        return value.componentName === 'ElFormItem' || value.componentName === 'ElTabs' || value.componentName === 'ElButton' ? wrappedComponent : rawComponent
+        return useWrappedNames.indexOf(value.componentName) > -1 ? wrappedComponent : rawComponent
         // } else {
 
 

@@ -41,7 +41,7 @@
       <el-header height="50px">
         <headerComponent :json="schema.components" @on-drag-drop="handleDragDrop"></headerComponent>
       </el-header>
-      <div class="testbox"></div>
+      <div id="canvas-content"></div>
       <!--      <el-form ref="formRef" :inline="inline" :model="formData" :rules="rules" :label-width="labelWidth"-->
       <!--               :label-position="labelPosition">-->
       <!--        <div v-if="isMask" class="mask"></div>-->
@@ -61,7 +61,7 @@
         </el-tab-pane>
       </el-tabs>
       <div :class="{'panel-content':activeName1 !== 'second','panel-code':activeName1 === 'second'}">
-        <setComponent ref="setComponentRef" :formRef="formRef" :initSortable="initSortable"
+        <setComponent ref="setComponentRef" :initSortable="initSortable"
                       v-show="activeName1 === 'first'"/>
         <setForm ref="setFormRef" v-show="activeName1 === 'form'" @changeAlignLabel="changeAlignLabel"
                  @changeLabelWidth="changeLabelWidth" @inline-change="inlineChange"/>
@@ -78,7 +78,7 @@ import {basicSetup, EditorView} from 'codemirror'
 import {vue} from '@codemirror/lang-vue'
 import {html as beautifyHtml} from 'js-beautify'
 import headerComponent from '../components/headerComponent.vue'
-import {createRendererApp, getAppMap, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
+import {getAppMap, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
 import {removeComponentById} from "../utils/findComponentById.js";
 import templateJson from "../assets/templates";
 import {jsonToElementPlusTags} from "../utils/jsonToElementPlusTags.js";
@@ -87,7 +87,7 @@ import {Delete} from '@element-plus/icons-vue'
 import setComponent from '../components/setComponent';
 import setForm from '../components/setForm.vue';
 import formStore from "../store/form.js";
-import {createSortableManager, resetSortable} from "../utils/sortableManager.js";
+import {createSortableManager, getSchema, resetSortable} from "../utils/sortableManager.js";
 import componentDataStore from "../store/componentData";
 import componentMapStore from "../store/componentMap.js";
 import teleportStore from "../store/teleport";
@@ -191,7 +191,7 @@ onMounted(() => {
                 class: 'drop-zone-box',
                 onClick: handleClick
               }, {
-                default: () => schema.value.components.map(item => {
+                default: () => getSchema().map(item => {
                   componentDataStore.SET_COMPONENT_DATA_MAP(item.id, item)
                   return renderComponent(item)
                 })
@@ -202,10 +202,15 @@ onMounted(() => {
     }
   })
 
-  app.mount('.testbox')
+  app.mount('#canvas-content')
 
 })
 
+/**
+ * 处理点击事件
+ *
+ * @param e 事件对象
+ */
 function handleClick(e) {
   const container = e.target.closest('.drop-item')
   const prev = getSelectDOM()
@@ -227,28 +232,21 @@ function handleClick(e) {
 
 let app = null
 
+/**
+ * 创建一个示例，根据传入的 JSON 数据生成对应的 Vue 组件
+ *
+ * @param demoJSON {Object} - 一个包含 Vue 组件定义的 JSON 对象
+ */
 function createDemo(demoJSON) {
   if (app) {
     app.unmount();
   }
   resetSortable()
   const {
-    initSortable,
     schema,
   } = createSortableManager()
 
   schema.value.components = JSON.parse(JSON.stringify(demoJSON))
-
-  // const dom = document.querySelector('.drop-zone-box')
-  // const renderComponent = createRenderer(
-  //     {
-  //       isTemplate: true
-  //     }
-  // )
-  // nextTick(() => {
-  //   // schema.value.components 的改变还会触发 render 更新，会导致执行两次 render 创建相同的两条数据，所以要深拷贝
-  //   app = createRendererApp(dom, JSON.parse(JSON.stringify(schema.value.components)), renderComponent, initSortable)
-  // })
 }
 
 /**
@@ -368,11 +366,11 @@ function remove() {
 }
 
 function changeAlignLabel(val) {
-  // labelPosition.value = val;
+  labelPosition.value = val;
 }
 
 function changeLabelWidth(val) {
-  // labelWidth.value = !val ? 'auto' : `${val}px`;
+  labelWidth.value = !val ? 'auto' : `${val}px`;
   // const dataMap = componentDataStore.componentDataMap
   // canvasRef.value.querySelectorAll('.el-form-item__label').forEach(el => {
   //   const data = dataMap[el.closest('[data-id]').dataset.id]
@@ -497,7 +495,7 @@ function changeLabelWidth(val) {
   }
 }
 
-.testbox {
+#canvas-content {
   height: calc(100% - 60px);
 }
 
@@ -537,18 +535,18 @@ function changeLabelWidth(val) {
     padding: 5px;
   }
 
-  .el-form--label-left .el-form-item__label {
-    text-align: left;
-    justify-content: flex-start;
-  }
+  //.el-form--label-left .el-form-item__label {
+  //  text-align: left;
+  //  justify-content: flex-start;
+  //}
 
-  .el-form--label-top .el-form-item__label {
-    display: block;
-    height: auto;
-    text-align: right;
-    margin-bottom: 8px;
-    line-height: 22px;
-  }
+  //.el-form--label-top .el-form-item__label {
+  //  display: block;
+  //  height: auto;
+  //  text-align: right;
+  //  margin-bottom: 8px;
+  //  line-height: 22px;
+  //}
 
   .el-header {
     padding: 0;

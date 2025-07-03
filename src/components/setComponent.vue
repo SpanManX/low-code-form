@@ -98,7 +98,6 @@ defineExpose({reset, select});
 
 const props = defineProps({
   initSortable: Function,
-  formRef: Object
 })
 
 const labelText = ref('')

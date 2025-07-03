@@ -187,8 +187,8 @@ export function createSortableManager() {
                     initSortable({id: movedItem.id});
                 }
 
+                // 如果是 ElTabs，则初始化子元素
                 if (movedItem.children?.length) {
-                    console.log(movedItem.children)
                     creatInitSortable(movedItem.children, initSortable)
                 }
                 showToolbar(getSelectDOM());

@@ -135,6 +135,14 @@ export function createSortableManager() {
             }
         }
 
+        // 可能无用，后续删除
+        // const oldParentElement = event.from.closest('[data-id]');
+        // if (oldParentElement) { // 如果存在旧父元素，则从其子组件列表中移除
+        //     const oldParentId = oldParentElement?.dataset.id || null;
+        //     const oldParent = findComponentById(schema.value.components, oldParentId);
+        //     oldParent.children.splice(event.oldDraggableIndex, 1);
+        // }
+
         if (type === "ElCard" || type === 'ElTabs') {
             nextTick(() => {
                 if (newComp.children?.length) { // ElTabs 执行

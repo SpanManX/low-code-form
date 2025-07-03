@@ -109,7 +109,7 @@ export async function jsonToElementPlusTags(jsonData) {
     formData = formStore.formData
     propsMap = JSON.parse(JSON.stringify(componentDataStore.componentDataMap))
     const treeJSON = JSON.parse(JSON.stringify(jsonData))
-    await mergeJSON(propsMap, jsonData, treeJSON)
+    // await mergeJSON(propsMap, jsonData, treeJSON)
 
     return treeJSON.map((item) => {
         return generateTag(item)

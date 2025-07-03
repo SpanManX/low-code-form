@@ -29,17 +29,17 @@ function handleDragOrDrop() {
  */
 async function exportJSON() {
   // 获取组件数据映射的深拷贝
-  const dataMap = JSON.parse(JSON.stringify(componentDataStore.componentDataMap))
+  // const dataMap = JSON.parse(JSON.stringify(componentDataStore.componentDataMap))
   // 获取传入的JSON数据的深拷贝
-  let treeData = JSON.parse(JSON.stringify(props.json))
+  // let treeData = JSON.parse(JSON.stringify(props.json))
   // 异步合并数据映射和传入的JSON数据到树状结构中
-  await mergeJSON(dataMap, props.json, treeData)
+  // await mergeJSON(dataMap, props.json, treeData)
 
-  console.log(JSON.stringify(treeData, null, 2));
+  console.log(JSON.stringify(props.json, null, 2));
 }
 
 function clearAll(){
-  componentDataStore.clearAll()
+  componentDataStore.CLEAR_COMPONENT_DATA_MAP()
 }
 </script>
 <style lang="scss" scoped>

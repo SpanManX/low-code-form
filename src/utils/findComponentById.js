@@ -5,7 +5,7 @@ let componentMap = {}
  *
  * @param components 组件树，包含多个组件的数组
  * @param id 要查找的组件ID
- * @return 如果找到对应的组件，则返回该组件对象；否则返回null
+ * @return {Object} 如果找到对应的组件，则返回该组件对象；否则返回null
  */
 function findComp(components, id) {
     for (const comp of components) {

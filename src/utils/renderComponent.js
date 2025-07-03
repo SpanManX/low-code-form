@@ -14,7 +14,7 @@ import componentDataStore from "@/store/componentData.js";
  * @returns 返回渲染组件的函数
  */
 export function createRenderer(options = {}) {
-    const {isTemplate = false} = options
+    // const {isTemplate = false} = options
 
     const formData = formStore.formData  // 表单数据（用于 v-model），默认值为 null
     const names = namesStore                             // 不需要双向绑定的组件名列表，默认值为空数组
@@ -26,6 +26,8 @@ export function createRenderer(options = {}) {
      * 渲染组件
      *
      * @param value 要渲染的组件数据
+     *
+     * @description 组件必须要使用 key 属性，否则会导致组件无法正确更新
      * @returns 渲染后的组件对象
      */
     function renderComponent(value) {
@@ -71,7 +73,7 @@ export function createRenderer(options = {}) {
             }
         }
 
-        // 处理插槽内容
+        // 处理子节点
         let defaultData
         if (value.children) {
             defaultData = () => value.children.map(child => renderComponent(child))
@@ -86,6 +88,7 @@ export function createRenderer(options = {}) {
         // 特殊处理
         if (value.componentName === 'ElCard') {
             return h('div', {
+                key: value.id,
                 class: 'drop-item drop-item-card', 'data-id': value.id, 'data-component': value.componentName
             }, [h(ElementPlus[value.componentName], props, {
                 default: defaultData, header: () => renderStaticChildren(value.staticChildren)
@@ -93,7 +96,6 @@ export function createRenderer(options = {}) {
         }
 
         const componentName = value.componentName === 'ElFormItem' ? value.children?.[0]?.componentName : value.componentName
-
 
         // const key = `${value.componentName}-${value.id}-${value.version || 0}`
         // console.log(key)

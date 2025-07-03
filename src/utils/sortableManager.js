@@ -1,7 +1,7 @@
 import Sortable from 'sortablejs'
 import {nextTick, ref} from 'vue'
 import {findComponentById} from './findComponentById'
-import {createComponent, getSelectDOM} from './rendererUtils.js'
+import {createComponent, creatInitSortable, getSelectDOM} from './rendererUtils.js'
 import {setData} from './setData'
 import teleportStore from "@/store/teleport.js";
 import componentMapStore from "@/store/componentMap.js";
@@ -21,6 +21,7 @@ let sortableMap = {}
  * @returns {Object} 包含initSortable方法和schema对象的对象
  */
 export function createSortableManager() {
+    const names = ['ElCard', "ElTabs", 'ElTabPane']
 
     /**
      * 初始化可排序组件
@@ -31,10 +32,15 @@ export function createSortableManager() {
      * @param {Object} [options.componentJSON=null] - 组件JSON对象
      */
     function initSortable({id = '', el = null, componentJSON = null}) {
-        if (sortableMap[id]) return;
         if (!el && !id) {
             console.error('必须提供 id 或 el');
             return;
+        }
+
+        // 如果已存在，先销毁旧的 Sortable 实例
+        if (sortableMap[id]) {
+            sortableMap[id].destroy();
+            delete sortableMap[id];
         }
 
         // if (componentJSON) {
@@ -47,7 +53,6 @@ export function createSortableManager() {
             element = element.querySelector('.el-card__body');
             if (!element) return;
         }
-
         sortableMap[id] = Sortable.create(element, {
             group: {name: 'shared'},
             animation: 150,
@@ -74,7 +79,7 @@ export function createSortableManager() {
      */
     function replaceElement(event) {
         const type = event.originalEvent.dataTransfer.getData('type');
-        let bool = sortableMap[event.item.dataset.id];
+        // let bool = sortableMap[event.item.dataset.id];
         const dropTarget = event.to.closest('[data-id]');
 
         if (dropTarget &&
@@ -84,12 +89,13 @@ export function createSortableManager() {
             return;
         }
 
-        if (type === 'ElTabs') {
-            const com = findComponentById(schema.value.components, event.item.dataset.id)
-            if (com) bool = sortableMap[com.children[0].id];
-        }
+        // if (type === 'ElTabs') {
+        //     const com = findComponentById(schema.value.components, event.item.dataset.id)
+        //     if (com) bool = sortableMap[com.children[0].id];
+        // }
 
-        if (bool || !event.item.classList.contains('item')) {
+        // if (bool || !event.item.classList.contains('item')) {
+        if (!event.item.classList.contains('item')) {
             handleSortChange(event);
             return;
         }
@@ -99,14 +105,12 @@ export function createSortableManager() {
         if (!compConfig) return;
 
         let newComp = createComponent(compConfig, itemId); // 创建新组件配置对象
-        // newComp.version = 0
         if (!newComp.noUseForm) {
             const name = newComp.componentName
             const id = newComp.id
             newComp = {
                 componentName: 'ElFormItem',
                 props: {label: newComp.text, prop: `field${id}`},
-                // version:0,
                 on: {
                     onClick: (e) => {
                         if (name !== 'ElRadioGroup' && name !== 'ElCheckboxGroup') e.preventDefault();
@@ -116,34 +120,26 @@ export function createSortableManager() {
                 children: [newComp]
             }
         }
-        // renderComponentToCanvas(JSON.parse(JSON.stringify(newComp)), event.item, type); // 替换为El组件并渲染到画布上
 
-        if (dropTarget) {
+        if (dropTarget) { // 如果存在目标元素，则添加到子组件列表中
             const parentId = dropTarget.dataset.id;
             const parentNode = findComponentById(schema.value.components, parentId);
             if (parentNode) {
                 parentNode.children.splice(event.newIndex, 0, newComp);
             }
         } else {
-            if (schema.value.components[event.newIndex]) {
+            if (schema.value.components[event.newIndex]) { // 画布上已有元素，新拖拽的元素插入到最上层触发
                 schema.value.components.splice(event.newIndex, 0, newComp);
             } else {
                 schema.value.components.push(newComp);
             }
         }
 
-        const oldParentElement = event.from.closest('[data-id]');
-        if (oldParentElement) {
-            const oldParentId = oldParentElement?.dataset.id || null;
-            const oldParent = findComponentById(schema.value.components, oldParentId);
-            oldParent.children.splice(event.oldDraggableIndex, 1);
-        }
-
         if (type === "ElCard" || type === 'ElTabs') {
             nextTick(() => {
-                if (newComp.children?.length) {
+                if (newComp.children?.length) { // ElTabs 执行
                     newComp.children.forEach(item => initSortable({id: item.id}));
-                } else {
+                } else { // ElCard 执行
                     initSortable({id: newComp.id});
                 }
             });
@@ -169,8 +165,6 @@ export function createSortableManager() {
         const oldParentId = oldParentElement?.dataset.id || null;
         const newParentId = newParentElement?.dataset.id || null;
 
-        // const json = JSON.parse(JSON.stringify(schema.value.components))
-
         const oldParent = oldParentId ? findComponentById(schema.value.components, oldParentId) : {children: schema.value.components};
         const newParent = newParentId ? findComponentById(schema.value.components, newParentId) : {children: schema.value.components};
 
@@ -178,19 +172,22 @@ export function createSortableManager() {
         let [movedItem] = oldParent.children.splice(evt.oldDraggableIndex, 1);
         // 添加
         newParent.children.splice(evt.newIndex, 0, movedItem);
-        // newParent.children.forEach((item) => {
-        //     item.version++
-        //     item.children?.forEach(child => {
-        //         child.version++
-        //     })
-        // })
 
-        // console.log(json);
-        showToolbar(getSelectDOM());
-        // schema.value.components = []
-        // nextTick(()=>{
-        //     schema.value.components = json
-        // })
+        if (movedItem.componentName === "ElCard" || movedItem.componentName === 'ElTabs') {
+            nextTick(() => {
+                if (movedItem.componentName === "ElCard") {
+                    initSortable({id: movedItem.id});
+                }
+
+                if (movedItem.children?.length) {
+                    console.log(movedItem.children)
+                    creatInitSortable(movedItem.children, initSortable)
+                }
+                showToolbar(getSelectDOM());
+            });
+        } else {
+            showToolbar(getSelectDOM());
+        }
     }
 
     return {
@@ -212,8 +209,4 @@ export function resetSortable() {
             delete sortableMap[key];
         }
     });
-}
-
-export function getSchema() {
-    return schema.value.components;
 }

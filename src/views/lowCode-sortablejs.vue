@@ -2,7 +2,7 @@
   <el-container style="position: relative">
     <teleport v-if="to" :to="to">
       <div class="toolbar" ref="toolbarRef">
-        <el-icon class="delete" title="删除" @click="remove">
+        <el-icon class="delete" title="删除" @click="remove()">
           <Delete/>
         </el-icon>
       </div>
@@ -78,7 +78,7 @@ import {basicSetup, EditorView} from 'codemirror'
 import {vue} from '@codemirror/lang-vue'
 import {html as beautifyHtml} from 'js-beautify'
 import headerComponent from '../components/headerComponent.vue'
-import {getAppMap, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
+import {creatInitSortable, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
 import {removeComponentById} from "../utils/findComponentById.js";
 import templateJson from "../assets/templates";
 import {jsonToElementPlusTags} from "../utils/jsonToElementPlusTags.js";
@@ -87,7 +87,7 @@ import {Delete} from '@element-plus/icons-vue'
 import setComponent from '../components/setComponent';
 import setForm from '../components/setForm.vue';
 import formStore from "../store/form.js";
-import {createSortableManager, getSchema, resetSortable} from "../utils/sortableManager.js";
+import {createSortableManager, resetSortable} from "../utils/sortableManager.js";
 import componentDataStore from "../store/componentData";
 import componentMapStore from "../store/componentMap.js";
 import teleportStore from "../store/teleport";
@@ -97,6 +97,7 @@ import {createRenderer} from "../utils/renderComponent.js";
 import * as ElementPlus from "element-plus";
 import {ElMessage} from "element-plus";
 import {showToolbar} from "../utils/showToolbar.js";
+import {zhCn} from "element-plus/es/locale/index";
 
 // 组件列表，用于左侧面板展示
 const componentList = templateJson
@@ -109,10 +110,8 @@ templateJson.forEach(item => {
 
 componentMapStore.SET_COMPONENT_MAP(componentMap)
 
-// 激活的面板标签页
 const activeName = ref("first");
 const activeName1 = ref("first")
-// DOM 引用
 const componentListRef = ref(null);
 const setFormRef = ref(null);
 const canvasRef = ref(null);
@@ -130,6 +129,7 @@ const rules = formStore.rules;
 const to = ref(teleportStore.teleportTo.value);
 let vueView = null;
 let currentComponentData = null;
+let isExecuted = false;
 
 watch(teleportStore.teleportTo, (val) => {
   to.value = val;
@@ -165,7 +165,9 @@ onMounted(() => {
             if (inline.value) evt.item.classList.add("inline-block");
           },
           onEnd(evt) {
-            evt.item.remove()
+            if (evt.originalEvent.dataTransfer.getData('type') && !evt.to.classList.contains('component-box')) {
+              evt.item.remove()
+            }
           }
         });
         nextTick(() => {
@@ -173,7 +175,15 @@ onMounted(() => {
         })
       })
     },
+    updated() {
+      console.log('updated')
+      if (isExecuted) {
+        creatInitSortable(schema.value.components, initSortable)
+        isExecuted = false;
+      }
+    },
     render() {
+      const list = schema.value.components // 响应式依赖，用于触发 updated 生命周期
       return h(
           ElementPlus['ElForm'],
           {
@@ -191,7 +201,7 @@ onMounted(() => {
                 class: 'drop-zone-box',
                 onClick: handleClick
               }, {
-                default: () => getSchema().map(item => {
+                default: () => list.map(item => {
                   componentDataStore.SET_COMPONENT_DATA_MAP(item.id, item)
                   return renderComponent(item)
                 })
@@ -200,7 +210,7 @@ onMounted(() => {
           }
       )
     }
-  })
+  }).use(ElementPlus, {locale: zhCn});
 
   app.mount('#canvas-content')
 
@@ -225,12 +235,9 @@ function handleClick(e) {
   container.classList.add('selected-component')
   const componentDataMap = componentDataStore.componentDataMap
   currentComponentData = componentDataMap[container.dataset.id]
-  console.log(componentDataMap)
   setComponentRef.value.select(componentDataMap[container.dataset.id])
   showToolbar(container)
 }
-
-let app = null
 
 /**
  * 创建一个示例，根据传入的 JSON 数据生成对应的 Vue 组件
@@ -238,14 +245,8 @@ let app = null
  * @param demoJSON {Object} - 一个包含 Vue 组件定义的 JSON 对象
  */
 function createDemo(demoJSON) {
-  if (app) {
-    app.unmount();
-  }
   resetSortable()
-  const {
-    schema,
-  } = createSortableManager()
-
+  isExecuted = true
   schema.value.components = JSON.parse(JSON.stringify(demoJSON))
 }
 
@@ -348,21 +349,36 @@ function inlineChange(val = null) {
   }
 }
 
-function remove() {
-  const appMap = getAppMap()
-  if (appMap[currentComponentData.id]) {
-    appMap[currentComponentData.id].unmount()
+/**
+ * 移除组件
+ *
+ * @param {Object} componentData - 要移除的组件数据
+ */
+function remove(componentData) {
+  let value = componentData
+  if (!componentData) {
+    value = currentComponentData
+    const dom = getSelectDOM()
+    dom.remove()
+    removeComponentById(schema.value.components, value.id)
+    inlineChange()
   }
-  const dom = getSelectDOM()
-  dom.remove()
-  removeComponentById(schema.value.components, currentComponentData.id)
-  delete componentDataStore.componentDataMap[currentComponentData.id]
-  if (currentComponentData.children[0]) {
-    delete componentDataStore.componentDataMap[currentComponentData.children[0].id]
-    // delete formStore.rules[currentComponentData.children[0].id]
-    // delete formStore.formData[currentComponentData.children[0].id]
+
+  delete componentDataStore.componentDataMap[value.id]
+  if (value.children?.[0]) {
+    delete componentDataStore.componentDataMap[value.children[0].id]
+    // 删除 ElFormItem 对应的表单规则和表单数据
+    if (value.componentName === "ElFormItem" || value.componentName === "ElTabs") {
+      delete rules.value[value.props.prop]
+      delete formData.value[value.props.prop || `field${value.id}`]
+    }
   }
-  inlineChange()
+
+  if (value.children && value.children.length) {
+    value.children.forEach(child => {
+      remove(child)
+    })
+  }
 }
 
 function changeAlignLabel(val) {
@@ -371,13 +387,6 @@ function changeAlignLabel(val) {
 
 function changeLabelWidth(val) {
   labelWidth.value = !val ? 'auto' : `${val}px`;
-  // const dataMap = componentDataStore.componentDataMap
-  // canvasRef.value.querySelectorAll('.el-form-item__label').forEach(el => {
-  //   const data = dataMap[el.closest('[data-id]').dataset.id]
-  //   if (!data.props['label-width']) {
-  //     el.style.width = labelWidth.value
-  //   }
-  // })
 }
 </script>
 

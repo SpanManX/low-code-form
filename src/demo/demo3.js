@@ -103,20 +103,18 @@ export default [
         "text": "卡片",
         "icon": {},
         "noUseForm": true,
-        "props": {},
+        "props": {
+            "label": "修改标题",
+            "shadow": "hover"
+        },
         "staticChildren": [
             {
-                "componentName": "template",
+                "componentName": "div",
                 "slot": "header",
-                "staticChildren": [
-                    {
-                        "componentName": "div",
-                        "props": {
-                            "class": "card-header"
-                        },
-                        "label": "卡片"
-                    }
-                ]
+                "props": {
+                    "class": "card-header"
+                },
+                "label": "修改标题"
             }
         ],
         "children": [
@@ -195,20 +193,17 @@ export default [
                                 "text": "卡片",
                                 "icon": {},
                                 "noUseForm": true,
-                                "props": {},
+                                "props": {
+                                    "label": "卡片标题"
+                                },
                                 "staticChildren": [
                                     {
-                                        "componentName": "template",
+                                        "componentName": "div",
                                         "slot": "header",
-                                        "staticChildren": [
-                                            {
-                                                "componentName": "div",
-                                                "props": {
-                                                    "class": "card-header"
-                                                },
-                                                "label": "卡片"
-                                            }
-                                        ]
+                                        "props": {
+                                            "class": "card-header"
+                                        },
+                                        "label": "卡片标题"
                                     }
                                 ],
                                 "children": [

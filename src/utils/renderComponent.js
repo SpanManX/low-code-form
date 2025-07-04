@@ -1,6 +1,6 @@
 import {h} from 'vue'
 import * as ElementPlus from 'element-plus'
-import divComponent from "@/components/divComponent.vue";
+import divComponent from "@/assets/templates/divComponent.vue";
 import formStore from "../store/form.js";
 import namesStore from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";

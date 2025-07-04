@@ -25,12 +25,22 @@ export const ElCheckboxGroupConfigProps = [
 ];
 
 export const ElDatePickerConfigProps = [
-    {key: 'type', values: ['date', 'datetime', 'year', 'month','daterange','datetimerange'], name: '日期类型'},
+    {key: 'type', values: ['date', 'datetime', 'year', 'month', 'daterange', 'datetimerange'], name: '日期类型'},
     {key: 'placeholder', value: '请选择日期', name: '占位文本'},
     {key: 'unlink-panels', value: false, name: '取消面板联动'},
     {key: 'range-separator', value: '-', name: '分隔符'},
-    {key: 'value-format', values: ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss','YYYY/MM/DD', 'YYYY/MM/DD HH:mm:ss'], name: '返回格式', clearable: true},
-    {key: 'format', values: ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss','YYYY/MM/DD', 'YYYY/MM/DD HH:mm:ss'], name: '显示格式', clearable: true},
+    {
+        key: 'value-format',
+        values: ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss', 'YYYY/MM/DD', 'YYYY/MM/DD HH:mm:ss'],
+        name: '返回格式',
+        clearable: true
+    },
+    {
+        key: 'format',
+        values: ['YYYY-MM-DD', 'YYYY-MM-DD HH:mm:ss', 'YYYY/MM/DD', 'YYYY/MM/DD HH:mm:ss'],
+        name: '显示格式',
+        clearable: true
+    },
     {key: 'clearable', value: true, name: '清除按钮'},
 ];
 
@@ -38,4 +48,9 @@ export const ElSwitchConfigProps = [
     {key: 'inline-prompt', value: false, name: '显示在点内'},
     {key: 'active-text', value: '', name: 'on 文字描述'},
     {key: 'inactive-text', value: '', name: 'off 文字描述'},
+];
+
+export const ElCardConfigProps = [
+    {key: 'label', value: '', name: '标题'},
+    {key: 'shadow', values: ['always', 'hover', 'never'], name: '卡片阴影'},
 ];

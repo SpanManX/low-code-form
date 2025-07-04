@@ -4,22 +4,24 @@
       <el-divider v-show="isShow">
         <p>表单属性</p>
       </el-divider>
-      <el-form-item label="标签文本" v-if="isShow">
-        <el-input v-model="labelText" @change="labelTextChange"/>
-      </el-form-item>
-      <el-form-item v-if="isShow">
-        <template #label>
-          标签宽度
-          <el-icon class="form-item-tip" title="0 或空为 auto">
-            <WarningFilled/>
-          </el-icon>
-        </template>
-        <el-input-number :controls="false" v-model="labelWidth" :min="0" step-strictly :step="1"
-                         @change="labelWidthChange"/>
-      </el-form-item>
-      <el-form-item label="是否必填" v-if="isShow">
-        <el-switch v-model="required" @change="checkChange"/>
-      </el-form-item>
+      <template v-if="isShow">
+        <el-form-item label="标签文本">
+          <el-input v-model="labelText" @change="labelTextChange"/>
+        </el-form-item>
+        <el-form-item>
+          <template #label>
+            标签宽度
+            <el-icon class="form-item-tip" title="0 或空为 auto">
+              <WarningFilled/>
+            </el-icon>
+          </template>
+          <el-input-number :controls="false" v-model="labelWidth" :min="0" step-strictly :step="1"
+                           @change="labelWidthChange"/>
+        </el-form-item>
+        <el-form-item label="是否必填">
+          <el-switch v-model="required" @change="checkChange"/>
+        </el-form-item>
+      </template>
       <el-divider v-show="configPropsList && configPropsList.length">
         <p>组件属性</p>
       </el-divider>
@@ -29,8 +31,8 @@
             v-if="shouldShowItem(item)"
             :label="item.name">
           <template v-if="item.values">
-            <el-select v-model="currentData.children[0].props[item.key]" placeholder="请选择"
-                       @change="selectChange(currentData.children[0].props[item.key],item.key,currentData.children[0].componentName)"
+            <el-select v-model="useFormCurrentData.props[item.key]" placeholder="请选择"
+                       @change="selectChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"
                        :clearable="item.clearable">
               <el-option v-for="val in item.values" :value="val" :label="val"></el-option>
             </el-select>
@@ -38,12 +40,12 @@
           <template v-else>
             <el-switch
                 v-if="typeof item.value === 'boolean'"
-                v-model="currentData.children[0].props[item.key]"
-                @change="switchChange(item.key,currentData.children[0].props[item.key])"/>
+                v-model="useFormCurrentData.props[item.key]"
+                @change="switchChange(item.key,useFormCurrentData.props[item.key])"/>
             <el-input-number v-else-if="typeof item.value === 'number'"
-                             v-model="currentData.children[0].props[item.key]"/>
-            <el-input v-else v-model="currentData.children[0].props[item.key]" :placeholder="`请输入${item.name}`"
-                      :clearable="item.clearable"/>
+                             v-model="useFormCurrentData.props[item.key]"/>
+            <el-input v-else v-model="useFormCurrentData.props[item.key]" :placeholder="`请输入${item.name}`"
+                      :clearable="item.clearable" @change="inputChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"/>
           </template>
         </el-form-item>
       </template>
@@ -104,16 +106,18 @@ const labelText = ref('')
 const labelWidth = ref(null)
 const required = ref(false)
 const currentData = ref(null)
+const useFormCurrentData = ref(null)
 const configPropsList = ref([])
 const options = ref([])
 const inputs = ref([])
 
 const joinTag = ['ElTabs']
-const names = ['ElTable', 'ElCard', 'ElButton', ...joinTag]
+const names = ['ElTable', 'ElButton', ...joinTag]
 const groupNames = ['ElRadioGroup', 'ElCheckboxGroup', 'ElSelect', ...joinTag]
 
 const isShow = computed(() => {
-  if (currentData.value) return names.indexOf(currentData.value.componentName) <= -1;
+  // if (currentData.value) return names.indexOf(currentData.value.componentName) <= -1;
+  if (currentData.value) return !currentData.value.noUseForm;
   else false
 })
 
@@ -122,21 +126,24 @@ function select(val) {
   configPropsList.value = []
   console.log(val, '...........')
   currentData.value = val
+  useFormCurrentData.value = val.componentName === 'ElCard' ? currentData.value : currentData.value.children[0]
+
   labelText.value = val.props.label
   labelWidth.value = val.props['label-width']
   required.value = val.props.rules?.required || false
 
   inputs.value = []  // 初始化 inputs 数组，用于存储输入框的值
   options.value = []  // 初始化options数组，用于存储选项数据
-  if ((val.children && val.children[0]) && (groupNames.indexOf(val.children[0].componentName) > -1 || groupNames.indexOf(val.componentName) > -1)) {
+
+  if ((val.children && val.children[0]) && !val.parentId) {
     let arr
     if (joinTag.indexOf(val.componentName) > -1) {
       arr = val.children
-    } else {
-      arr = val.children[0].children || val.children
+    } else if (val.componentName === 'ElFormItem') {
+      arr = val.children[0].children
     }
 
-    options.value = arr.map((item, i) => {
+    options.value = (arr || []).map((item, i) => {
       inputs.value[i] = item.props.label
       return item.props
     })
@@ -145,6 +152,8 @@ function select(val) {
   // 根据组件类型展示不同设置项
   if (isShow.value && val.children[0]) {
     configPropsList.value = configProps[`${val.children[0].componentName}ConfigProps`]
+  } else if (val.componentName === 'ElCard') {
+    configPropsList.value = configProps[`${val.componentName}ConfigProps`]
   }
 }
 
@@ -157,6 +166,13 @@ function reset() {
   currentData.value = null
   configPropsList.value = []
   options.value = []
+}
+
+function inputChange(val,key,componentName){
+  console.log(val,key,componentName)
+  if(componentName === 'ElCard'){
+    currentData.value.staticChildren[0].label = val
+  }
 }
 
 /**
@@ -331,7 +347,7 @@ function add() {
     return
   }
 
-  const isTabs = currentData.value.componentName === 'ElTabs'
+  const isTabs = joinTag.indexOf(currentData.value.componentName) > -1
   const targetChildren = isTabs
       ? currentData.value.children
       : currentData.value.children[0]?.children
@@ -363,7 +379,7 @@ function add() {
   const newItem = {
     componentName: componentType,
     id: generateRandomId(),
-    parentId: currentData.value.id || currentData.value.children[0].id,
+    parentId: currentData.value.componentName === 'ElFormItem' ? currentData.value.children[0].id : currentData.value.id,
     props: newOption,
     ...(isTabs ? {children: []} : {})
   }

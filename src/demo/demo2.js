@@ -4,20 +4,17 @@ export default [
         "text": "卡片",
         "icon": {},
         "noUseForm": true,
-        "props": {},
+        "props": {
+            "label": "卡片标题"
+        },
         "staticChildren": [
             {
-                "componentName": "template",
+                "componentName": "div",
                 "slot": "header",
-                "staticChildren": [
-                    {
-                        "componentName": "div",
-                        "props": {
-                            "class": "card-header"
-                        },
-                        "label": "卡片"
-                    }
-                ]
+                "props": {
+                    "class": "card-header"
+                },
+                "label": "卡片标题"
             }
         ],
         "children": [
@@ -199,140 +196,3 @@ export default [
         ]
     }
 ]
-
-// export default [
-//     {
-//         "componentName": "ElCard",
-//         "text": "卡片",
-//         "icon": {},
-//         "noUseForm": true,
-//         "props": {},
-//         "staticChildren": [
-//             {
-//                 "componentName": "template",
-//                 "slot": "header",
-//                 "staticChildren": [
-//                     {
-//                         "componentName": "div",
-//                         "props": {
-//                             "class": "card-header"
-//                         },
-//                         "label": "卡片"
-//                     }
-//                 ]
-//             }
-//         ],
-//         "children": [
-//             {
-//                 "componentName": "ElTabs",
-//                 "text": "标签页",
-//                 "icon": {},
-//                 "noUseForm": true,
-//                 "props": {
-//                     "type": "border-card"
-//                 },
-//                 "children": [
-//                     {
-//                         "componentName": "ElTabPane",
-//                         "props": {
-//                             "label": "标签",
-//                             "name": "1"
-//                         },
-//                         "children": [
-//                             {
-//                                 "componentName": "ElInput",
-//                                 "icon": {},
-//                                 "text": "输入框",
-//                                 "props": {
-//                                     "placeholder": "请输入内容"
-//                                 },
-//                                 "id": "1751459827859360"
-//                             }
-//                         ],
-//                         "id": "1751459818457763",
-//                         "parentId": "1751459818059718"
-//                     },
-//                     {
-//                         "componentName": "ElTabPane",
-//                         "id": "1751459823713715",
-//                         "parentId": "1751459818059718",
-//                         "props": {
-//                             "label": "New Option",
-//                             "name": 1751459823713
-//                         },
-//                         "children": []
-//                     }
-//                 ],
-//                 "id": "1751459818059718"
-//             }
-//         ],
-//         "id": "1751459817246219"
-//     },
-//     {
-//         "componentName": "ElSelect",
-//         "text": "选择器",
-//         "icon": {},
-//         "props": {
-//             "style": "min-width: 196px",
-//             "placeholder": "请选择"
-//         },
-//         "children": [
-//             {
-//                 "componentName": "ElOption",
-//                 "props": {
-//                     "label": "First Option",
-//                     "value": "val1"
-//                 },
-//                 "id": "17514598400297",
-//                 "parentId": "1751459839551301"
-//             },
-//             {
-//                 "componentName": "ElOption",
-//                 "props": {
-//                     "label": "Second Option",
-//                     "value": "val2"
-//                 },
-//                 "id": "1751459840029898",
-//                 "parentId": "1751459839551301"
-//             }
-//         ],
-//         "id": "1751459839551301"
-//     },
-//     {
-//         "componentName": "ElSwitch",
-//         "icon": {},
-//         "text": "开关",
-//         "props": {
-//             "active-text": "开",
-//             "inactive-text": "关"
-//         },
-//         "id": "1751459845645647"
-//     },
-//     {
-//         "componentName": "ElCheckboxGroup",
-//         "text": "复选框",
-//         "icon": {},
-//         "props": {},
-//         "children": [
-//             {
-//                 "componentName": "ElCheckbox",
-//                 "props": {
-//                     "label": "Option A",
-//                     "value": "ValueA"
-//                 },
-//                 "id": "1751459852606296",
-//                 "parentId": "1751459851919523"
-//             },
-//             {
-//                 "componentName": "ElCheckbox",
-//                 "props": {
-//                     "label": "Option B",
-//                     "value": "ValueB"
-//                 },
-//                 "id": "1751459852606107",
-//                 "parentId": "1751459851919523"
-//             }
-//         ],
-//         "id": "1751459851919523"
-//     }
-// ]

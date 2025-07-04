@@ -50,6 +50,9 @@ export function createSortableManager() {
         if (element?.dataset?.component === 'ElCard') {
             element = element.querySelector('.el-card__body');
             if (!element) return;
+        } else if (element?.dataset?.component === 'GridComponent') {
+            element = element.querySelector('.grid');
+            if (!element) return;
         }
         sortableMap[id] = Sortable.create(element, {
             group: {name: 'shared'},
@@ -141,7 +144,7 @@ export function createSortableManager() {
         //     oldParent.children.splice(event.oldDraggableIndex, 1);
         // }
 
-        if (type === "ElCard" || type === 'ElTabs') {
+        if (type === "ElCard" || type === 'ElTabs' || type === 'GridComponent') {
             nextTick(() => {
                 if (newComp.children?.length) { // ElTabs 执行
                     newComp.children.forEach(item => initSortable({id: item.id}));
@@ -179,9 +182,9 @@ export function createSortableManager() {
         // 添加
         newParent.children.splice(evt.newIndex, 0, movedItem);
 
-        if (movedItem.componentName === "ElCard" || movedItem.componentName === 'ElTabs') {
+        if (movedItem.componentName === "ElCard" || movedItem.componentName === 'ElTabs' || movedItem.componentName === 'GridComponent') {
             nextTick(() => {
-                if (movedItem.componentName === "ElCard") {
+                if (movedItem.componentName === "ElCard" || movedItem.componentName === 'GridComponent') {
                     initSortable({id: movedItem.id});
                 }
 

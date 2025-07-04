@@ -43,7 +43,7 @@
                 v-model="useFormCurrentData.props[item.key]"
                 @change="switchChange(item.key,useFormCurrentData.props[item.key])"/>
             <el-input-number v-else-if="typeof item.value === 'number'"
-                             v-model="useFormCurrentData.props[item.key]"/>
+                             v-model="useFormCurrentData.props[item.key]" @change="numberChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"/>
             <el-input v-else v-model="useFormCurrentData.props[item.key]" :placeholder="`请输入${item.name}`"
                       :clearable="item.clearable" @change="inputChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"/>
           </template>
@@ -126,7 +126,7 @@ function select(val) {
   configPropsList.value = []
   console.log(val, '...........')
   currentData.value = val
-  useFormCurrentData.value = val.componentName === 'ElCard' ? currentData.value : currentData.value.children[0]
+  useFormCurrentData.value = val.componentName === 'ElCard' || 'ElButton' ? currentData.value : currentData.value.children[0]
 
   labelText.value = val.props.label
   labelWidth.value = val.props['label-width']
@@ -152,7 +152,7 @@ function select(val) {
   // 根据组件类型展示不同设置项
   if (isShow.value && val.children[0]) {
     configPropsList.value = configProps[`${val.children[0].componentName}ConfigProps`]
-  } else if (val.componentName === 'ElCard') {
+  } else if (val.componentName === 'ElCard' || val.componentName === 'GridComponent') {
     configPropsList.value = configProps[`${val.componentName}ConfigProps`]
   }
 }
@@ -168,11 +168,17 @@ function reset() {
   options.value = []
 }
 
-function inputChange(val,key,componentName){
-  console.log(val,key,componentName)
-  if(componentName === 'ElCard'){
+function inputChange(val,key,name){
+  console.log(val,key,name)
+  if(name === 'ElCard'){
     currentData.value.staticChildren[0].label = val
   }
+}
+
+function numberChange(val,key,name){
+  // if(name === 'GridComponent'){
+  //   currentData.value.props[key] = val
+  // }
 }
 
 /**

@@ -1,6 +1,7 @@
 import {h} from 'vue'
 import * as ElementPlus from 'element-plus'
-import divComponent from "@/assets/templates/divComponent.vue";
+import divComponent from "@/assets/templates/components/divComponent.vue";
+import gridComponent from "@/assets/templates/components/gridComponent.vue";
 import formStore from "../store/form.js";
 import namesStore from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";
@@ -27,7 +28,7 @@ export function createRenderer(options = {}) {
      *
      * @param value 要渲染的组件数据
      *
-     * @description 组件必须要使用 key 属性，否则会导致组件无法正确更新
+     * @description 组件必须使用 key 属性，否则会导致组件无法正确更新
      * @returns 渲染后的组件对象
      */
     function renderComponent(value) {
@@ -52,10 +53,10 @@ export function createRenderer(options = {}) {
         if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
-                formStore.SET_FORM_DATA(`field${value.id}`,value.children[0].props.name || '')
+                formStore.SET_FORM_DATA(`field${value.id}`, value.children[0].props.name || '')
                 // formData.value[`field${value.id}`] = value.children[0].props.name || ''
             } else {
-                formStore.SET_FORM_DATA(`field${value.id}`,value.componentName === 'ElCheckboxGroup' ? [] : '')
+                formStore.SET_FORM_DATA(`field${value.id}`, value.componentName === 'ElCheckboxGroup' ? [] : '')
                 // formData.value[`field${value.id}`] = value.componentName === 'ElCheckboxGroup' ? [] : ''
             }
         }
@@ -94,28 +95,27 @@ export function createRenderer(options = {}) {
 
         // const key = `${value.componentName}-${value.id}-${value.version || 0}`
         // console.log(key)
-        const rawComponent = h(ElementPlus[value.componentName], {
-            ...props,
-            ...events
-        }, defaultData)
+        // const rawComponent = h(ElementPlus[value.componentName], {
+        //     ...props,
+        //     ...events
+        // }, defaultData)
+
+        // const component = value.componentName === 'gridComponent' ? gridComponent : ElementPlus[value.componentName]
+        if (value.componentName === 'GridComponent') {
+            return h(divComponent, {componentData: {...value, componentName}, key: value.id}, {
+                default: () => h(gridComponent, value.props, defaultData)
+            })
+        }
 
         const wrappedComponent = h(divComponent, {componentData: {...value, componentName}, key: value.id}, {
-            default: () => [h(ElementPlus[value.componentName], {
+            default: () => h(ElementPlus[value.componentName], {
                 ...props,
                 ...(labelWidth ? {'label-width': labelWidth || 'auto'} : {}),
                 ...events
-            }, defaultData)]
+            }, defaultData)
         })
-        // if (notDiv) {
-        //     return rawComponent
-        // }
-        // if (!isTemplate) {
-        return useWrappedNames.indexOf(value.componentName) > -1 ? wrappedComponent : rawComponent
-        // } else {
 
-
-        // return !value.parentId ? wrappedComponent : rawComponent
-        // }
+        return useWrappedNames.indexOf(value.componentName) > -1 ? wrappedComponent : h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
     }
 
     return renderComponent

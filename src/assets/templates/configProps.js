@@ -1,3 +1,4 @@
+// 下拉选择框
 export const ElSelectConfigProps = [
     {key: 'placeholder', value: '请选择', name: '占位文本'},
     {key: 'clearable', value: false, name: '清除按钮'},
@@ -7,6 +8,7 @@ export const ElSelectConfigProps = [
     {key: 'filterable', value: false, name: '是否可筛选'},
 ];
 
+// 输入框
 export const ElInputConfigProps = [
     {key: 'type', values: ['text', 'textarea', 'password'], name: '类型：'},
     {key: 'placeholder', value: '请输入内容', name: '占位文本'},
@@ -16,14 +18,17 @@ export const ElInputConfigProps = [
     {key: 'clearable', value: false, name: '清除按钮'},
 ];
 
+// 单选框
 export const ElRadioGroupConfigProps = [
     {key: 'border', value: false, name: '显示边框'},
 ];
 
+// 多选框
 export const ElCheckboxGroupConfigProps = [
     {key: 'border', value: false, name: '显示边框'},
 ];
 
+// 日期选择器
 export const ElDatePickerConfigProps = [
     {key: 'type', values: ['date', 'datetime', 'year', 'month', 'daterange', 'datetimerange'], name: '日期类型'},
     {key: 'placeholder', value: '请选择日期', name: '占位文本'},
@@ -44,13 +49,15 @@ export const ElDatePickerConfigProps = [
     {key: 'clearable', value: true, name: '清除按钮'},
 ];
 
+// 开关
 export const ElSwitchConfigProps = [
     {key: 'inline-prompt', value: false, name: '显示在点内'},
     {key: 'active-text', value: '', name: 'on 文字描述'},
     {key: 'inactive-text', value: '', name: 'off 文字描述'},
 ];
 
-export const ElCardConfigProps = [
-    {key: 'label', value: '', name: '标题'},
-    {key: 'shadow', values: ['always', 'hover', 'never'], name: '卡片阴影'},
+// grid
+export const GridComponentConfigProps = [
+    {key: 'rows', value: 1, name: '行数'},
+    {key: 'columns', value: 1, name: '列数'},
 ];

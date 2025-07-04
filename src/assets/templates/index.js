@@ -9,6 +9,7 @@ export default [
     {title: '容器组件'},
     templateJson.elCard(),
     templateJson.elTabsJson(),
+    templateJson.gridJson(),
     {title: '基础组件'},
     templateJson.elTableJson(),
     templateJson.elButtonJson(),

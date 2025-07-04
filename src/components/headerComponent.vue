@@ -7,13 +7,13 @@
 </template>
 <script setup>
 import { ref} from "vue";
-import {mergeJSON} from "@/utils/mergeJSON.js";
+// import {mergeJSON} from "@/utils/mergeJSON.js";
 import componentDataStore from "../store/componentData";
 
 const props = defineProps({
   json: [Object, Array]
 })
-const emits = defineEmits(["onDragDrop"]);
+const emits = defineEmits(["onDragDrop",'clearAll']);
 
 const dragOrDrop = ref(false)
 
@@ -40,6 +40,7 @@ async function exportJSON() {
 
 function clearAll(){
   componentDataStore.CLEAR_COMPONENT_DATA_MAP()
+  emits("clearAll")
 }
 </script>
 <style lang="scss" scoped>

@@ -1,7 +1,6 @@
-import {mergeJSON} from "./mergeJSON.js";
+// import {mergeJSON} from "./mergeJSON.js";
 import componentDataStore from "../store/componentData";
 import formStore from "../store/form.js";
-import namesStore from "@/store/names.js";
 
 let formData = null
 let propsMap = {}

@@ -31,8 +31,6 @@ export function createRenderer(options = {}) {
      * @returns 渲染后的组件对象
      */
     function renderComponent(value) {
-        // if (!isReactive(value)) value = reactive(value || {})
-
         if (!value.parentId) {
             componentDataStore.SET_COMPONENT_DATA_MAP(value.id, value)
         }
@@ -41,14 +39,8 @@ export function createRenderer(options = {}) {
             formStore.SET_FORM_RULES(`field${value.children[0].id}`, value.props.rules)
         }
         // if (isTemplate) {
-        //
         //     const id = value.id
         //     if (!saveId.has(id) && !value.parentId) {
-        //         // 将通过 findComponentById 方法从 schema 数据中查找到的组件信息，以 value.id 作为键，存入 componentDataStore 的组件数据映射中。
-        //         // 此处使用 schema 数据，即复制了组件的引用，以达到在其他修改 componentDataMap 也跟着变化。
-        //         // componentDataStore.SET_COMPONENT_DATA_MAP(value.id, findComponentById(schema.value.components, value.id))
-        //         // componentDataStore.SET_TEMPLATE_COMPONENT_DATA_MAP(value.id, value)
-        //         // componentDataStore.SET_COMPONENT_DATA_MAP(value.id, value)
         //         saveId.add(id)
         //     }
         // }
@@ -60,16 +52,19 @@ export function createRenderer(options = {}) {
         if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
-                formData.value[`field${value.id}`] = value.children[0].props.name || ''
+                formStore.SET_FORM_DATA(`field${value.id}`,value.children[0].props.name || '')
+                // formData.value[`field${value.id}`] = value.children[0].props.name || ''
             } else {
-                formData.value[`field${value.id}`] = value.componentName === 'ElCheckboxGroup' ? [] : ''
+                formStore.SET_FORM_DATA(`field${value.id}`,value.componentName === 'ElCheckboxGroup' ? [] : '')
+                // formData.value[`field${value.id}`] = value.componentName === 'ElCheckboxGroup' ? [] : ''
             }
         }
 
         if (formData && names.indexOf(value.componentName) === -1) {
             props.modelValue = formData.value[`field${value.id}`]
             props['onUpdate:modelValue'] = (val) => {
-                formData.value[`field${value.id}`] = val
+                // formData.value[`field${value.id}`] = val
+                formStore.SET_FORM_DATA(`field${value.id}`, val)
             }
         }
 

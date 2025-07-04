@@ -43,7 +43,7 @@
             <el-input-number v-else-if="typeof item.value === 'number'"
                              v-model="currentData.children[0].props[item.key]"/>
             <el-input v-else v-model="currentData.children[0].props[item.key]" :placeholder="`请输入${item.name}`"
-                      @change="test" :clearable="item.clearable"/>
+                      :clearable="item.clearable"/>
           </template>
         </el-form-item>
       </template>
@@ -57,7 +57,7 @@
             <el-form-item label="文本">
               <el-input v-model="inputs[i]" @change="textChange(inputs[i],i)"/>
             </el-form-item>
-            <el-form-item label="值" v-if="typeof item.value !== 'undefined'">
+            <el-form-item label="值（value）" v-if="typeof item.value !== 'undefined'">
               <el-input v-model="item.value"/>
             </el-form-item>
             <el-form-item label="值（name）" v-else>
@@ -107,8 +107,6 @@ const currentData = ref(null)
 const configPropsList = ref([])
 const options = ref([])
 const inputs = ref([])
-const rules = formStore.rules
-const formData = formStore.formData
 
 const joinTag = ['ElTabs']
 const names = ['ElTable', 'ElCard', 'ElButton', ...joinTag]
@@ -195,10 +193,10 @@ function checkChange() {
   const firstChild = currentData.value.children?.[0];
   const fieldKey = `field${firstChild?.id}`;
 
-  if (!required.value && rules.value[fieldKey]) {
+  if (!required.value && formStore.rules.value[fieldKey]) {
     delete currentData.value.props.rules
-    delete rules.value[fieldKey]
-    delete formData.value[fieldKey]
+    formStore.DELETE_FORM_DATA(fieldKey)
+    formStore.DELETE_RULES(fieldKey)
     return
   }
 
@@ -209,12 +207,7 @@ function checkChange() {
       trigger: firstChild.children ? 'change' : 'blur',
       // trigger: 'change',
     }
-    rules.value[fieldKey] = JSON.parse(JSON.stringify(currentData.value.props.rules))
-    // currentData.value.props.rules.validator = (rule, value, callback) => {
-    //   if (!formData.value[fieldKey]) {
-    //     callback(new Error(rule.message))
-    //   }
-    // }
+    formStore.SET_FORM_RULES(fieldKey, JSON.parse(JSON.stringify(currentData.value.props.rules)))
   }
 }
 
@@ -243,17 +236,13 @@ function shouldShowItem(item) {
   return true
 }
 
-function test() {
-  // console.log(currentData.value)
-}
-
 let saveKey = ''
 
 function selectChange(key, key1, name) {
   if (key === 'textarea' || saveKey === 'textarea') {
     saveKey = key
     // 更新 toolbar 坐标
-    showToolbar(getSelectDOM(), document.querySelector('.toolbar'))
+    showToolbar(getSelectDOM())
     delete currentData.value.children[0].props['show-password']
     delete currentData.value.children[0].props['show-word-limit']
     delete currentData.value.children[0].props['maxlength']
@@ -267,7 +256,7 @@ function selectChange(key, key1, name) {
   }
 
   if (key1 === 'type' && name === 'ElDatePicker') {
-    formData.value[`field${currentData.value.children[0].id}`] = null
+    formStore.SET_FORM_DATA([`field${currentData.value.children[0].id}`], null)
     return
   }
 }
@@ -327,12 +316,10 @@ function moveDown(index) {
 function textChange(val, i) {
   options.value[i].label = val
   showToolbar(getSelectDOM());
-  // currentData.value.children[0].children[i].props.label = val
 }
 
 function nameChange(val, i) {
   options.value[i].name = val
-  // currentData.value.children[0].children[i].props.label = val
 }
 
 /**

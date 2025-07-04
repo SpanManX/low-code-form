@@ -21,8 +21,6 @@ let sortableMap = {}
  * @returns {Object} 包含initSortable方法和schema对象的对象
  */
 export function createSortableManager() {
-    const names = ['ElCard', "ElTabs", 'ElTabPane']
-
     /**
      * 初始化可排序组件
      *

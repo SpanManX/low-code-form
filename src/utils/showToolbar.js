@@ -12,7 +12,8 @@ export function showToolbar(container) {
     nextTick(() => {
         const toolbar = container.querySelector('.toolbar')
         container.style.position = 'relative'
-        toolbar.style.left = `${container.clientWidth - toolbar.clientWidth}px`
+        // container.getBoundingClientRect().width 包含小数点
+        toolbar.style.left = `${container.getBoundingClientRect().width - toolbar.clientWidth}px`
         toolbar.style.bottom = `0px`
     })
 }

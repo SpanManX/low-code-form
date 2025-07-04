@@ -1,24 +1,9 @@
 import {ref} from "vue";
 
-// export const formData = ref({})
-// export const formOptions = {
-//     labelWidth: '',
-//     labelPosition: ''
-// }
-//
-// export function SET_FORM_OPTIONS({labelWidth, labelPosition}) {
-//     formOptions.labelWidth = labelWidth
-//     formOptions.labelPosition = labelPosition
-// }
-//
-// export function SET_FORM_DATA(data) {
-//     formData.value = data
-// }
-
 export default {
     formOptions: {
         labelWidth: '',
-        labelPosition: ''
+        labelPosition: 'right'
     },
     formData: ref({}),
     rules: ref({}),
@@ -28,10 +13,24 @@ export default {
         this.formOptions.labelPosition = labelPosition
     },
 
-    SET_FORM_DATA(data) {
-        this.formData.value = data
+    SET_FORM_DATA(key,data) {
+        this.formData.value[key] = data
     },
-    SET_FORM_RULES(key,data) {
+
+    DELETE_FORM_DATA(key) {
+        delete this.formData.value[key]
+    },
+
+    SET_FORM_RULES(key, data) {
         this.rules.value[key] = data
+    },
+
+    DELETE_RULES(key) {
+        delete this.rules.value[key]
+    },
+
+    CLEAR_ALL() {
+        this.formData.value = {}
+        this.rules.value = {}
     }
 }

@@ -31,6 +31,9 @@
             <div class="item pointer" @click="createDemo(demo2)">
               Demo2
             </div>
+            <div class="item pointer" @click="createDemo(demo3)">
+              Demo3
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -39,15 +42,13 @@
     <!-- 画布 -->
     <el-main class="canvas">
       <el-header height="50px">
-        <headerComponent :json="schema.components" @on-drag-drop="handleDragDrop"></headerComponent>
+        <headerComponent :json="schema.components" @on-drag-drop="handleDragDrop"
+                         @clear-all="clearAll"></headerComponent>
       </el-header>
-      <div id="canvas-content"></div>
-      <!--      <el-form ref="formRef" :inline="inline" :model="formData" :rules="rules" :label-width="labelWidth"-->
-      <!--               :label-position="labelPosition">-->
-      <!--        <div v-if="isMask" class="mask"></div>-->
-      <!--        <div ref="canvasRef" class="drop-zone-box" @click="handleClick">-->
-      <!--        </div>-->
-      <!--      </el-form>-->
+      <div class="canvas-content">
+        <div v-if="isMask" class="mask"></div>
+        <div id="canvas-drop"></div>
+      </div>
     </el-main>
 
     <!-- 代码编辑器 -->
@@ -93,6 +94,7 @@ import componentMapStore from "../store/componentMap.js";
 import teleportStore from "../store/teleport";
 import demo1 from "../demo/demo1.js";
 import demo2 from "../demo/demo2.js";
+import demo3 from "../demo/demo3.js";
 import {createRenderer} from "../utils/renderComponent.js";
 import * as ElementPlus from "element-plus";
 import {ElMessage} from "element-plus";
@@ -120,8 +122,8 @@ const templateRef = ref(null);
 const toolbarRef = ref(null);
 const setComponentRef = ref(null);
 const inline = ref(false);
-const labelPosition = ref("right")
-const labelWidth = ref("auto")
+const labelPosition = ref(formStore.formOptions.labelPosition)
+const labelWidth = ref(formStore.formOptions.labelWidth)
 const isMask = ref(false);
 
 const formData = formStore.formData;
@@ -139,11 +141,7 @@ watch(teleportStore.teleportTo, (val) => {
 const {
   initSortable,
   schema,
-} = createSortableManager({
-  componentMap,
-  labelWidth,
-  toolbarRef
-})
+} = createSortableManager()
 
 // 初始化 SortableJS
 onMounted(() => {
@@ -212,8 +210,7 @@ onMounted(() => {
     }
   }).use(ElementPlus, {locale: zhCn});
 
-  app.mount('#canvas-content')
-
+  app.mount('#canvas-drop')
 })
 
 /**
@@ -369,8 +366,8 @@ function remove(componentData) {
     delete componentDataStore.componentDataMap[value.children[0].id]
     // 删除 ElFormItem 对应的表单规则和表单数据
     if (value.componentName === "ElFormItem" || value.componentName === "ElTabs") {
-      delete rules.value[value.props.prop]
-      delete formData.value[value.props.prop || `field${value.id}`]
+      formStore.DELETE_FORM_DATA(value.props.prop || `field${value.id}`)
+      formStore.DELETE_RULES(value.props.prop)
     }
   }
 
@@ -379,6 +376,16 @@ function remove(componentData) {
       remove(child)
     })
   }
+}
+
+/**
+ * 清空所有表单项、组件和数据存储
+ */
+function clearAll() {
+  schema.value.components = []
+  formStore.CLEAR_ALL()
+  componentDataStore.componentDataMap = {}
+  inlineChange()
 }
 
 function changeAlignLabel(val) {
@@ -504,17 +511,8 @@ function changeLabelWidth(val) {
   }
 }
 
-#canvas-content {
+.canvas-content {
   height: calc(100% - 60px);
-}
-
-::v-deep(.el-form) {
-  height: 100%;
-}
-
-
-.el-form {
-  //height: calc(100% - 60px);
   position: relative;
 
   .mask {
@@ -524,12 +522,21 @@ function changeLabelWidth(val) {
     height: 100%;
     width: 100%;
   }
+
+  #canvas-drop {
+    height: 100%;
+  }
 }
 
-::v-deep(.drop-zone-box) {
+
+::v-deep(.el-form) {
   height: 100%;
-  margin: 0 10px;
-  box-sizing: border-box;
+
+  .drop-zone-box {
+    height: 100%;
+    margin: 0 10px;
+    box-sizing: border-box;
+  }
 }
 
 :deep() {

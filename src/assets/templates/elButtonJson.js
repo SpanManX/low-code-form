@@ -6,7 +6,7 @@ export default () => {
         icon: button,
         noUseForm: true,
         label: '按钮',
-        text: '按钮',
+        // text: '按钮',
         props: {type: 'primary'}
     }
 }

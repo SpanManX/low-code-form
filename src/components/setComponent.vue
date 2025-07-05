@@ -64,7 +64,7 @@
             <el-form-item label="值（value）" v-if="typeof item.value !== 'undefined'">
               <el-input v-model="item.value"/>
             </el-form-item>
-            <el-form-item label="值（name）" v-else>
+            <el-form-item label="值（name）" v-else-if="useFormCurrentData.componentName !== 'ElButton'">
               <el-input v-model="item.name" @change="nameChange(item.name,i)"/>
             </el-form-item>
             <div class="toolbar">
@@ -116,10 +116,9 @@ const inputs = ref([])
 const joinTag = ['ElTabs']
 const names = ['ElTable', 'ElButton', ...joinTag]
 const groupNames = ['ElRadioGroup', 'ElCheckboxGroup', 'ElSelect', ...joinTag]
-const notGetChildren = ['ElCard', 'GridComponent','ElButton']
+const notGetChildren = ['ElCard', 'GridComponent', 'ElButton','ElDivider']
 
 const isShow = computed(() => {
-  // if (currentData.value) return names.indexOf(currentData.value.componentName) <= -1;
   if (currentData.value) return !currentData.value.noUseForm;
   else false
 })
@@ -127,13 +126,15 @@ const isShow = computed(() => {
 // 选中组件触发
 function select(val) {
   configPropsList.value = []
-  console.log(val, '...........')
+  console.log(val, 'setComponent.vue')
   currentData.value = val
-  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 ? currentData.value : currentData.value.children[0]
-
-  labelText.value = val.props.label
-  labelWidth.value = val.props['label-width']
-  required.value = val.props.rules?.required || false
+  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 || !currentData.value.children ? currentData.value : currentData.value.children[0]
+  console.log(useFormCurrentData.value)
+  if (val.props) {
+    labelText.value = val.props.label
+    labelWidth.value = val.props['label-width']
+    required.value = val.props.rules?.required || false
+  }
 
   inputs.value = []  // 初始化 inputs 数组，用于存储输入框的值
   options.value = []  // 初始化options数组，用于存储选项数据
@@ -153,11 +154,8 @@ function select(val) {
   }
 
   // 根据组件类型展示不同设置项
-  if (isShow.value && val.children[0]) {
-    configPropsList.value = configProps[`${val.children[0].componentName}ConfigProps`]
-  } else if (val.componentName === 'ElCard' || val.componentName === 'GridComponent') {
-    configPropsList.value = configProps[`${val.componentName}ConfigProps`]
-    console.log(configPropsList.value)
+  if (isShow.value && val.children[0] || notGetChildren.indexOf(useFormCurrentData.value.componentName) > -1) {
+    configPropsList.value = configProps[`${useFormCurrentData.value.componentName}ConfigProps`]
   }
 }
 
@@ -195,13 +193,13 @@ function labelTextChange(val) {
 }
 
 function labelWidthChange(val) {
-  const dom = getSelectDOM()
+  // const dom = getSelectDOM()
   if (!val) {
     delete currentData.value.props['label-width']
-    dom.querySelector('.el-form-item__label').style.width = !formStore.labelWidth || formStore.labelWidth === 'auto' ? 'auto' : `${formStore.labelWidth}px`
+    // dom.querySelector('.el-form-item__label').style.width = !formStore.labelWidth || formStore.labelWidth === 'auto' ? 'auto' : `${formStore.labelWidth}px`
   } else {
     currentData.value.props['label-width'] = Number(val)
-    dom.querySelector('.el-form-item__label').style.width = `${val}px`
+    // dom.querySelector('.el-form-item__label').style.width = `${val}px`
   }
 }
 
@@ -279,11 +277,19 @@ function selectChange(key, key1, name) {
     delete currentData.value.children[0].props['show-password']
     delete currentData.value.children[0].props['show-word-limit']
     delete currentData.value.children[0].props['maxlength']
+    return;
   }
 
   if (key1 === 'type' && name === 'ElDatePicker') {
     formStore.SET_FORM_DATA([`field${currentData.value.children[0].id}`], null)
     return
+  }
+
+  // div
+  if(key1 === 'text-align'){
+    currentData.value.props[key1] = useFormCurrentData.value.props[key1]
+    delete useFormCurrentData.value.props[key1]
+    return;
   }
 }
 

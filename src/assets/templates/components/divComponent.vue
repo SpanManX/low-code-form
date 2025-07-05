@@ -1,19 +1,20 @@
 <template>
-  <div :class="`drop-item drop-item-${toKebabCase(componentData.componentName)}`"
-       :data-component="componentData.componentName"
-       :data-id="componentData.id || componentData.children?.[0]?.id">
+  <div :style="style">
     <slot></slot>
   </div>
 </template>
 <script setup>
-import {toKebabCase} from "@/utils/jsonToElementPlusTags.js";
+import {computed} from "vue";
 
 const props = defineProps({
-  componentData: {
-    type: Object,
-    required: true,
-    default: () => ({})
+  'text-align': {
+    type: String,
   }
+})
+
+const style = computed(() => {
+  console.log(props)
+  return props
 })
 </script>
 <style scoped lang="scss">

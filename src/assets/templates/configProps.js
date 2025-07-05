@@ -68,3 +68,20 @@ export const GridComponentConfigProps = [
     {key: 'columns', value: 1, name: '列数'},
     {key: 'gap', value: 0, name: '间距'},
 ];
+
+// button
+export const ElButtonConfigProps = [
+    // {key: 'button-total', value: 1, name: '创建按钮'},
+    // {key: 'text-align', values: ['left', 'right', 'center'], name: '位置'},
+    {key: 'type', values: ['primary', 'success', 'info', 'warning', 'danger'], name: '类型'},
+    {key: 'round', value: false, name: '圆角按钮'},
+    {key: 'plain', value: false, name: '朴素按钮'},
+    {key: 'text', value: false, name: '文字按钮'},
+];
+
+// 分割线
+export const ElDividerConfigProps = [
+    {key: 'direction', values: ['horizontal', 'vertical'], name: '分割线方向'},
+    {key: 'border-style', values: ['none', 'solid', 'dashed'], name: '分隔符样式'},
+    {key: 'content-position', values: ['left', 'right', 'center'], name: '内容位置'},
+];

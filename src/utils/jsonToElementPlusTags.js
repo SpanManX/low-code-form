@@ -77,27 +77,6 @@ function generateTag(item) {
     }
 }
 
-const names = ['ElCard', "ElTabs", 'ElTabPane']
-
-/**
- * 替换组件数据
- *
- * @param data 要处理的组件数据数组
- * @return 返回处理后的组件数据数组
- */
-export function replaceData(data) {
-    return data.map(item => {
-        if (names.indexOf(item.componentName) > -1 && item.children && item.children.length) {
-            item.children = replaceData(item.children) // 递归替换 children
-            return item
-        }
-        if (propsMap[item.id]) {
-            return propsMap[item.id]
-        }
-        return item
-    })
-}
-
 /**
  * 将 JSON 数据转换为 Element Plus 组件标签
  *

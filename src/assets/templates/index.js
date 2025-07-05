@@ -18,5 +18,7 @@ export default [
     templateJson.elInputJson(),
     templateJson.elSelectJson(),
     templateJson.elDatePickerJson(),
-    templateJson.elSwitchJson()
+    templateJson.elSwitchJson(),
+    {title: '其他'},
+    templateJson.elDivider()
 ]

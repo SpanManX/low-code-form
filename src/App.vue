@@ -9,7 +9,7 @@
 import lowCode from "./views/lowCode-sortablejs.vue";
 // import lowCode from "./views/test.vue";
 // import lowCode from "./views/custom.vue";
-// import lowCode from "./views/divComponent.vue";
+// import lowCode from "./views/dropItemComponent.vue";
 </script>
 <style>
 html, body, #app, .el-container {

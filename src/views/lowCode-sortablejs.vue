@@ -18,7 +18,7 @@
               <div v-else class="item item-component grab"
                    :data-component="component.componentName">
                 <component v-if="component.icon" :is="component.icon"></component>
-                {{ component.text }}
+                {{ component.text || component.label}}
               </div>
             </template>
           </div>
@@ -585,8 +585,12 @@ function changeLabelWidth(val) {
     display: inline-flex;
   }
 
-  .el-form--inline .drop-item:not(.drop-item-tabs):not(.drop-item-card):not(.drop-item-el-tabs):not(.drop-item-el-card) {
+  .el-form--inline .drop-item:not(.drop-item-card):not(.drop-item-el-tabs):not(.drop-item-el-button) {
     display: inline-flex;
+  }
+
+  .drop-item-el-button{
+    display: inline-block;
   }
 
   .el-date-editor.el-input {

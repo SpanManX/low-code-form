@@ -1,5 +1,6 @@
 import {h} from 'vue'
 import * as ElementPlus from 'element-plus'
+import DropItemComponent from "@/assets/templates/components/dropItemComponent.vue";
 import divComponent from "@/assets/templates/components/divComponent.vue";
 import gridComponent from "@/assets/templates/components/gridComponent.vue";
 import formStore from "../store/form.js";
@@ -21,7 +22,8 @@ export function createRenderer(options = {}) {
     const names = namesStore                             // 不需要双向绑定的组件名列表，默认值为空数组
     const {labelWidth} = formStore.formOptions            // 表单 label 宽度，默认值为 null
     const saveId = new Set()
-    const useWrappedNames = ['ElFormItem', 'ElTabs', 'ElButton', 'ElTable']
+    const useWrappedNames = ['ElFormItem', 'ElTabs', 'ElTable', 'ElDivider', 'ElButton','div']
+    const except = ['ElTabs']
 
     /**
      * 渲染组件
@@ -51,6 +53,7 @@ export function createRenderer(options = {}) {
 
         // value.id in formData.value 是 JavaScript 中的一个语法，用来判断一个对象是否包含某个属性
         if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
+        // if ((!value.noUseForm || except.indexOf(value.componentName) > -1) && !(`field${value.id}` in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
                 formStore.SET_FORM_DATA(`field${value.id}`, value.children[0].props.name || '')
@@ -85,35 +88,40 @@ export function createRenderer(options = {}) {
         if (value.componentName === 'ElCard') {
             return h('div', {
                 key: value.id,
-                class: 'drop-item drop-item-card', 'data-id': value.id, 'data-component': value.componentName
+                class: 'drop-item drop-item-card',
+                'data-id': value.id,
+                'data-component': value.componentName
             }, [h(ElementPlus[value.componentName], props, {
                 default: defaultData, header: () => renderStaticChildren(value.staticChildren)
             })])
         }
 
-        const componentName = value.componentName === 'ElFormItem' ? value.children?.[0]?.componentName : value.componentName
+        const componentName = value.componentName === 'ElFormItem' || value.componentName === 'div' ? value.children?.[0]?.componentName : value.componentName
 
-        // const key = `${value.componentName}-${value.id}-${value.version || 0}`
-        // console.log(key)
-        // const rawComponent = h(ElementPlus[value.componentName], {
-        //     ...props,
-        //     ...events
-        // }, defaultData)
-
-        // const component = value.componentName === 'gridComponent' ? gridComponent : ElementPlus[value.componentName]
         if (value.componentName === 'GridComponent') {
-            return h(divComponent, {componentData: {...value, componentName}, key: value.id}, {
+            return h(DropItemComponent, {componentData: {...value, componentName}, key: value.id}, {
                 default: () => h(gridComponent, value.props, defaultData)
             })
         }
 
-        const wrappedComponent = h(divComponent, {componentData: {...value, componentName}, key: value.id}, {
-            default: () => h(ElementPlus[value.componentName], {
-                ...props,
-                ...(labelWidth ? {'label-width': labelWidth || 'auto'} : {}),
-                ...events
-            }, defaultData)
-        })
+
+        let wrappedComponentChild;
+        if (value.componentName === 'div') {
+            wrappedComponentChild = {
+                default: () => h(divComponent, {...value.props}, defaultData)
+            }
+        } else {
+            wrappedComponentChild = {
+                default: () => h(ElementPlus[value.componentName], {
+                    ...props, ...(labelWidth ? {'label-width': labelWidth || 'auto'} : {}), ...events
+                }, defaultData)
+            }
+        }
+
+        const wrappedComponent = h(DropItemComponent, {
+            componentData: {...value, componentName},
+            key: value.id
+        }, wrappedComponentChild)
 
         return useWrappedNames.indexOf(value.componentName) > -1 ? wrappedComponent : h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
     }

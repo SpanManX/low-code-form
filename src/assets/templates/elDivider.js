@@ -1,9 +1,9 @@
-import input from '../svg/input.svg';
+import divider from '../svg/divider.svg';
 
 export default () => {
     return {
         componentName: 'ElDivider',
-        icon: input,
+        icon: divider,
         noUseForm: true,
         label: '这是分割线组件',
         text: '分割线',

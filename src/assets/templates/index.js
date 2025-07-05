@@ -10,6 +10,7 @@ export default [
     templateJson.elCard(),
     templateJson.elTabsJson(),
     templateJson.gridJson(),
+    templateJson.divJson(),
     {title: '基础组件'},
     templateJson.elTableJson(),
     templateJson.elButtonJson(),

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid" :style="style">
+  <div class="grid element" :style="style">
     <slot></slot>
   </div>
 </template>

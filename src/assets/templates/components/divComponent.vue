@@ -1,5 +1,5 @@
 <template>
-  <div :style="style">
+  <div class="block-element element" :style="style">
     <slot></slot>
   </div>
 </template>
@@ -18,5 +18,11 @@ const style = computed(() => {
 })
 </script>
 <style scoped lang="scss">
-
+.block-element {
+  min-height: 50px;
+  border: 1px dashed #ecd55e;
+  border-radius: 5px;
+  padding: 10px;
+  box-sizing: border-box;
+}
 </style>

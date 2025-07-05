@@ -116,7 +116,7 @@ const inputs = ref([])
 const joinTag = ['ElTabs']
 const names = ['ElTable', 'ElButton', ...joinTag]
 const groupNames = ['ElRadioGroup', 'ElCheckboxGroup', 'ElSelect', ...joinTag]
-const notGetChildren = ['ElCard', 'GridComponent', 'ElButton','ElDivider']
+const notGetChildren = ['ElCard', 'ElButton', 'ElDivider', 'GridComponent','DivComponent']
 
 const isShow = computed(() => {
   if (currentData.value) return !currentData.value.noUseForm;
@@ -128,8 +128,8 @@ function select(val) {
   configPropsList.value = []
   console.log(val, 'setComponent.vue')
   currentData.value = val
-  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 || !currentData.value.children ? currentData.value : currentData.value.children[0]
-  console.log(useFormCurrentData.value)
+  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 ? currentData.value : currentData.value.children[0]
+
   if (val.props) {
     labelText.value = val.props.label
     labelWidth.value = val.props['label-width']
@@ -139,6 +139,7 @@ function select(val) {
   inputs.value = []  // 初始化 inputs 数组，用于存储输入框的值
   options.value = []  // 初始化options数组，用于存储选项数据
 
+  // 如果有子组件，则设置 options 数据
   if ((val.children && val.children[0]) && !val.parentId) {
     let arr
     if (joinTag.indexOf(val.componentName) > -1) {
@@ -174,6 +175,8 @@ function inputChange(val, key, name) {
   console.log(val, key, name)
   if (name === 'ElCard') {
     currentData.value.staticChildren[0].label = val
+  }else if (name === 'ElButton') {
+    useFormCurrentData.value.label = val
   }
 }
 
@@ -283,13 +286,6 @@ function selectChange(key, key1, name) {
   if (key1 === 'type' && name === 'ElDatePicker') {
     formStore.SET_FORM_DATA([`field${currentData.value.children[0].id}`], null)
     return
-  }
-
-  // div
-  if(key1 === 'text-align'){
-    currentData.value.props[key1] = useFormCurrentData.value.props[key1]
-    delete useFormCurrentData.value.props[key1]
-    return;
   }
 }
 

@@ -1,1 +1,1 @@
-export default ['ElCheckbox', 'ElFormItem', 'ElRadio', 'ElOption', 'ElTable', 'ElTableColumn', 'ElTabPane', 'ElCard', 'ElButton', 'ElDivider', 'div']
+export default ['ElCheckbox', 'ElFormItem', 'ElRadio', 'ElOption', 'ElTable', 'ElTableColumn', 'ElTabPane', 'ElCard', 'ElButton', 'ElDivider', 'GridComponent','DivComponent']

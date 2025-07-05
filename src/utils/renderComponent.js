@@ -1,7 +1,7 @@
 import {h} from 'vue'
 import * as ElementPlus from 'element-plus'
 import DropItemComponent from "@/assets/templates/components/dropItemComponent.vue";
-import divComponent from "@/assets/templates/components/divComponent.vue";
+import DivComponent from "@/assets/templates/components/divComponent.vue";
 import gridComponent from "@/assets/templates/components/gridComponent.vue";
 import formStore from "../store/form.js";
 import namesStore from "../store/names.js";
@@ -22,7 +22,7 @@ export function createRenderer(options = {}) {
     const names = namesStore                             // 不需要双向绑定的组件名列表，默认值为空数组
     const {labelWidth} = formStore.formOptions            // 表单 label 宽度，默认值为 null
     const saveId = new Set()
-    const useWrappedNames = ['ElFormItem', 'ElTabs', 'ElTable', 'ElDivider', 'ElButton','div']
+    const useWrappedNames = ['ElFormItem', 'ElTabs', 'ElTable', 'ElDivider', 'ElButton', 'DivComponent']
     const except = ['ElTabs']
 
     /**
@@ -53,7 +53,7 @@ export function createRenderer(options = {}) {
 
         // value.id in formData.value 是 JavaScript 中的一个语法，用来判断一个对象是否包含某个属性
         if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
-        // if ((!value.noUseForm || except.indexOf(value.componentName) > -1) && !(`field${value.id}` in formData.value)) {
+            // if ((!value.noUseForm || except.indexOf(value.componentName) > -1) && !(`field${value.id}` in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
                 formStore.SET_FORM_DATA(`field${value.id}`, value.children[0].props.name || '')
@@ -96,7 +96,7 @@ export function createRenderer(options = {}) {
             })])
         }
 
-        const componentName = value.componentName === 'ElFormItem' || value.componentName === 'div' ? value.children?.[0]?.componentName : value.componentName
+        const componentName = value.componentName === 'ElFormItem' ? value.children?.[0]?.componentName : value.componentName
 
         if (value.componentName === 'GridComponent') {
             return h(DropItemComponent, {componentData: {...value, componentName}, key: value.id}, {
@@ -106,9 +106,9 @@ export function createRenderer(options = {}) {
 
 
         let wrappedComponentChild;
-        if (value.componentName === 'div') {
+        if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(divComponent, {...value.props}, defaultData)
+                default: () => h(DivComponent, value.props, defaultData)
             }
         } else {
             wrappedComponentChild = {
@@ -118,12 +118,18 @@ export function createRenderer(options = {}) {
             }
         }
 
-        const wrappedComponent = h(DropItemComponent, {
-            componentData: {...value, componentName},
-            key: value.id
-        }, wrappedComponentChild)
 
-        return useWrappedNames.indexOf(value.componentName) > -1 ? wrappedComponent : h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
+
+        if (useWrappedNames.indexOf(value.componentName) > -1) {
+            return h(DropItemComponent, {
+                componentData: {...value, componentName},
+                key: value.id
+            }, wrappedComponentChild)
+        } else {
+            return h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
+        }
+
+        // return useWrappedNames.indexOf(value.componentName) > -1 || value.componentName === 'div' ? wrappedComponent : h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
     }
 
     return renderComponent

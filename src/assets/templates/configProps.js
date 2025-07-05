@@ -69,10 +69,15 @@ export const GridComponentConfigProps = [
     {key: 'gap', value: 0, name: '间距'},
 ];
 
+// div
+export const DivComponentConfigProps = [
+    {key: 'text-align', values: ['left', 'right', 'center'], name: '位置'},
+];
+
 // button
 export const ElButtonConfigProps = [
     // {key: 'button-total', value: 1, name: '创建按钮'},
-    // {key: 'text-align', values: ['left', 'right', 'center'], name: '位置'},
+    {key: 'label', value: '', name: '按钮文字'},
     {key: 'type', values: ['primary', 'success', 'info', 'warning', 'danger'], name: '类型'},
     {key: 'round', value: false, name: '圆角按钮'},
     {key: 'plain', value: false, name: '朴素按钮'},

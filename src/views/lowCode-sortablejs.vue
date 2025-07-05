@@ -585,7 +585,7 @@ function changeLabelWidth(val) {
     display: inline-flex;
   }
 
-  .el-form--inline .drop-item:not(.drop-item-card):not(.drop-item-el-tabs):not(.drop-item-el-button):not(.drop-item-el-divider) {
+  .el-form--inline .drop-item:not(.drop-item-card):not(.drop-item-el-tabs):not(.drop-item-el-button):not(.drop-item-el-divider):not(.drop-item-div-component) {
     display: inline-flex;
   }
 

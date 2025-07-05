@@ -50,8 +50,8 @@ export function createSortableManager() {
         if (element?.dataset?.component === 'ElCard') {
             element = element.querySelector('.el-card__body');
             if (!element) return;
-        } else if (element?.dataset?.component === 'GridComponent') {
-            element = element.querySelector('.grid');
+        } else if (element?.dataset?.component === 'GridComponent' || element?.dataset?.component === 'DivComponent') {
+            element = element.querySelector('.element');
             if (!element) return;
         }
         sortableMap[id] = Sortable.create(element, {
@@ -144,11 +144,11 @@ export function createSortableManager() {
         //     oldParent.children.splice(event.oldDraggableIndex, 1);
         // }
 
-        if (type === "ElCard" || type === 'ElTabs' || type === 'GridComponent') {
+        if (type === "ElCard" || type === 'ElTabs' || type === 'GridComponent' || type === 'DivComponent') {
             nextTick(() => {
                 if (newComp.children?.length) { // ElTabs 执行
                     newComp.children.forEach(item => initSortable({id: item.id}));
-                } else { // ElCard 执行
+                } else { // ElCard GridComponent DivComponent执行
                     initSortable({id: newComp.id});
                 }
             });
@@ -182,13 +182,13 @@ export function createSortableManager() {
         // 添加
         newParent.children.splice(evt.newIndex, 0, movedItem);
 
-        if (movedItem.componentName === "ElCard" || movedItem.componentName === 'ElTabs' || movedItem.componentName === 'GridComponent') {
+        if (movedItem.componentName === "ElCard" || movedItem.componentName === 'ElTabs' || movedItem.componentName === 'GridComponent' || movedItem.componentName === 'DivComponent') {
             nextTick(() => {
-                if (movedItem.componentName === "ElCard" || movedItem.componentName === 'GridComponent') {
+                if (movedItem.componentName === "ElCard" || movedItem.componentName === 'GridComponent' || movedItem.componentName === 'DivComponent') {
                     initSortable({id: movedItem.id});
                 }
 
-                // 如果是 ElTabs，则初始化子元素
+                // 初始化子元素
                 if (movedItem.children?.length) {
                     creatInitSortable(movedItem.children, initSortable)
                 }

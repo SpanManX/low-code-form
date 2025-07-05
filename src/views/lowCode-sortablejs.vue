@@ -15,7 +15,7 @@
           <div ref="componentListRef" class="component-box">
             <template v-for="(component) in componentList">
               <div class="group-title" v-if="component.title">{{ component.title }}</div>
-              <div v-else class="item grab"
+              <div v-else class="item item-component grab"
                    :data-component="component.componentName">
                 <component v-if="component.icon" :is="component.icon"></component>
                 {{ component.text }}
@@ -25,13 +25,13 @@
         </el-tab-pane>
         <el-tab-pane label="DEMOS" name="second">
           <div class="component-box">
-            <div class="item pointer" @click="createDemo(demo1)">
+            <div class="item item-component pointer" @click="createDemo(demo1)">
               Demo1
             </div>
-            <div class="item pointer" @click="createDemo(demo2)">
+            <div class="item item-component pointer" @click="createDemo(demo2)">
               Demo2
             </div>
-            <div class="item pointer" @click="createDemo(demo3)">
+            <div class="item item-component pointer" @click="createDemo(demo3)">
               Demo3
             </div>
           </div>
@@ -157,14 +157,18 @@ onMounted(() => {
           },
           ghostClass: '.item',
           sort: false,
+          preventOnFilter: true,
           animation: 150,
           setData: setData,
           onStart(evt) {
             if (inline.value) evt.item.classList.add("inline-block");
+            evt.item.classList.remove("item-component");
           },
           onEnd(evt) {
             if (evt.originalEvent.dataTransfer.getData('type') && !evt.to.classList.contains('component-box')) {
               evt.item.remove()
+            } else {
+              evt.item.classList.add("item-component");
             }
           }
         });
@@ -458,8 +462,12 @@ function changeLabelWidth(val) {
   cursor: pointer;
 }
 
-.item {
+.item-component {
   width: calc(100% / 2 - 10px);
+}
+
+.item {
+  display: inline-block;
   padding: 8px 10px;
   border-radius: 8px;
   background: rgba(243, 244, 246, 0.3);
@@ -622,6 +630,10 @@ function changeLabelWidth(val) {
     .el-tab-pane {
       min-height: 55px;
     }
+  }
+
+  .drop-item-grid-component {
+    width: 100%;
   }
 }
 </style>

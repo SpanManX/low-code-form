@@ -56,8 +56,15 @@ export const ElSwitchConfigProps = [
     {key: 'inactive-text', value: '', name: 'off 文字描述'},
 ];
 
+// 卡片
+export const ElCardConfigProps = [
+    {key: 'label', value: '', name: '标题'},
+    {key: 'shadow', values: ['always', 'hover', 'never'], name: '卡片阴影'},
+];
+
 // grid
 export const GridComponentConfigProps = [
-    {key: 'rows', value: 1, name: '行数'},
+    // {key: 'rows', value: 1, name: '行数'},
     {key: 'columns', value: 1, name: '列数'},
+    {key: 'gap', value: 0, name: '间距'},
 ];

@@ -35,7 +35,7 @@
               Demo3
             </div>
             <div class="item item-component pointer" @click="createDemo(demo4)">
-              demo4
+              Demo4
             </div>
           </div>
         </el-tab-pane>

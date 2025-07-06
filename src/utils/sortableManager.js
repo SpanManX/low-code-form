@@ -63,7 +63,7 @@ export function createSortableManager() {
                     event.item.remove()
                     return
                 }
-                replaceElement(event)
+                handleDragDropElement(event)
             },
             onMove: () => {
                 teleportStore.SET_TELEPORT_TO(null);
@@ -74,28 +74,30 @@ export function createSortableManager() {
     }
 
     /**
-     * 在拖拽事件中替换元素
+     * 元素拖入画布触发
      *
      * @param {Event} event - 拖拽事件对象
+     * @description 在拖拽事件中，根据拖拽的组件类型和目标位置，替换或添加元素。
+     * 1. 首先获取拖拽事件对象中的数据类型和目标元素。
+     * 2. 如果目标元素存在且满足特定条件，则调用 handleSortChange 函数处理排序变更，并返回。
+     * 3. 如果拖拽的项不包含 'item' 类，则调用 handleSortChange 函数处理排序变更，并返回。
+     * 4. 根据拖拽的数据类型获取组件配置，并创建新组件配置对象。
+     * 5. 如果新组件配置对象不需要表单，则直接处理。
+     * 6. 如果存在目标元素，则将其添加到目标元素的子组件列表中。
+     * 7. 如果不存在目标元素，则根据画布上已有元素的情况，将新拖拽的元素插入到相应位置。
+     * 8. 对于特定类型的组件（如 ElCard、ElTabs 等），在下一帧中初始化可排序功能。
      */
-    function replaceElement(event) {
+    function handleDragDropElement(event) {
         const type = event.originalEvent.dataTransfer.getData('type');
-        // let bool = sortableMap[event.item.dataset.id];
         const dropTarget = event.to.closest('[data-id]');
 
-        if (dropTarget &&
-            (dropTarget.dataset.component === 'ElCard' || dropTarget.className === 'el-tab-pane') &&
-            event.from.className !== 'component-box') {
-            handleSortChange(event);
-            return;
-        }
-
-        // if (type === 'ElTabs') {
-        //     const com = findComponentById(schema.value.components, event.item.dataset.id)
-        //     if (com) bool = sortableMap[com.children[0].id];
+        // if (dropTarget &&
+        //     (dropTarget.dataset.component === 'ElCard' || dropTarget.className === 'el-tab-pane') &&
+        //     event.from.className !== 'component-box') {
+        //     handleSortChange(event);
+        //     return;
         // }
 
-        // if (bool || !event.item.classList.contains('item')) {
         if (!event.item.classList.contains('item')) {
             handleSortChange(event);
             return;

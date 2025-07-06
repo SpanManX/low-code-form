@@ -81,30 +81,30 @@ import Sortable from 'sortablejs';
 import {basicSetup, EditorView} from 'codemirror'
 import {vue} from '@codemirror/lang-vue'
 import {html as beautifyHtml} from 'js-beautify'
-import headerComponent from '../components/headerComponent.vue'
+import {ElMessage} from "element-plus";
+import {zhCn} from "element-plus/es/locale/index";
+import {Delete} from '@element-plus/icons-vue'
+import * as ElementPlus from "element-plus";
 import {creatInitSortable, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
 import {removeComponentById} from "../utils/findComponentById.js";
-import templateJson from "../assets/templates";
 import {jsonToElementPlusTags} from "../utils/jsonToElementPlusTags.js";
 import {setData} from "../utils/setData.js";
-import {Delete} from '@element-plus/icons-vue'
+import {createSortableManager, resetSortable} from "../utils/sortableManager.js";
+import {createRenderer} from "../utils/renderComponent.js";
+import {showToolbar} from "../utils/showToolbar.js";
 import setComponent from '../components/setComponent';
 import setForm from '../components/setForm.vue';
+import headerComponent from '../components/headerComponent.vue'
 import formStore from "../store/form.js";
-import {createSortableManager, resetSortable} from "../utils/sortableManager.js";
 import componentDataStore from "../store/componentData";
 import componentMapStore from "../store/componentMap.js";
 import teleportStore from "../store/teleport";
+import divStylesStore from "@/store/divStyles.js";
+import templateJson from "../assets/templates";
 import demo1 from "../demo/demo1.js";
 import demo2 from "../demo/demo2.js";
 import demo3 from "../demo/demo3.js";
 import demo4 from "../demo/demo4.js";
-import {createRenderer} from "../utils/renderComponent.js";
-import * as ElementPlus from "element-plus";
-import {ElMessage} from "element-plus";
-import {showToolbar} from "../utils/showToolbar.js";
-import {zhCn} from "element-plus/es/locale/index";
-import divStylesStore from "@/store/divStyles.js";
 
 // 组件列表，用于左侧面板展示
 const componentList = templateJson

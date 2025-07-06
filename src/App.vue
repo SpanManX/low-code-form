@@ -4,12 +4,7 @@
   </div>
 </template>
 <script setup>
-// import lowCode from "./views/lowCode.vue";
-// import lowCode from "./views/lowCode-sortablejs_backup.vue";
 import lowCode from "./views/lowCode-sortablejs.vue";
-// import lowCode from "./views/test.vue";
-// import lowCode from "./views/custom.vue";
-// import lowCode from "./views/dropItemComponent.vue";
 </script>
 <style>
 html, body, #app, .el-container {

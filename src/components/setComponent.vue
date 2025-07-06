@@ -179,20 +179,6 @@ function inputChange(val, key, name) {
 }
 
 function numberChange(val, key, name) {
-  // if (name === 'GridComponent') {
-  //   if (!currentData.value.props.style) {
-  //     currentData.value.props.style = {};
-  //   }
-  //   const gap = currentData.value.props['grid-gap'] || 0
-  //   if (key === 'grid-template-columns') {
-  //     currentData.value.props.style['grid-template-columns'] = `repeat(${val}, calc(100% / ${val} - ${gap + 'px'}))`
-  //   } else if (key === 'grid-gap') {
-  //     const columns = currentData.value.props['grid-template-columns'] || 1
-  //     currentData.value.props.style['grid-gap'] = `${val}px`
-  //     currentData.value.props.style['grid-template-columns'] = `repeat(${columns}, calc(100% / ${columns} - ${gap + 'px'}))`
-  //   }
-  //   return
-  // }
 }
 
 /**

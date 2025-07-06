@@ -282,7 +282,7 @@ function tabsChange() {
  * 如果 Vue 编辑器尚未创建，则创建新的编辑器并将其添加到指定的父容器中。
  * 如果 Vue 编辑器已存在，则更新其文档内容。
  */
-async function updateVueCode() {
+function updateVueCode() {
   const {labelPosition, labelWidth} = formStore.formOptions
 
   const labelPositionJoin = labelPosition === 'right' || labelPosition === '' ? '' : `label-position="${labelPosition}"`
@@ -297,7 +297,7 @@ async function updateVueCode() {
       `<template>
 <div>
     <el-form :model="formData" :rules="rules" :inline="${inline.value}" ${labelPositionJoin} ${labelWidthJoin}>
-    ${(await jsonToElementPlusTags(JSON.parse(JSON.stringify(schema.value.components))))}
+    ${(jsonToElementPlusTags(JSON.parse(JSON.stringify(schema.value.components))))}
     </el-form>
 </div>
 </template>

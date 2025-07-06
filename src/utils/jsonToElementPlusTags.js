@@ -49,8 +49,6 @@ function generateTag(item) {
     } else if (item.model) {
         vModelString = `:model="${item.model}"`
     }
-    // const vModelString = item["v-model"] ? ` v-model="${item['v-model']}"` : "";
-
 
     // 递归处理 children
     const staticChildrenStr = (item.staticChildren || []).map((child) => generateTag(child)).join('\n')
@@ -88,7 +86,7 @@ function generateTag(item) {
  * @param {Object} jsonData - 包含 Element Plus 组件配置的 JSON 数据
  * @returns {string} - 转换后的 Element Plus 组件标签字符串
  */
-export async function jsonToElementPlusTags(jsonData) {
+export function jsonToElementPlusTags(jsonData) {
     formData = formStore.formData
     propsMap = JSON.parse(JSON.stringify(componentDataStore.componentDataMap))
     const treeJSON = JSON.parse(JSON.stringify(jsonData))

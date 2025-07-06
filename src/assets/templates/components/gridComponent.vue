@@ -27,7 +27,7 @@ const style = computed(() => {
     'grid-template-columns': `repeat(${props.columns || 1}, calc(100% / ${props.columns || 1} - ${(props.gap ? props.gap : 0) + 'px'}))`,
     'grid-gap': `${props.gap}px`
   }
-  divStylesStore.SET_STYLES(props.class,obj)
+  divStylesStore.SET_STYLES(props.class,{...obj,display: "grid"})
   return obj
 })
 </script>

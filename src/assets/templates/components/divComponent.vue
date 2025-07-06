@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup>
-import {computed, watch} from "vue";
+import {computed} from "vue";
 import divStylesStore from "@/store/divStyles.js";
 
 const props = defineProps({
@@ -18,12 +18,14 @@ const props = defineProps({
 })
 
 const style = computed(() => {
-  const obj = {
-    ...props
+  if(props['text-align']) {
+    const obj = {
+      ...props
+    }
+    const className = obj.class
+    delete obj.class
+    divStylesStore.SET_STYLES(className, obj)
   }
-  const className = obj.class
-  delete obj.class
-  divStylesStore.SET_STYLES(className, obj)
   return props
 })
 

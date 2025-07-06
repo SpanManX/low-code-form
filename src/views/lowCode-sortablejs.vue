@@ -311,6 +311,11 @@ function updateVueCode() {
 .el-tabs, .el-card, .el-table {
     margin-bottom: 10px;
 }
+
+.el-button{
+    width: fit-content;
+}
+
 ${str}
 </style>`,
       {indent_size: 4, wrap_line_length: 50, end_with_newline: true}

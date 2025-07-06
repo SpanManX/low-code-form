@@ -163,7 +163,7 @@ export function createSortableManager() {
         let [movedItem] = oldParent.children.splice(evt.oldDraggableIndex, 1);
         // 添加
         newParent.children.splice(evt.newIndex, 0, movedItem);
-
+        console.log(schema.value.components);
         if (movedItem.componentName === "ElCard" || movedItem.componentName === 'ElTabs' || movedItem.componentName === 'GridComponent' || movedItem.componentName === 'DivComponent') {
             nextTick(() => {
                 if (movedItem.componentName === "ElCard" || movedItem.componentName === 'GridComponent' || movedItem.componentName === 'DivComponent') {

@@ -100,7 +100,7 @@ export function createRenderer() {
                 }, defaultData)
             }
         }
-        
+
         if (useWrappedNames.indexOf(value.componentName) > -1) {
             return h(DropItemComponent, {
                 componentData: {...value, componentName},

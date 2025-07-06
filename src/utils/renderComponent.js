@@ -40,21 +40,17 @@ export function createRenderer() {
 
         // value.id in formData.value 是 JavaScript 中的一个语法，用来判断一个对象是否包含某个属性
         if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
-            // if ((!value.noUseForm || except.indexOf(value.componentName) > -1) && !(`field${value.id}` in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
                 formStore.SET_FORM_DATA(`field${value.id}`, value.children[0].props.name || '')
-                // formData.value[`field${value.id}`] = value.children[0].props.name || ''
             } else {
                 formStore.SET_FORM_DATA(`field${value.id}`, value.componentName === 'ElCheckboxGroup' ? [] : '')
-                // formData.value[`field${value.id}`] = value.componentName === 'ElCheckboxGroup' ? [] : ''
             }
         }
 
         if (formData && names.indexOf(value.componentName) === -1) {
             props.modelValue = formData.value[`field${value.id}`]
             props['onUpdate:modelValue'] = (val) => {
-                // formData.value[`field${value.id}`] = val
                 formStore.SET_FORM_DATA(`field${value.id}`, val)
             }
         }
@@ -104,8 +100,7 @@ export function createRenderer() {
                 }, defaultData)
             }
         }
-
-
+        
         if (useWrappedNames.indexOf(value.componentName) > -1) {
             return h(DropItemComponent, {
                 componentData: {...value, componentName},
@@ -114,8 +109,6 @@ export function createRenderer() {
         } else {
             return h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
         }
-
-        // return useWrappedNames.indexOf(value.componentName) > -1 || value.componentName === 'div' ? wrappedComponent : h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
     }
 
     return renderComponent

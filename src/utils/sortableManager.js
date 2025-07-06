@@ -41,11 +41,6 @@ export function createSortableManager() {
             delete sortableMap[id];
         }
 
-        // if (componentJSON) {
-        //     const node = findComponentById(schema.value.components, componentJSON.parentId);
-        //     node.children.push(JSON.parse(JSON.stringify(componentJSON)))
-        // }
-
         let element = el || document.querySelector(`[data-id='${id}']`);
         if (element?.dataset?.component === 'ElCard') {
             element = element.querySelector('.el-card__body');
@@ -91,13 +86,6 @@ export function createSortableManager() {
         const type = event.originalEvent.dataTransfer.getData('type');
         const dropTarget = event.to.closest('[data-id]');
 
-        // if (dropTarget &&
-        //     (dropTarget.dataset.component === 'ElCard' || dropTarget.className === 'el-tab-pane') &&
-        //     event.from.className !== 'component-box') {
-        //     handleSortChange(event);
-        //     return;
-        // }
-
         if (!event.item.classList.contains('item')) {
             handleSortChange(event);
             return;
@@ -137,14 +125,6 @@ export function createSortableManager() {
                 schema.value.components.push(newComp);
             }
         }
-
-        // 可能无用，后续删除
-        // const oldParentElement = event.from.closest('[data-id]');
-        // if (oldParentElement) { // 如果存在旧父元素，则从其子组件列表中移除
-        //     const oldParentId = oldParentElement?.dataset.id || null;
-        //     const oldParent = findComponentById(schema.value.components, oldParentId);
-        //     oldParent.children.splice(event.oldDraggableIndex, 1);
-        // }
 
         if (type === "ElCard" || type === 'ElTabs' || type === 'GridComponent' || type === 'DivComponent') {
             nextTick(() => {

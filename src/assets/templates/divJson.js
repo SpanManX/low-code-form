@@ -6,7 +6,9 @@ export default () => {
         icon: block,
         noUseForm: true,
         text: '块元素',
-        props: {},
+        props: {
+            class:'block-element'
+        },
         children: []
     }
 }

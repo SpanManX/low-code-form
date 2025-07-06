@@ -1,4 +1,3 @@
-// import {mergeJSON} from "./mergeJSON.js";
 import componentDataStore from "../store/componentData";
 import formStore from "../store/form.js";
 
@@ -19,9 +18,13 @@ export function toKebabCase(str) {
  * @returns 生成的标签字符串
  */
 function generateTag(item) {
+    const isDiv = item.componentName === 'DivComponent' || item.componentName === 'GridComponent'
+
     // 处理 props，拼接成字符串
     const propsString = Object.entries(item.props || {})
         .map(([key, value]) => {
+            if (isDiv && (key === 'columns' || key === "gap" || key === 'text-align')) return '';
+
             const str = typeof value === 'boolean' || typeof value === 'number' ? ':' : ''
             return key === 'rules' ? '' : `${str}${key}="${value}"`
         })
@@ -61,6 +64,8 @@ function generateTag(item) {
 
     if (item.componentName.indexOf("El") > -1) {
         componentName = toKebabCase(item.componentName);
+    } else if (item.componentName === 'DivComponent' || item.componentName === 'GridComponent') {
+        componentName = 'div'
     }
 
     // 生成最终的标签字符串
@@ -87,7 +92,6 @@ export async function jsonToElementPlusTags(jsonData) {
     formData = formStore.formData
     propsMap = JSON.parse(JSON.stringify(componentDataStore.componentDataMap))
     const treeJSON = JSON.parse(JSON.stringify(jsonData))
-    // await mergeJSON(propsMap, jsonData, treeJSON)
 
     return treeJSON.map((item) => {
         return generateTag(item)

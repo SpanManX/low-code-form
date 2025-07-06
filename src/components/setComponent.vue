@@ -114,9 +114,7 @@ const options = ref([])
 const inputs = ref([])
 
 const joinTag = ['ElTabs']
-const names = ['ElTable', 'ElButton', ...joinTag]
-const groupNames = ['ElRadioGroup', 'ElCheckboxGroup', 'ElSelect', ...joinTag]
-const notGetChildren = ['ElCard', 'ElButton', 'ElDivider', 'GridComponent','DivComponent']
+const notGetChildren = ['ElCard', 'ElButton', 'ElDivider', 'GridComponent', 'DivComponent']
 
 const isShow = computed(() => {
   if (currentData.value) return !currentData.value.noUseForm;
@@ -175,14 +173,25 @@ function inputChange(val, key, name) {
   console.log(val, key, name)
   if (name === 'ElCard') {
     currentData.value.staticChildren[0].label = val
-  }else if (name === 'ElButton') {
+  } else if (name === 'ElButton') {
     useFormCurrentData.value.label = val
   }
 }
 
 function numberChange(val, key, name) {
-  // if(name === 'GridComponent'){
-  //   currentData.value.props[key] = val
+  // if (name === 'GridComponent') {
+  //   if (!currentData.value.props.style) {
+  //     currentData.value.props.style = {};
+  //   }
+  //   const gap = currentData.value.props['grid-gap'] || 0
+  //   if (key === 'grid-template-columns') {
+  //     currentData.value.props.style['grid-template-columns'] = `repeat(${val}, calc(100% / ${val} - ${gap + 'px'}))`
+  //   } else if (key === 'grid-gap') {
+  //     const columns = currentData.value.props['grid-template-columns'] || 1
+  //     currentData.value.props.style['grid-gap'] = `${val}px`
+  //     currentData.value.props.style['grid-template-columns'] = `repeat(${columns}, calc(100% / ${columns} - ${gap + 'px'}))`
+  //   }
+  //   return
   // }
 }
 

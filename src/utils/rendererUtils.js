@@ -6,7 +6,7 @@ export function creatInitSortable(data = [], initSortable) {
     data.forEach(item => {
         const name = item.componentName;
 
-        if (['ElCard', 'ElTabPane'].includes(name)) {
+        if (['ElCard', 'ElTabPane', 'GridComponent', 'DivComponent'].includes(name)) {
             if (item.id) {
                 initSortable({id: item.id});
             }

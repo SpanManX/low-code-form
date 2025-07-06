@@ -9,8 +9,10 @@ import {getSelectDOM} from "@/utils/rendererUtils.js";
  */
 export function showToolbar(container) {
     const dom = getSelectDOM()
-    dom.onmouseenter = null
-    dom.onmouseleave = null
+    if(dom){
+        dom.onmouseenter = null
+        dom.onmouseleave = null
+    }
     if (!container) return
     teleportStore.SET_TELEPORT_TO(container);
     nextTick(() => {

@@ -1,15 +1,16 @@
 <template>
-  <div class="grid element" :style="style">
+  <div class="element" :class="props.class" :style="style">
     <slot></slot>
   </div>
 </template>
 <script setup>
-import {onUnmounted, reactive, watch} from "vue";
+import {computed} from "vue";
+import divStylesStore from '../../../store/divStyles.js'
 
 const props = defineProps({
-  rows: {
-    type: Number,
-    default: 1,
+  class: {
+    type: String,
+    required: true,
   },
   columns: {
     type: Number,
@@ -21,29 +22,13 @@ const props = defineProps({
   }
 })
 
-const style = reactive({})
-
-let timer = null;
-let timer1 = null;
-
-watch(() => props.columns, (val) => {
-  timer && clearTimeout(timer);
-  timer = setTimeout(() => {
-    if (!val) val = 1
-    style['grid-template-columns'] = `repeat(${val}, calc(100% / ${val} - ${(props.gap ? props.gap : 0) + 'px'}))`;
-  }, 300)
-})
-
-watch(() => props.gap, (val) => {
-  timer1 && clearTimeout(timer);
-  timer1 = setTimeout(() => {
-    if (!val) val = 1
-    style['grid-gap'] = `${val}px`;
-  }, 300)
-})
-
-onUnmounted(() => {
-  timer && clearTimeout(timer);
+const style = computed(() => {
+  const obj = {
+    'grid-template-columns': `repeat(${props.columns || 1}, calc(100% / ${props.columns || 1} - ${(props.gap ? props.gap : 0) + 'px'}))`,
+    'grid-gap': `${props.gap}px`
+  }
+  divStylesStore.SET_STYLES(props.class,obj)
+  return obj
 })
 </script>
 <style scoped lang="scss">
@@ -53,7 +38,12 @@ onUnmounted(() => {
   min-height: 50px;
   border: 1px dashed #409EFF;
   border-radius: 5px;
-  padding: 10px;
+  //padding: 10px;
   box-sizing: border-box;
+
+  //width: calc(100% + 20px);
+  padding: 10px 0;
+  //position: relative;
+  //left: -10px;
 }
 </style>

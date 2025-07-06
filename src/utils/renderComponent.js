@@ -4,26 +4,19 @@ import DropItemComponent from "@/assets/templates/components/dropItemComponent.v
 import DivComponent from "@/assets/templates/components/divComponent.vue";
 import gridComponent from "@/assets/templates/components/gridComponent.vue";
 import formStore from "../store/form.js";
-import namesStore from "../store/names.js";
+import {noNeedBind, useWrappedNames} from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";
 import componentDataStore from "@/store/componentData.js";
 
 /**
  * 创建渲染器函数
  *
- * @param options 配置项，默认值为空对象
- * @param options.isTemplate 是否为模板模式，默认值为 false
  * @returns 返回渲染组件的函数
  */
-export function createRenderer(options = {}) {
-    // const {isTemplate = false} = options
-
-    const formData = formStore.formData  // 表单数据（用于 v-model），默认值为 null
-    const names = namesStore                             // 不需要双向绑定的组件名列表，默认值为空数组
-    const {labelWidth} = formStore.formOptions            // 表单 label 宽度，默认值为 null
-    const saveId = new Set()
-    const useWrappedNames = ['ElFormItem', 'ElTabs', 'ElTable', 'ElDivider', 'ElButton', 'DivComponent']
-    const except = ['ElTabs']
+export function createRenderer() {
+    const formData = formStore.formData  // 表单数据（用于 v-model）
+    const names = noNeedBind                                     // 不需要双向绑定的组件名列表
+    const {labelWidth} = formStore.formOptions            // 表单 label 宽度
 
     /**
      * 渲染组件
@@ -41,12 +34,6 @@ export function createRenderer(options = {}) {
         if (value.componentName === 'ElFormItem' && value.props.rules) {
             formStore.SET_FORM_RULES(`field${value.children[0].id}`, value.props.rules)
         }
-        // if (isTemplate) {
-        //     const id = value.id
-        //     if (!saveId.has(id) && !value.parentId) {
-        //         saveId.add(id)
-        //     }
-        // }
 
         const props = {...value.props}
         const events = value.on || {}
@@ -117,7 +104,6 @@ export function createRenderer(options = {}) {
                 }, defaultData)
             }
         }
-
 
 
         if (useWrappedNames.indexOf(value.componentName) > -1) {

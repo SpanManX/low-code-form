@@ -34,6 +34,9 @@
             <div class="item item-component pointer" @click="createDemo(demo3)">
               Demo3
             </div>
+            <div class="item item-component pointer" @click="createDemo(demo4)">
+              demo4
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -95,11 +98,13 @@ import teleportStore from "../store/teleport";
 import demo1 from "../demo/demo1.js";
 import demo2 from "../demo/demo2.js";
 import demo3 from "../demo/demo3.js";
+import demo4 from "../demo/demo4.js";
 import {createRenderer} from "../utils/renderComponent.js";
 import * as ElementPlus from "element-plus";
 import {ElMessage} from "element-plus";
 import {showToolbar} from "../utils/showToolbar.js";
 import {zhCn} from "element-plus/es/locale/index";
+import divStylesStore from "@/store/divStyles.js";
 
 // 组件列表，用于左侧面板展示
 const componentList = templateJson
@@ -178,7 +183,7 @@ onMounted(() => {
       })
     },
     updated() {
-      console.log('updated')
+      console.log(isExecuted,'updated')
       if (isExecuted) {
         creatInitSortable(schema.value.components, initSortable)
         isExecuted = false;
@@ -283,6 +288,11 @@ async function updateVueCode() {
   const labelPositionJoin = labelPosition === 'right' || labelPosition === '' ? '' : `label-position="${labelPosition}"`
   const labelWidthJoin = labelWidth === 'auto' || !labelWidth ? '' : `label-width="${labelWidth}"`
 
+  let str = ''
+  Object.keys(divStylesStore.styles).forEach((key) => {
+    str += `.${key}${divStylesStore.styles[key]}`
+  })
+
   const htmlStr = beautifyHtml(
       `<template>
 <div>
@@ -299,8 +309,9 @@ async function updateVueCode() {
 <\/script>
 <style scoped>
 .el-tabs, .el-card, .el-table {
-      margin-bottom: 10px;
-    }
+    margin-bottom: 10px;
+}
+${str}
 </style>`,
       {indent_size: 4, wrap_line_length: 50, end_with_newline: true}
   )
@@ -373,6 +384,10 @@ function remove(componentData) {
       formStore.DELETE_FORM_DATA(value.props.prop || `field${value.id}`)
       formStore.DELETE_RULES(value.props.prop)
     }
+  }
+
+  if (value.componentName === "GridComponent" || value.componentName === "DivComponent") {
+    divStylesStore.DELETE_STYLES(value.props.class)
   }
 
   if (value.children && value.children.length) {

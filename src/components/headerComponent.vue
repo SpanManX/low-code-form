@@ -6,14 +6,14 @@
   </div>
 </template>
 <script setup>
-import { ref} from "vue";
-// import {mergeJSON} from "@/utils/mergeJSON.js";
+import {ref} from "vue";
 import componentDataStore from "../store/componentData";
+import {ElMessageBox} from "element-plus";
 
 const props = defineProps({
   json: [Object, Array]
 })
-const emits = defineEmits(["onDragDrop",'clearAll']);
+const emits = defineEmits(["onDragDrop", 'clearAll']);
 
 const dragOrDrop = ref(false)
 
@@ -28,19 +28,19 @@ function handleDragOrDrop() {
  * 这个函数用于异步导出JSON数据。首先，它会获取组件数据映射和传入的JSON数据，然后将这些数据合并到一个树状结构中。
  */
 async function exportJSON() {
-  // 获取组件数据映射的深拷贝
-  // const dataMap = JSON.parse(JSON.stringify(componentDataStore.componentDataMap))
-  // 获取传入的JSON数据的深拷贝
-  // let treeData = JSON.parse(JSON.stringify(props.json))
-  // 异步合并数据映射和传入的JSON数据到树状结构中
-  // await mergeJSON(dataMap, props.json, treeData)
-
   console.log(JSON.stringify(props.json, null, 2));
 }
 
-function clearAll(){
-  componentDataStore.CLEAR_COMPONENT_DATA_MAP()
-  emits("clearAll")
+function clearAll() {
+  ElMessageBox.confirm('这将清空画布，是否继续？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    componentDataStore.CLEAR_COMPONENT_DATA_MAP()
+    emits("clearAll")
+  }).catch(() => {
+  })
 }
 </script>
 <style lang="scss" scoped>

@@ -6,7 +6,9 @@ export default () => {
         icon: grid,
         noUseForm: true,
         text: '栅格',
-        props: {},
+        props: {
+            class: 'grid',
+        },
         children: []
     }
 }

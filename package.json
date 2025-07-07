@@ -3,11 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "main": "src/App.vue",
-  "bin": "src/App.vue",
+  "main": "dist/low-code-form.umd.js",
+  "module": "dist/low-code-form.es.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:lib": "vite build --config vite.lib.config.js",
     "preview": "vite preview"
   },
   "dependencies": {

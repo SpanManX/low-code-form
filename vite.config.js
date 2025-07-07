@@ -3,9 +3,9 @@ import vue from '@vitejs/plugin-vue'
 import {fileURLToPath, URL} from 'node:url'
 import svgLoader from 'vite-svg-loader'
 
-// https://vite.dev/config/
 export default defineConfig({
     plugins: [vue(), svgLoader()],
+    base: './',
     resolve: {
         extensions: ['.vue', '.js'],
         alias: {

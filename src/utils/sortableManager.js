@@ -49,7 +49,7 @@ export function createSortableManager() {
             element = element.querySelector('.element');
             if (!element) return;
         }
-        console.log(element)
+
         sortableMap[id] = Sortable.create(element, {
             group: {name: 'shared'},
             animation: 150,

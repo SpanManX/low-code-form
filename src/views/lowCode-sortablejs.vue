@@ -65,7 +65,7 @@
         </el-tab-pane>
       </el-tabs>
       <div :class="{'panel-content':activeName1 !== 'second','panel-code':activeName1 === 'second'}">
-        <setComponent ref="setComponentRef" :initSortable="initSortable"
+        <setComponent ref="setComponentRef" :formRef="formRef" :initSortable="initSortable"
                       v-show="activeName1 === 'first'"/>
         <setForm ref="setFormRef" v-show="activeName1 === 'form'" @changeAlignLabel="changeAlignLabel"
                  @changeLabelWidth="changeLabelWidth" @inline-change="inlineChange"/>

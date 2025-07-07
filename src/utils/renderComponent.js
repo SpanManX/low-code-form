@@ -13,8 +13,8 @@ import componentDataStore from "@/store/componentData.js";
  *
  * @returns 返回渲染组件的函数
  */
-export function createRenderer() {
-    const formData = formStore.formData  // 表单数据（用于 v-model）
+export function createRenderer(isPreview = false) {
+    const formData = !isPreview ? formStore.formData : formStore.previewFormData // 表单数据（用于 v-model）
     const names = noNeedBind                                     // 不需要双向绑定的组件名列表
     const {labelWidth} = formStore.formOptions            // 表单 label 宽度
 
@@ -23,36 +23,38 @@ export function createRenderer() {
      *
      * @param value 要渲染的组件数据
      *
-     * @param isPreview
      * @description 组件必须使用 key 属性，否则会导致组件无法正确更新
      * @returns 渲染后的组件对象
      */
-    function renderComponent(value, isPreview = false) {
+    function renderComponent(value) {
         if (!value.parentId) {
             componentDataStore.SET_COMPONENT_DATA_MAP(value.id, value)
         }
 
-        if (value.componentName === 'ElFormItem' && value.props.rules) {
+        if (value.componentName === 'ElFormItem' && value.props.rules && !isPreview) {
             formStore.SET_FORM_RULES(`field${value.children[0].id}`, value.props.rules)
         }
 
-        const props = {...value.props}
-        const events = value.on || {}
+        const funcKey = !isPreview ? 'SET_FORM_DATA' : 'SET_PREVIEW_FORM_DATA' // 用于区分是设置表单数据还是预览表单数据
 
         // value.id in formData.value 是 JavaScript 中的一个语法，用来判断一个对象是否包含某个属性
         if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
-                formStore.SET_FORM_DATA(`field${value.id}`, value.children[0].props.name || '')
+                formStore[funcKey](`field${value.id}`, value.children[0].props.name || '')
             } else {
-                formStore.SET_FORM_DATA(`field${value.id}`, value.componentName === 'ElCheckboxGroup' ? [] : '')
+                formStore[funcKey](`field${value.id}`, value.componentName === 'ElCheckboxGroup' ? [] : '')
             }
         }
+
+        const props = {...value.props}
+        const events = value.on || {}
 
         if (formData && names.indexOf(value.componentName) === -1) {
             props.modelValue = formData.value[`field${value.id}`]
             props['onUpdate:modelValue'] = (val) => {
-                formStore.SET_FORM_DATA(`field${value.id}`, val)
+                console.log(funcKey)
+                formStore[funcKey](`field${value.id}`, val)
             }
         }
 
@@ -87,7 +89,7 @@ export function createRenderer() {
 
         if (value.componentName === 'GridComponent') {
             return h(DropItemComponent, {componentData: {...value, componentName}, key: key}, {
-                default: () => h(gridComponent, {isPreview,...value.props}, defaultData)
+                default: () => h(gridComponent, {isPreview, ...value.props}, defaultData)
             })
         }
 
@@ -95,7 +97,7 @@ export function createRenderer() {
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(DivComponent, {isPreview,...value.props}, defaultData)
+                default: () => h(DivComponent, {isPreview, ...value.props}, defaultData)
             }
         } else {
             wrappedComponentChild = {

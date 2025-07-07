@@ -18,4 +18,22 @@ html, body, #app, .el-container {
   box-sizing: border-box;
   background-color: #f0f2f5;
 }
+
+.el-dialog {
+  padding: 0 !important;
+}
+
+.el-dialog__footer {
+  padding: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.el-dialog__header {
+  padding: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.el-dialog__body{
+  padding: 15px
+}
 </style>

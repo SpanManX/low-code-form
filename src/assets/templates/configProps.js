@@ -86,6 +86,7 @@ export const ElButtonConfigProps = [
 
 // 分割线
 export const ElDividerConfigProps = [
+    {key: 'label', value: '', name: '文字内容'},
     {key: 'direction', values: ['horizontal', 'vertical'], name: '分割线方向'},
     {key: 'border-style', values: ['none', 'solid', 'dashed'], name: '分隔符样式'},
     {key: 'content-position', values: ['left', 'right', 'center'], name: '内容位置'},

@@ -82,7 +82,7 @@
         </ul>
         <div>
           <el-button link type="primary" @click="add">增加</el-button>
-<!--          <el-button link type="primary">批量增加</el-button>-->
+          <!--          <el-button link type="primary">批量增加</el-button>-->
         </div>
       </div>
     </el-form>
@@ -101,6 +101,7 @@ defineExpose({reset, select});
 
 const props = defineProps({
   initSortable: Function,
+  formRef: Object,
 })
 
 const labelText = ref('')
@@ -169,11 +170,13 @@ function reset() {
 }
 
 function inputChange(val, key, name) {
-  console.log(val, key, name)
   if (name === 'ElCard') {
     currentData.value.staticChildren[0].label = val
   } else if (name === 'ElButton') {
     useFormCurrentData.value.label = val
+  }
+  if(name === 'ElDivider'){
+    useFormCurrentData.value[key] = val
   }
 }
 
@@ -218,6 +221,9 @@ function checkChange() {
     delete currentData.value.props.rules
     formStore.DELETE_FORM_DATA(fieldKey)
     formStore.DELETE_RULES(fieldKey)
+    setTimeout(() => {
+      props.formRef.resetFields()
+    })
     return
   }
 
@@ -229,6 +235,9 @@ function checkChange() {
       // trigger: 'change',
     }
     formStore.SET_FORM_RULES(fieldKey, JSON.parse(JSON.stringify(currentData.value.props.rules)))
+    setTimeout(() => {
+      props.formRef.resetFields()
+    })
   }
 }
 

@@ -6,6 +6,7 @@ export default {
         labelPosition: 'right'
     },
     formData: ref({}),
+    previewFormData: ref({}),
     rules: ref({}),
 
     SET_FORM_OPTIONS({labelWidth, labelPosition}) {
@@ -15,6 +16,14 @@ export default {
 
     SET_FORM_DATA(key,data) {
         this.formData.value[key] = data
+    },
+
+    SET_PREVIEW_FORM_DATA(key, data) {
+        this.previewFormData.value[key] = data
+    },
+
+    CLEAR_PREVIEW_FORM_DATA() {
+        this.previewFormData.value = {}
     },
 
     DELETE_FORM_DATA(key) {

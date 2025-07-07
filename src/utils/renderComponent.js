@@ -23,10 +23,11 @@ export function createRenderer() {
      *
      * @param value 要渲染的组件数据
      *
+     * @param isPreview
      * @description 组件必须使用 key 属性，否则会导致组件无法正确更新
      * @returns 渲染后的组件对象
      */
-    function renderComponent(value) {
+    function renderComponent(value, isPreview = false) {
         if (!value.parentId) {
             componentDataStore.SET_COMPONENT_DATA_MAP(value.id, value)
         }
@@ -67,10 +68,13 @@ export function createRenderer() {
         if (value.componentName === 'ElTabPane') {
             props['data-id'] = value.id
         }
+
+        const key = value.id
+
         // 特殊处理
         if (value.componentName === 'ElCard') {
             return h('div', {
-                key: value.id,
+                key: key,
                 class: 'drop-item drop-item-card',
                 'data-id': value.id,
                 'data-component': value.componentName
@@ -82,8 +86,8 @@ export function createRenderer() {
         const componentName = value.componentName === 'ElFormItem' ? value.children?.[0]?.componentName : value.componentName
 
         if (value.componentName === 'GridComponent') {
-            return h(DropItemComponent, {componentData: {...value, componentName}, key: value.id}, {
-                default: () => h(gridComponent, value.props, defaultData)
+            return h(DropItemComponent, {componentData: {...value, componentName}, key: key}, {
+                default: () => h(gridComponent, {isPreview,...value.props}, defaultData)
             })
         }
 
@@ -91,7 +95,7 @@ export function createRenderer() {
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(DivComponent, value.props, defaultData)
+                default: () => h(DivComponent, {isPreview,...value.props}, defaultData)
             }
         } else {
             wrappedComponentChild = {
@@ -104,7 +108,7 @@ export function createRenderer() {
         if (useWrappedNames.indexOf(value.componentName) > -1) {
             return h(DropItemComponent, {
                 componentData: {...value, componentName},
-                key: value.id
+                key: key
             }, wrappedComponentChild)
         } else {
             return h(ElementPlus[value.componentName], {...props, ...events}, defaultData)

@@ -3,19 +3,24 @@
     <el-button link type="primary" @click="handleDragOrDrop">{{ dragOrDrop ? '开启' : '关闭' }}拖放</el-button>
     <el-button link type="primary" @click="clearAll">清空画布</el-button>
     <el-button link type="primary" @click="exportJSON">导出JSON</el-button>
+    <el-button link type="primary" @click="openPreview">预览</el-button>
   </div>
+  <preview-dialog ref="previewDialogRef"/>
 </template>
 <script setup>
-import {ref} from "vue";
-import componentDataStore from "../store/componentData";
+import {nextTick, ref} from "vue";
 import {ElMessageBox} from "element-plus";
+import componentDataStore from "../store/componentData";
+import previewDialog from "../components/previewDialog.vue";
 
 const props = defineProps({
-  json: [Object, Array]
+  json: [Object, Array],
+  inline:Boolean
 })
 const emits = defineEmits(["onDragDrop", 'clearAll']);
 
 const dragOrDrop = ref(false)
+const previewDialogRef = ref(null)
 
 function handleDragOrDrop() {
   dragOrDrop.value = !dragOrDrop.value
@@ -23,12 +28,27 @@ function handleDragOrDrop() {
 }
 
 /**
- * 异步导出JSON数据
- *
- * 这个函数用于异步导出JSON数据。首先，它会获取组件数据映射和传入的JSON数据，然后将这些数据合并到一个树状结构中。
+ * 导出JSON数据
  */
 async function exportJSON() {
   console.log(JSON.stringify(props.json, null, 2));
+
+  let jsonStr = JSON.stringify(props.json, null, 2) // 格式化 JSON 数据
+  let blob = new Blob([jsonStr], {type: "application/json"});
+  let a = document.createElement("a");
+
+  a.href = URL.createObjectURL(blob);
+  a.download = 'formData';
+  a.click();
+
+  URL.revokeObjectURL(a.href);
+  nextTick(() => {
+    a.remove()
+  })
+}
+
+function openPreview() {
+  previewDialogRef.value.open(props.inline, props.json)
 }
 
 function clearAll() {

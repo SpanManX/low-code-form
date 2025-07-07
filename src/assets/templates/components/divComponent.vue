@@ -1,5 +1,5 @@
 <template>
-  <div class="element" :class="props.class" :style="style">
+  <div class="element" :class="{[props.class]:props.class,['div-border']:!isPreview}" :style="style">
     <slot></slot>
   </div>
 </template>
@@ -12,13 +12,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  isPreview: {
+    type: Boolean,
+  },
   'text-align': {
     type: String,
   }
 })
 
 const style = computed(() => {
-  if(props['text-align']) {
+  if (props['text-align']) {
     const obj = {
       ...props
     }
@@ -32,15 +35,13 @@ const style = computed(() => {
 </script>
 <style scoped lang="scss">
 .block-element {
+
+}
+
+.div-border {
   min-height: 50px;
   border: 1px dashed #ecd55e;
   border-radius: 5px;
-  //padding: 10px;
   box-sizing: border-box;
-
-  //width: calc(100% + 20px);
-  //padding: 10px 0;
-  //position: relative;
-  //left: -10px;
 }
 </style>

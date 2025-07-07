@@ -1,5 +1,5 @@
 <template>
-  <div class="element" :class="props.class" :style="style">
+  <div class="element" :class="{[props.class]:props.class,['grid-border']:!isPreview}" :style="style">
     <slot></slot>
   </div>
 </template>
@@ -19,6 +19,9 @@ const props = defineProps({
   gap: {
     type: Number,
     default: 10,
+  },
+  isPreview: {
+    type: Boolean,
   }
 })
 
@@ -27,7 +30,7 @@ const style = computed(() => {
     'grid-template-columns': `repeat(${props.columns || 1}, calc(100% / ${props.columns || 1} - ${(props.gap ? props.gap : 0) + 'px'}))`,
     'grid-gap': `${props.gap}px`
   }
-  divStylesStore.SET_STYLES(props.class,{...obj,display: "grid"})
+  divStylesStore.SET_STYLES(props.class, {...obj, display: "grid"})
   return obj
 })
 </script>
@@ -35,15 +38,12 @@ const style = computed(() => {
 .grid {
   width: 100%;
   display: grid;
+}
+
+.grid-border {
+  box-sizing: border-box;
   min-height: 50px;
   border: 1px dashed #409EFF;
   border-radius: 5px;
-  //padding: 10px;
-  box-sizing: border-box;
-
-  //width: calc(100% + 20px);
-  //padding: 10px 0;
-  //position: relative;
-  //left: -10px;
 }
 </style>

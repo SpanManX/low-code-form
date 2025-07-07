@@ -45,7 +45,7 @@
     <!-- 画布 -->
     <el-main class="canvas">
       <el-header height="50px">
-        <headerComponent :json="schema.components" @on-drag-drop="handleDragDrop"
+        <headerComponent :json="schema.components" :inline="inline" @on-drag-drop="handleDragDrop"
                          @clear-all="clearAll"></headerComponent>
       </el-header>
       <div class="canvas-content">

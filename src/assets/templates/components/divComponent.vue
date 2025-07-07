@@ -39,7 +39,7 @@ const style = computed(() => {
   box-sizing: border-box;
 
   //width: calc(100% + 20px);
-  padding: 10px 0;
+  //padding: 10px 0;
   //position: relative;
   //left: -10px;
 }

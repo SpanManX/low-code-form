@@ -82,7 +82,7 @@
         </ul>
         <div>
           <el-button link type="primary" @click="add">增加</el-button>
-          <el-button link type="primary">批量增加</el-button>
+<!--          <el-button link type="primary">批量增加</el-button>-->
         </div>
       </div>
     </el-form>
@@ -93,7 +93,6 @@ import {computed, nextTick, reactive, ref} from "vue";
 import {Delete, Download, Upload, WarningFilled} from '@element-plus/icons-vue'
 import * as configProps from "@/assets/templates/configProps.js";
 import {getSelectDOM} from "../utils/rendererUtils.js";
-// import {formOptions} from "../store/form.js";
 import formStore from "../store/form.js";
 import {showToolbar} from "../utils/showToolbar.js";
 import {generateRandomId} from "../utils/generateRandomId.js";

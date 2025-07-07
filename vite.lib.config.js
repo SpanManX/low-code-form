@@ -22,7 +22,7 @@ export default defineConfig({
             fileName: (format) => `low-code-form.${format}.js`
         },
         rollupOptions: {
-            external: ['vue', 'element-plus'],  // 防止重复打包依赖
+            external: ['vue', 'element-plus'],  // 不把 vue 和 element-plus 打包进依赖库文件中
             output: {
                 globals: {
                     vue: 'Vue',

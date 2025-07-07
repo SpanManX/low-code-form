@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "src/App.vue",
+  "bin": "src/App.vue",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

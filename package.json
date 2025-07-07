@@ -1,7 +1,7 @@
 {
   "name": "low-code-form",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
   "type": "module",
   "main": "dist/low-code-form.umd.js",
   "module": "dist/low-code-form.es.js",

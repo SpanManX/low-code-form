@@ -567,6 +567,24 @@ function changeLabelWidth(val) {
   }
 }
 
+::v-deep(.el-dialog) {
+  padding: 0 !important;
+
+  .el-dialog__footer {
+    padding: 15px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .el-dialog__header {
+    padding: 15px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .el-dialog__body {
+    padding: 15px
+  }
+}
+
 :deep() {
   .cm-editor {
     height: 100%;
@@ -578,19 +596,6 @@ function changeLabelWidth(val) {
     border-radius: 5px;
     padding: 5px;
   }
-
-  //.el-form--label-left .el-form-item__label {
-  //  text-align: left;
-  //  justify-content: flex-start;
-  //}
-
-  //.el-form--label-top .el-form-item__label {
-  //  display: block;
-  //  height: auto;
-  //  text-align: right;
-  //  margin-bottom: 8px;
-  //  line-height: 22px;
-  //}
 
   .el-header {
     padding: 0;

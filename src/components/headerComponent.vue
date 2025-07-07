@@ -15,7 +15,7 @@ import previewDialog from "../components/previewDialog.vue";
 
 const props = defineProps({
   json: [Object, Array],
-  inline:Boolean
+  inline: Boolean
 })
 const emits = defineEmits(["onDragDrop", 'clearAll']);
 

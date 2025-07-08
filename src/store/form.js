@@ -2,8 +2,9 @@ import {ref} from "vue";
 
 export default {
     formOptions: {
-        labelWidth: '',
-        labelPosition: 'right'
+        labelWidth: null,
+        labelPosition: 'right',
+        inline: false,
     },
     formData: ref({}),
     previewFormData: ref({}),
@@ -12,9 +13,14 @@ export default {
     SET_FORM_OPTIONS({labelWidth, labelPosition}) {
         this.formOptions.labelWidth = labelWidth
         this.formOptions.labelPosition = labelPosition
+
     },
 
-    SET_FORM_DATA(key,data) {
+    SET_FORM_OPTIONS_INIT(inline) {
+        this.formOptions.inline = inline
+    },
+
+    SET_FORM_DATA(key, data) {
         this.formData.value[key] = data
     },
 

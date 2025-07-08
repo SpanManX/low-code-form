@@ -8,10 +8,11 @@
   <preview-dialog ref="previewDialogRef"/>
 </template>
 <script setup>
-import {nextTick, ref} from "vue";
+import {ref} from "vue";
 import {ElMessageBox} from "element-plus";
 import componentDataStore from "../store/componentData";
 import previewDialog from "../components/previewDialog.vue";
+import formStore from "@/store/form.js";
 
 const props = defineProps({
   json: [Object, Array],
@@ -31,20 +32,37 @@ function handleDragOrDrop() {
  * 导出JSON数据
  */
 async function exportJSON() {
-  console.log(JSON.stringify(props.json, null, 2));
+  console.log(formStore.formOptions)
 
-  let jsonStr = JSON.stringify(props.json, null, 2) // 格式化 JSON 数据
-  let blob = new Blob([jsonStr], {type: "application/json"});
-  let a = document.createElement("a");
+  const {labelPosition, labelWidth, inline} = formStore.formOptions
 
-  a.href = URL.createObjectURL(blob);
-  a.download = 'formData';
-  a.click();
+  const obj = {}
+  if (labelPosition !== 'right' && labelPosition !== '') {
+    obj.labelPosition = labelPosition
+  }
 
-  URL.revokeObjectURL(a.href);
-  nextTick(() => {
-    a.remove()
-  })
+  if (labelWidth !== '' && labelWidth !== 'auto') {
+    obj.labelWidth = labelWidth
+  }
+
+  if (inline) {
+    obj.inline = inline
+  }
+
+  console.log(JSON.stringify({formOptions: obj, forms: props.json}, null, 2));
+
+  // let jsonStr = JSON.stringify(props.json, null, 2) // 格式化 JSON 数据
+  // let blob = new Blob([jsonStr], {type: "application/json"});
+  // let a = document.createElement("a");
+  //
+  // a.href = URL.createObjectURL(blob);
+  // a.download = 'formData';
+  // a.click();
+  //
+  // URL.revokeObjectURL(a.href);
+  // nextTick(() => {
+  //   a.remove()
+  // })
 }
 
 function openPreview() {

@@ -25,17 +25,8 @@
         </el-tab-pane>
         <el-tab-pane label="DEMOS" name="second">
           <div class="component-box">
-            <div class="item item-component pointer" @click="createDemo(demo1)">
-              Demo1
-            </div>
-            <div class="item item-component pointer" @click="createDemo(demo2)">
-              Demo2
-            </div>
-            <div class="item item-component pointer" @click="createDemo(demo3)">
-              Demo3
-            </div>
-            <div class="item item-component pointer" @click="createDemo(demo4)">
-              Demo4
+            <div v-for="(item,i) in demo" class="item item-component pointer" @click="createDemo(item)">
+              Demo{{ i + 1 }}
             </div>
           </div>
         </el-tab-pane>
@@ -81,10 +72,10 @@ import Sortable from 'sortablejs';
 import {basicSetup, EditorView} from 'codemirror'
 import {vue} from '@codemirror/lang-vue'
 import {html as beautifyHtml} from 'js-beautify'
+import * as ElementPlus from "element-plus";
 import {ElMessage} from "element-plus";
 import {zhCn} from "element-plus/es/locale/index";
 import {Delete} from '@element-plus/icons-vue'
-import * as ElementPlus from "element-plus";
 import {creatInitSortable, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
 import {removeComponentById} from "../utils/findComponentById.js";
 import {jsonToElementPlusTags} from "../utils/jsonToElementPlusTags.js";
@@ -101,11 +92,7 @@ import componentMapStore from "../store/componentMap.js";
 import teleportStore from "../store/teleport";
 import divStylesStore from "@/store/divStyles.js";
 import templateJson from "../assets/templates";
-import demo1 from "../demo/demo1.js";
-import demo2 from "../demo/demo2.js";
-import demo3 from "../demo/demo3.js";
-import demo4 from "../demo/demo4.js";
-
+import demo from '../demo'
 // 组件列表，用于左侧面板展示
 const componentList = templateJson
 const componentMap = {}
@@ -126,7 +113,7 @@ const formRef = ref(null);
 const templateRef = ref(null);
 const toolbarRef = ref(null);
 const setComponentRef = ref(null);
-const inline = ref(false);
+const inline = ref(formStore.formOptions.inline);
 const labelPosition = ref(formStore.formOptions.labelPosition)
 const labelWidth = ref(formStore.formOptions.labelWidth)
 const isMask = ref(false);
@@ -183,7 +170,7 @@ onMounted(() => {
       })
     },
     updated() {
-      console.log(isExecuted,'updated')
+      console.log(isExecuted, 'updated')
       if (isExecuted) {
         creatInitSortable(schema.value.components, initSortable)
         isExecuted = false;
@@ -253,7 +240,14 @@ function handleClick(e) {
 function createDemo(demoJSON) {
   resetSortable()
   isExecuted = true
-  schema.value.components = JSON.parse(JSON.stringify(demoJSON))
+  console.log(demoJSON.formOptions)
+  formStore.SET_FORM_OPTIONS_INIT(demoJSON.formOptions.inline)
+  formStore.SET_FORM_OPTIONS(demoJSON.formOptions)
+  inline.value = demoJSON.formOptions.inline
+  changeAlignLabel(demoJSON.formOptions.labelPosition)
+  changeLabelWidth(demoJSON.formOptions.labelWidth || null)
+
+  schema.value.components = JSON.parse(JSON.stringify(demoJSON.forms))
 }
 
 /**
@@ -357,7 +351,10 @@ async function copyToClipboard() {
  *              隐藏工具栏，并重置组件引用。
  */
 function inlineChange(val = null) {
-  if (val !== null) inline.value = val;
+  if (val !== null) {
+    inline.value = val
+    formStore.SET_FORM_OPTIONS_INIT(val)
+  }
   const dom = getSelectDOM()
   if (dom) {
     dom.classList.remove('selected-component')

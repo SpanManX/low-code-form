@@ -30,9 +30,9 @@ const rules = formStore.rules;
 
 let app = null
 
-function open({inline = false}) {
+function open() {
   previewVisible.value = true
-  const {labelPosition, labelWidth} = formStore.formOptions
+  const {labelPosition, labelWidth, inline} = formStore.formOptions
 
   nextTick(() => {
     const renderComponent = createRenderer(true)

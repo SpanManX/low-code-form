@@ -1,10 +1,20 @@
 <template>
   <div class="draggable-box">
-    <lowCode></lowCode>
+    <edit-panel v-if="!isPreview"/>
+    <preview-panel :data="data" v-else/>
   </div>
 </template>
 <script setup>
-import lowCode from "./lowCode-sortablejs.vue";
+import editPanel from "./editPanel.vue";
+import previewPanel from "./previewPanel.vue";
+
+const props = defineProps({
+  isPreview: Boolean,
+  data: {
+    type: Object,
+    default: () => ({}),
+  },
+})
 </script>
 <style>
 #app, .el-container {
@@ -14,7 +24,7 @@ import lowCode from "./lowCode-sortablejs.vue";
 
 .draggable-box {
   height: 100%;
-  padding: 10px;
+  padding: 5px;
   box-sizing: border-box;
   background-color: #f0f2f5;
 }

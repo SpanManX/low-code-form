@@ -29,19 +29,16 @@ onMounted(() => {
   const renderComponent = createRenderer()
   const app = createApp({
     render() {
-      const list = schema.value.components // 响应式依赖，用于触发 updated 生命周期
       return h(
           ElementPlus['ElForm'],
           {
             ref: formRef,
-            inline: formStore.formOptions.inline,
             model: formData,
             rules: rules,
-            labelWidth: formStore.formOptions.labelWidth,
-            labelPosition: formStore.formOptions.labelPosition
+            ...formStore.formOptions
           },
           {
-            default: () => list.map(item => {
+            default: () => props.data.forms.map(item => {
               componentDataStore.SET_COMPONENT_DATA_MAP(item.id, item)
               return renderComponent(item)
             })

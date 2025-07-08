@@ -16,7 +16,6 @@ import formStore from "@/store/form.js";
 
 const props = defineProps({
   json: [Object, Array],
-  inline: Boolean
 })
 const emits = defineEmits(["onDragDrop", 'clearAll']);
 
@@ -32,8 +31,6 @@ function handleDragOrDrop() {
  * 导出JSON数据
  */
 async function exportJSON() {
-  console.log(formStore.formOptions)
-
   const {labelPosition, labelWidth, inline} = formStore.formOptions
 
   const obj = {}
@@ -51,7 +48,7 @@ async function exportJSON() {
 
   console.log(JSON.stringify({formOptions: obj, forms: props.json}, null, 2));
 
-  // let jsonStr = JSON.stringify(props.json, null, 2) // 格式化 JSON 数据
+  // let jsonStr = JSON.stringify(obj, null, 2) // 格式化 JSON 数据
   // let blob = new Blob([jsonStr], {type: "application/json"});
   // let a = document.createElement("a");
   //
@@ -66,7 +63,7 @@ async function exportJSON() {
 }
 
 function openPreview() {
-  previewDialogRef.value.open(props.inline, props.json)
+  previewDialogRef.value.open(formStore.formOptions.inline, props.json)
 }
 
 function clearAll() {
@@ -76,6 +73,7 @@ function clearAll() {
     type: 'warning',
   }).then(() => {
     componentDataStore.CLEAR_COMPONENT_DATA_MAP()
+    formStore.INIT_FORM_OPTIONS()
     emits("clearAll")
   }).catch(() => {
   })

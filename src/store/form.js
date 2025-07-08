@@ -1,11 +1,11 @@
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 
 export default {
-    formOptions: {
+    formOptions: reactive({
         labelWidth: null,
         labelPosition: 'right',
         inline: false,
-    },
+    }),
     formData: ref({}),
     previewFormData: ref({}),
     rules: ref({}),
@@ -43,7 +43,11 @@ export default {
     DELETE_RULES(key) {
         delete this.rules.value[key]
     },
-
+    INIT_FORM_OPTIONS() {
+        this.formOptions.labelWidth = null
+        this.formOptions.labelPosition = 'right'
+        this.formOptions.inline = false
+    },
     CLEAR_ALL() {
         this.formData.value = {}
         this.rules.value = {}

@@ -36,7 +36,7 @@
     <!-- 画布 -->
     <el-main class="canvas">
       <el-header height="50px">
-        <headerComponent :json="schema.components" :inline="inline" @on-drag-drop="handleDragDrop"
+        <headerComponent :json="schema.components" @on-drag-drop="handleDragDrop"
                          @clear-all="clearAll"></headerComponent>
       </el-header>
       <div class="canvas-content">
@@ -58,8 +58,7 @@
       <div :class="{'panel-content':activeName1 !== 'second','panel-code':activeName1 === 'second'}">
         <setComponent ref="setComponentRef" :formRef="formRef" :initSortable="initSortable"
                       v-show="activeName1 === 'first'"/>
-        <setForm ref="setFormRef" v-show="activeName1 === 'form'" @changeAlignLabel="changeAlignLabel"
-                 @changeLabelWidth="changeLabelWidth" @inline-change="inlineChange"/>
+        <setForm ref="setFormRef" v-show="activeName1 === 'form'" @inline-change="inlineChange"/>
         <div class="code-editor" ref="templateRef" v-if="activeName1 === 'second'"></div>
       </div>
     </el-aside>
@@ -113,9 +112,6 @@ const formRef = ref(null);
 const templateRef = ref(null);
 const toolbarRef = ref(null);
 const setComponentRef = ref(null);
-const inline = ref(formStore.formOptions.inline);
-const labelPosition = ref(formStore.formOptions.labelPosition)
-const labelWidth = ref(formStore.formOptions.labelWidth)
 const isMask = ref(false);
 
 const formData = formStore.formData;
@@ -153,7 +149,7 @@ onMounted(() => {
           animation: 150,
           setData: setData,
           onStart(evt) {
-            if (inline.value) evt.item.classList.add("inline-block");
+            if (formStore.formOptions.inline) evt.item.classList.add("inline-block");
             evt.item.classList.remove("item-component");
           },
           onEnd(evt) {
@@ -170,7 +166,7 @@ onMounted(() => {
       })
     },
     updated() {
-      console.log(isExecuted, 'updated')
+      // console.log(isExecuted, 'updated')
       if (isExecuted) {
         creatInitSortable(schema.value.components, initSortable)
         isExecuted = false;
@@ -182,11 +178,9 @@ onMounted(() => {
           ElementPlus['ElForm'],
           {
             ref: formRef,
-            inline: inline.value,
             model: formData,
             rules: rules,
-            labelWidth: labelWidth.value,
-            labelPosition: labelPosition.value
+            ...formStore.formOptions
           },
           {
             default: () => [
@@ -243,11 +237,12 @@ function createDemo(demoJSON) {
   console.log(demoJSON.formOptions)
   formStore.SET_FORM_OPTIONS_INIT(demoJSON.formOptions.inline)
   formStore.SET_FORM_OPTIONS(demoJSON.formOptions)
-  inline.value = demoJSON.formOptions.inline
-  changeAlignLabel(demoJSON.formOptions.labelPosition)
-  changeLabelWidth(demoJSON.formOptions.labelWidth || null)
+  setFormRef.value.init(formStore.formOptions)
 
-  schema.value.components = JSON.parse(JSON.stringify(demoJSON.forms))
+  schema.value.components = []
+  nextTick(() => {
+    schema.value.components = JSON.parse(JSON.stringify(demoJSON.forms))
+  })
 }
 
 /**
@@ -290,7 +285,7 @@ function updateVueCode() {
   const htmlStr = beautifyHtml(
       `<template>
 <div>
-    <el-form :model="formData" :rules="rules" :inline="${inline.value}" ${labelPositionJoin} ${labelWidthJoin}>
+    <el-form :model="formData" :rules="rules" :inline="${formStore.formOptions.inline}" ${labelPositionJoin} ${labelWidthJoin}>
     ${(jsonToElementPlusTags(JSON.parse(JSON.stringify(schema.value.components))))}
     </el-form>
 </div>
@@ -343,16 +338,15 @@ async function copyToClipboard() {
 /**
  * @function inlineChange
  *
- * @param {any} val - 要设置的值
+ * @param val - 要设置的值
  *
  * @description 当输入值变化时，调用此函数来更新内联样式并重置相关组件状态。
- *              如果 `val` 不为 `null`，则将 `inline.value` 设置为 `val`。
+ *              如果 `val` 不为 `null`，则将 `inline` 设置为 `val`。
  *              然后获取选择框的 DOM 元素，如果存在，则移除其 `selected-component` 类，
  *              隐藏工具栏，并重置组件引用。
  */
 function inlineChange(val = null) {
   if (val !== null) {
-    inline.value = val
     formStore.SET_FORM_OPTIONS_INIT(val)
   }
   const dom = getSelectDOM()
@@ -406,15 +400,8 @@ function clearAll() {
   schema.value.components = []
   formStore.CLEAR_ALL()
   componentDataStore.componentDataMap = {}
+  setFormRef.value.init(formStore.formOptions)
   inlineChange()
-}
-
-function changeAlignLabel(val) {
-  labelPosition.value = val;
-}
-
-function changeLabelWidth(val) {
-  labelWidth.value = !val ? 'auto' : `${val}px`;
 }
 </script>
 

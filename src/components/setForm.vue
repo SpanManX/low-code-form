@@ -25,23 +25,30 @@
 <script setup>
 import {ref} from "vue";
 import {WarningFilled} from "@element-plus/icons-vue";
-// import {SET_FORM_OPTIONS} from "../store/form.js";
 import formStore from "../store/form.js";
 
-const emits = defineEmits(['changeAlignLabel', 'changeLabelWidth','inlineChange'])
+defineExpose({
+  init
+})
+
+const emits = defineEmits(['inlineChange'])
 
 const radio = ref('right')
 const labelWidth = ref(null)
 const inline = ref(false)
 
+function init(options) {
+  labelWidth.value = options.labelWidth
+  radio.value = options.labelPosition
+  inline.value = options.inline
+}
+
 function changAlignLabel() {
   formStore.SET_FORM_OPTIONS({labelPosition: radio.value, labelWidth: labelWidth.value})
-  emits('changeAlignLabel', radio.value)
 }
 
 function changeLabelWidth() {
   formStore.SET_FORM_OPTIONS({labelPosition: radio.value, labelWidth: labelWidth.value})
-  emits('changeLabelWidth', labelWidth.value)
 }
 
 function inlineChange(val) {

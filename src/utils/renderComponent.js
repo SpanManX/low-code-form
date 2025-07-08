@@ -93,7 +93,6 @@ export function createRenderer(isPreview = false) {
             })
         }
 
-
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
@@ -102,7 +101,8 @@ export function createRenderer(isPreview = false) {
         } else {
             wrappedComponentChild = {
                 default: () => h(ElementPlus[value.componentName], {
-                    ...props, ...(labelWidth ? {'label-width': labelWidth || 'auto'} : {}), ...events
+                    ...props,
+                    ...events
                 }, defaultData)
             }
         }

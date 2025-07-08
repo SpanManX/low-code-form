@@ -32,7 +32,6 @@ let app = null
 
 function open() {
   previewVisible.value = true
-  const {labelPosition, labelWidth, inline} = formStore.formOptions
 
   nextTick(() => {
     const renderComponent = createRenderer(true)
@@ -44,11 +43,9 @@ function open() {
             {
               key: 'preview',
               ref: formRef,
-              inline: inline,
               model: formData,
               rules: rules,
-              labelWidth: labelWidth,
-              labelPosition: labelPosition
+              ...formStore.formOptions
             },
             {
               default: () => list.map(item => {

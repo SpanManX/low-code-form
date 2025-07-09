@@ -328,7 +328,7 @@ ${str}
       changes: {
         from: 0,
         to: vueView.state.doc.length,
-        insert: htmlStr
+        insert: attrHtmlStr
       }
     })
   }

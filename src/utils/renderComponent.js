@@ -58,19 +58,20 @@ export function createRenderer(isPreview = false) {
         }
 
         // 处理子节点
-        let defaultData
-        const slot = {}
-        if (value.componentName === 'template') {
-            return renderStaticChildren([value], 'children')
-        }
-
-        // if (value.componentName !== 'template') {
-        if (value.children) {
-            defaultData = () => value.children.map(child => renderComponent(child))
+        let slots = {}
+        if (value.children && Array.isArray(value.children)) {
+            value.children.forEach(child => {
+                if (child.componentName === 'template' && child.slot) {
+                    slots[child.slot] = () => child.children?.map(renderComponent)
+                } else {
+                    if (!slots.default) slots.default = () => []
+                    // 累加 default slot 子元素
+                    slots.default = ((prev => () => [...prev(), renderComponent(child)])(slots.default))
+                }
+            })
         } else if (value.label) {
-            defaultData = () => value.label
+            slots.default = () => value.label
         }
-        // }
 
 
         // 特殊处理
@@ -88,7 +89,7 @@ export function createRenderer(isPreview = false) {
                 'data-id': value.id,
                 'data-component': value.componentName
             }, [h(ElementPlus[value.componentName], props, {
-                default: defaultData,
+                ...slots,
                 [value.staticChildren[0].slot]: () => renderStaticChildren(value.staticChildren, 'staticChildren')
             })])
         }
@@ -97,21 +98,21 @@ export function createRenderer(isPreview = false) {
 
         if (value.componentName === 'GridComponent') {
             return h(DropItemComponent, {componentData: {...value, componentName}, key: key}, {
-                default: () => h(gridComponent, {isPreview, ...value.props}, defaultData)
+                default: () => h(gridComponent, {isPreview, ...value.props}, slots)
             })
         }
 
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(DivComponent, {isPreview, ...value.props}, defaultData)
+                default: () => h(DivComponent, {isPreview, ...value.props}, slots)
             }
         } else {
             wrappedComponentChild = {
                 default: () => h(ElementPlus[value.componentName], {
                     ...props,
                     ...events
-                }, defaultData)
+                }, slots)
             }
         }
 
@@ -121,8 +122,7 @@ export function createRenderer(isPreview = false) {
                 key: key
             }, wrappedComponentChild)
         } else {
-            console.log(value.componentName, defaultData)
-            return h(ElementPlus[value.componentName] || value.componentName, {...props, ...events}, {default: defaultData, ...slot})
+            return h(ElementPlus[value.componentName] || value.componentName, {...props, ...events}, slots)
         }
     }
 

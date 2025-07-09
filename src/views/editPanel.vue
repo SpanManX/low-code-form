@@ -92,6 +92,7 @@ import teleportStore from "../store/teleport";
 import divStylesStore from "@/store/divStyles.js";
 import templateJson from "../assets/templates";
 import demo from '../demo'
+
 // 组件列表，用于左侧面板展示
 const componentList = templateJson
 const componentMap = {}
@@ -271,7 +272,7 @@ function tabsChange() {
  * 如果 Vue 编辑器尚未创建，则创建新的编辑器并将其添加到指定的父容器中。
  * 如果 Vue 编辑器已存在，则更新其文档内容。
  */
-function updateVueCode() {
+async function updateVueCode() {
   const {labelPosition, labelWidth} = formStore.formOptions
 
   const labelPositionJoin = !labelPosition || (labelPosition === 'right' || labelPosition === '') ? '' : `label-position="${labelPosition}"`
@@ -283,8 +284,7 @@ function updateVueCode() {
     str += `.${key}${divStylesStore.styles[key]}`
   })
 
-  const htmlStr = beautifyHtml(
-      `<template>
+  const htmlStr = `<template>
 <div>
     <el-form :model="formData" :rules="rules" ${inlineJoin} ${labelPositionJoin} ${labelWidthJoin}>
     ${(jsonToElementPlusTags(JSON.parse(JSON.stringify(schema.value.components))))}
@@ -307,13 +307,20 @@ function updateVueCode() {
 }
 
 ${str}
-</style>`,
-      {indent_size: 4, wrap_line_length: 50, end_with_newline: true}
+</style>`
+
+  const attrHtmlStr = beautifyHtml(htmlStr,
+      {
+        wrap_attributes: 'force-aligned', // 强制属性换行并对齐
+        indent_size: 4,
+        wrap_line_length: 50,
+        end_with_newline: true,
+      }
   )
   if (!vueView) {
     vueView = new EditorView({
       parent: templateRef.value,
-      doc: htmlStr,
+      doc: attrHtmlStr,
       extensions: [basicSetup, vue()]
     })
   } else {

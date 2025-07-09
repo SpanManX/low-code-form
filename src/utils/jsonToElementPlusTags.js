@@ -26,14 +26,24 @@ function generateTag(item) {
     // 处理 props，拼接成字符串
     const propsString = Object.entries(item.props || {})
         .map(([key, value]) => {
-            if (isDiv && (key === 'columns' || key === "gap" || key === 'text-align')) return '';
-            if (isElCard && key === 'label') return ''
-            if ((isElRadioGroup || isElCheckboxGroup) && key === 'border') return ''
+            // 合并条件判断，减少代码重复
+            if (
+                (isDiv && (key === 'columns' || key === 'gap' || key === 'text-align')) ||
+                (isElCard && key === 'label') ||
+                ((isElRadioGroup || isElCheckboxGroup) && key === 'border') ||
+                key === 'rules'
+            ) {
+                return '';
+            }
+            let attrString = value
+            if(typeof value === 'object'){
+                attrString = JSON.stringify(value).replace(/"/g, "'")
+            }
+            const attrPrefix = typeof value === 'boolean' || typeof value === 'number' || typeof value === 'object' ? ':' : '';
 
-            const str = typeof value === 'boolean' || typeof value === 'number' ? ':' : ''
-            return key === 'rules' ? '' : `${str}${key}="${value}"`
+            return `${attrPrefix}${key}="${attrString}"`;
         })
-        .join(' ')
+        .join(' ');
 
     let onString = ''
     if (item.on && item.componentName !== 'ElFormItem') {

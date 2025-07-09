@@ -7,6 +7,7 @@ import teleportStore from "@/store/teleport.js";
 import componentMapStore from "@/store/componentMap.js";
 import {showToolbar} from "./showToolbar.js";
 import {generateRandomId} from "./generateRandomId.js";
+import {deepClone} from "@/utils/deepClone.js";
 
 // 组件 schema 和代码
 export const schema = ref({
@@ -93,7 +94,8 @@ export function createSortableManager() {
         }
 
         const itemId = event.originalEvent.dataTransfer.getData('itemId');
-        let compConfig = JSON.parse(JSON.stringify(componentMapStore.componentMap[type]));
+        // let compConfig = JSON.parse(JSON.stringify(componentMapStore.componentMap[type]));
+        let compConfig = deepClone(componentMapStore.componentMap[type])
         if (!compConfig) return;
 
         let newComp = createComponent(compConfig, itemId); // 创建新组件配置对象

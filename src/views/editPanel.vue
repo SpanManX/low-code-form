@@ -167,7 +167,7 @@ onMounted(() => {
       })
     },
     updated() {
-      // console.log(isExecuted, 'updated')
+      console.log(isExecuted, 'updated')
       if (isExecuted) {
         creatInitSortable(schema.value.components, initSortable)
         isExecuted = false;
@@ -235,15 +235,14 @@ function handleClick(e) {
 function createDemo(demoJSON) {
   resetSortable()
   isExecuted = true
-  console.log(demoJSON.formOptions)
   formStore.SET_FORM_OPTIONS_INIT(demoJSON.formOptions.inline)
   formStore.SET_FORM_OPTIONS(demoJSON.formOptions)
   setFormRef.value.init(formStore.formOptions)
 
-  schema.value.components = []
-  nextTick(() => {
-    schema.value.components = JSON.parse(JSON.stringify(demoJSON.forms))
-  })
+  // schema.value.components = []
+  // nextTick(() => {
+  schema.value.components = JSON.parse(JSON.stringify(demoJSON.forms))
+  // })
 }
 
 /**

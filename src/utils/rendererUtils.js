@@ -34,7 +34,7 @@ export function setSelectDOM(dom) {
  * @param parentId 父组件的ID
  * @returns 返回创建的组件对象
  */
-export function createComponent(compConfig, itemId, parentId) {
+export function createComponent(compConfig, itemId, parentId = null) {
     const newComp = {
         ...compConfig,
         id: itemId,

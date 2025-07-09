@@ -72,15 +72,15 @@ export const GridComponentConfigProps = [
 // div
 export const DivComponentConfigProps = [
     {key: 'text-align', values: ['left', 'right', 'center'], name: '位置'},
+    {key: 'padding', value: '', name: '内边距', tip: '例如：10px 或 10px 20px 或 10px 20px 30px 40px'},
 ];
 
 // button
 export const ElButtonConfigProps = [
-    // {key: 'button-total', value: 1, name: '创建按钮'},
     {key: 'label', value: '', name: '按钮文字'},
     {key: 'type', values: ['primary', 'success', 'info', 'warning', 'danger'], name: '类型'},
-    {key: 'round', value: false, name: '圆角按钮'},
-    {key: 'plain', value: false, name: '朴素按钮'},
+    {key: 'round', value: false, name: '圆角按钮',tip: '仅在“按钮文字”不为“文字按钮”时有效'},
+    {key: 'plain', value: false, name: '朴素按钮',tip: '仅在“按钮文字”不为“文字按钮”时有效'},
     {key: 'text', value: false, name: '文字按钮'},
 ];
 

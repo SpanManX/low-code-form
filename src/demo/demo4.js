@@ -173,12 +173,17 @@ export default {
             },
             "staticChildren": [
                 {
-                    "componentName": "div",
-                    "slot": "header",
-                    "props": {
-                        "class": "card-header"
-                    },
-                    "label": "卡片标题"
+                    "componentName": 'template',
+                    "slot": 'header',
+                    "staticChildren": [
+                        {
+                            "componentName": "div",
+                            "props": {
+                                "class": "card-header"
+                            },
+                            "label": "卡片标题",
+                        }
+                    ]
                 }
             ],
             "children": [

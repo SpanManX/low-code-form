@@ -16,7 +16,6 @@ import componentDataStore from "@/store/componentData.js";
 export function createRenderer(isPreview = false) {
     const formData = !isPreview ? formStore.formData : formStore.previewFormData // 表单数据（用于 v-model）
     const names = noNeedBind                                     // 不需要双向绑定的组件名列表
-    const {labelWidth} = formStore.formOptions            // 表单 label 宽度
 
     /**
      * 渲染组件
@@ -60,11 +59,19 @@ export function createRenderer(isPreview = false) {
 
         // 处理子节点
         let defaultData
+        const slot = {}
+        if (value.componentName === 'template') {
+            return renderStaticChildren([value], 'children')
+        }
+
+        // if (value.componentName !== 'template') {
         if (value.children) {
             defaultData = () => value.children.map(child => renderComponent(child))
         } else if (value.label) {
             defaultData = () => value.label
         }
+        // }
+
 
         // 特殊处理
         if (value.componentName === 'ElTabPane') {
@@ -81,7 +88,8 @@ export function createRenderer(isPreview = false) {
                 'data-id': value.id,
                 'data-component': value.componentName
             }, [h(ElementPlus[value.componentName], props, {
-                default: defaultData, header: () => renderStaticChildren(value.staticChildren)
+                default: defaultData,
+                [value.staticChildren[0].slot]: () => renderStaticChildren(value.staticChildren, 'staticChildren')
             })])
         }
 
@@ -107,13 +115,14 @@ export function createRenderer(isPreview = false) {
             }
         }
 
-        if (useWrappedNames.indexOf(value.componentName) > -1) {
+        if (useWrappedNames.indexOf(value.componentName) > -1 && !value.parentId) { // 包裹组件
             return h(DropItemComponent, {
                 componentData: {...value, componentName},
                 key: key
             }, wrappedComponentChild)
         } else {
-            return h(ElementPlus[value.componentName], {...props, ...events}, defaultData)
+            console.log(value.componentName, defaultData)
+            return h(ElementPlus[value.componentName] || value.componentName, {...props, ...events}, {default: defaultData, ...slot})
         }
     }
 

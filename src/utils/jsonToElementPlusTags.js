@@ -19,11 +19,16 @@ export function toKebabCase(str) {
  */
 function generateTag(item) {
     const isDiv = item.componentName === 'DivComponent' || item.componentName === 'GridComponent'
+    const isElCard = item.componentName === 'ElCard'
+    const isElRadioGroup = item.componentName === 'ElRadioGroup'
+    const isElCheckboxGroup = item.componentName === 'ElCheckboxGroup'
 
     // 处理 props，拼接成字符串
     const propsString = Object.entries(item.props || {})
         .map(([key, value]) => {
             if (isDiv && (key === 'columns' || key === "gap" || key === 'text-align')) return '';
+            if (isElCard && key === 'label') return ''
+            if ((isElRadioGroup || isElCheckboxGroup) && key === 'border') return ''
 
             const str = typeof value === 'boolean' || typeof value === 'number' ? ':' : ''
             return key === 'rules' ? '' : `${str}${key}="${value}"`

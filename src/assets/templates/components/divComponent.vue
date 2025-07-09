@@ -17,27 +17,25 @@ const props = defineProps({
   },
   'text-align': {
     type: String,
+  },
+  padding: {
+    type: String,
   }
 })
 
 const style = computed(() => {
-  if (props['text-align']) {
-    const obj = {
-      ...props
-    }
-    const className = obj.class
-    delete obj.class
-    divStylesStore.SET_STYLES(className, obj)
+  const obj = {
+    ...props
   }
-  return props
+  const className = obj.class
+  delete obj.class
+  delete obj.isPreview
+  divStylesStore.SET_STYLES(className, obj)
+  return obj
 })
 
 </script>
 <style scoped lang="scss">
-.block-element {
-
-}
-
 .div-border {
   min-height: 50px;
   border: 1px dashed #ecd55e;

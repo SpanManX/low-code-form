@@ -20,6 +20,8 @@ export default [
     templateJson.elSelectJson(),
     templateJson.elDatePickerJson(),
     templateJson.elSwitchJson(),
+    {title: '高级组件'},
+    templateJson.elUploadJson(),
     {title: '其他'},
     templateJson.elDivider()
 ]

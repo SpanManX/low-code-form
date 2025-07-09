@@ -1,14 +1,12 @@
 <template>
-  <div class="preview-panel">
-
-  </div>
+  <div id="preview-panel"></div>
 </template>
 <script setup>
-import {createApp, createRenderer, h, onMounted, ref} from "vue";
+import {createApp, h, onMounted, ref} from "vue";
 import * as ElementPlus from "element-plus";
 import {zhCn} from "element-plus/es/locale/index";
+import {createRenderer} from "../utils/renderComponent.js";
 import componentDataStore from "../store/componentData";
-import {createSortableManager} from "@/utils/sortableManager.js";
 import formStore from "@/store/form.js";
 
 const props = defineProps({
@@ -19,14 +17,9 @@ const formRef = ref(null);
 const formData = formStore.formData;
 const rules = formStore.rules;
 
-// 构建 sortable 管理器
-const {
-  schema,
-} = createSortableManager()
-
 // 初始化 SortableJS
 onMounted(() => {
-  const renderComponent = createRenderer()
+  const renderComponent = createRenderer(true)
   const app = createApp({
     render() {
       return h(
@@ -47,11 +40,11 @@ onMounted(() => {
     }
   }).use(ElementPlus, {locale: zhCn});
 
-  app.mount('#canvas-drop')
+  app.mount('#preview-panel')
 })
 </script>
 <style scoped lang="scss">
-.preview-panel {
+#preview-panel {
   height: 100%;
 }
 </style>

@@ -30,6 +30,12 @@
         <el-form-item
             v-if="shouldShowItem(item)"
             :label="item.name">
+          <template #label v-if="item.tip">
+            {{item.name}}
+            <el-icon class="form-item-tip" :title="item.tip">
+              <WarningFilled/>
+            </el-icon>
+          </template>
           <template v-if="item.values">
             <el-select v-model="useFormCurrentData.props[item.key]" placeholder="请选择"
                        @change="selectChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"
@@ -91,7 +97,7 @@
 <script setup>
 import {computed, nextTick, reactive, ref} from "vue";
 import {Delete, Download, Upload, WarningFilled} from '@element-plus/icons-vue'
-import * as configProps from "@/assets/templates/configProps.js";
+import * as configProps from "@/config/configProps.js";
 import {getSelectDOM} from "../utils/rendererUtils.js";
 import formStore from "../store/form.js";
 import {showToolbar} from "../utils/showToolbar.js";
@@ -138,7 +144,7 @@ function select(val) {
   options.value = []  // 初始化options数组，用于存储选项数据
 
   // 如果有子组件，则设置 options 数据
-  if ((val.children && val.children[0]) && !val.parentId) {
+  if ((val.children && val.children[0] && val.children[0]?.componentName !== 'ElUpload') && !val.parentId) {
     let arr
     if (joinTag.indexOf(val.componentName) > -1) {
       arr = val.children
@@ -171,9 +177,11 @@ function reset() {
 
 function inputChange(val, key, name) {
   if (name === 'ElCard') {
-    currentData.value.staticChildren[0].label = val
+    currentData.value.staticChildren[0].staticChildren[0].label = val
+    return
   } else if (name === 'ElButton') {
     useFormCurrentData.value.label = val
+    return;
   }
   if(name === 'ElDivider'){
     useFormCurrentData.value[key] = val
@@ -193,13 +201,10 @@ function labelTextChange(val) {
 }
 
 function labelWidthChange(val) {
-  // const dom = getSelectDOM()
   if (!val) {
     delete currentData.value.props['label-width']
-    // dom.querySelector('.el-form-item__label').style.width = !formStore.labelWidth || formStore.labelWidth === 'auto' ? 'auto' : `${formStore.labelWidth}px`
   } else {
     currentData.value.props['label-width'] = Number(val)
-    // dom.querySelector('.el-form-item__label').style.width = `${val}px`
   }
 }
 

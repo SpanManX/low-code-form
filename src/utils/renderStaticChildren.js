@@ -1,12 +1,12 @@
 import {h} from "vue";
 import * as ElementPlus from 'element-plus'
 
-// 辅助函数：递归渲染 staticChildren
-export function renderStaticChildren(children) {
+// 辅助函数：递归渲染[key]
+export function renderStaticChildren(children,key) {
     return children.map(child => {
         // 跳过 template 标签，直接渲染其子节点
-        if (child.componentName === 'template') {
-            return renderStaticChildren(child.staticChildren );
+        if (child.componentName === 'template' && child[key]) {
+            return renderStaticChildren(child[key] );
         }
 
         // 渲染普通组件或 HTML 元素
@@ -16,8 +16,8 @@ export function renderStaticChildren(children) {
                 class: child.props?.class || ''
             };
 
-            const childNodes = child.staticChildren
-                ? renderStaticChildren(child.staticChildren)
+            const childNodes = child[key]
+                ? renderStaticChildren(child[key])
                 : undefined;
 
             return h(

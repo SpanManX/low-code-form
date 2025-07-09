@@ -14,12 +14,17 @@ export default () => {
         },
         staticChildren: [
             {
-                "componentName": "div",
+                componentName: 'template',
                 slot: 'header',
-                props: {
-                    class: "card-header"
-                },
-                ...props
+                staticChildren: [
+                    {
+                        "componentName": "div",
+                        props: {
+                            class: "card-header"
+                        },
+                        ...props,
+                    }
+                ]
             }
         ],
         children: [],

@@ -1,13 +1,12 @@
 <template>
-  <div class="draggable-box">
-    <index></index>
-  </div>
+  <index :data="demo4" :isPreview="false"></index>
 </template>
 <script setup>
 import index from "./views";
+import demo4 from './demo/demo4.js'
 </script>
 <style>
-html, body {
+#app, html, body {
   height: 100%;
   margin: 0;
 }

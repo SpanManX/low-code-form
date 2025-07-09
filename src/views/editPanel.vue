@@ -274,8 +274,9 @@ function tabsChange() {
 function updateVueCode() {
   const {labelPosition, labelWidth} = formStore.formOptions
 
-  const labelPositionJoin = labelPosition === 'right' || labelPosition === '' ? '' : `label-position="${labelPosition}"`
+  const labelPositionJoin = !labelPosition || (labelPosition === 'right' || labelPosition === '') ? '' : `label-position="${labelPosition}"`
   const labelWidthJoin = labelWidth === 'auto' || !labelWidth ? '' : `label-width="${labelWidth}"`
+  const inlineJoin = formStore.formOptions.inline ? `:inline="${formStore.formOptions.inline}"` : ''
 
   let str = ''
   Object.keys(divStylesStore.styles).forEach((key) => {
@@ -285,7 +286,7 @@ function updateVueCode() {
   const htmlStr = beautifyHtml(
       `<template>
 <div>
-    <el-form :model="formData" :rules="rules" :inline="${formStore.formOptions.inline}" ${labelPositionJoin} ${labelWidthJoin}>
+    <el-form :model="formData" :rules="rules" ${inlineJoin} ${labelPositionJoin} ${labelWidthJoin}>
     ${(jsonToElementPlusTags(JSON.parse(JSON.stringify(schema.value.components))))}
     </el-form>
 </div>
@@ -594,22 +595,6 @@ function clearAll() {
     display: inline-flex;
   }
 
-  .el-form--inline .drop-item:not(.drop-item-card):not(.drop-item-el-tabs):not(.drop-item-el-button):not(.drop-item-el-divider):not(.drop-item-div-component) {
-    display: inline-flex;
-  }
-
-  .drop-item-el-button {
-    display: inline-block;
-  }
-
-  .drop-item-el-button + .drop-item-el-button {
-    margin-left: 12px;
-  }
-
-  .el-date-editor.el-input {
-    width: 100%;
-  }
-
   .form-item-tip {
     color: coral;
     cursor: pointer;
@@ -628,19 +613,6 @@ function clearAll() {
 
   .drop-item-tabs, .drop-item-card {
     width: 100%;
-  }
-
-  .drop-item {
-    box-sizing: border-box;
-    margin-bottom: 10px;
-    //.el-tabs, .el-card, .el-table {
-    //  margin-bottom: 10px;
-    //}
-  }
-
-  .drop-item-button {
-    margin-right: 8px;
-    margin-left: 8px;
   }
 
   .drop-zone-box .el-tabs__content {

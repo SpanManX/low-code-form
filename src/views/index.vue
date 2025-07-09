@@ -1,5 +1,5 @@
 <template>
-  <div class="draggable-box">
+  <div class="low-code-form">
     <edit-panel v-if="!isPreview"/>
     <preview-panel :data="data" v-else/>
   </div>
@@ -16,16 +16,39 @@ const props = defineProps({
   },
 })
 </script>
-<style>
-#app, .el-container {
+<style lang="scss" scoped>
+.el-container {
   height: 100%;
   margin: 0;
 }
 
-.draggable-box {
+.low-code-form {
   height: 100%;
   padding: 5px;
   box-sizing: border-box;
   background-color: #f0f2f5;
+}
+
+:deep() {
+  .el-form--inline .drop-item:not(.drop-item-card):not(.drop-item-el-tabs):not(.drop-item-el-button):not(.drop-item-el-divider):not(.drop-item-div-component) {
+    display: inline-flex;
+  }
+
+  .drop-item-el-button {
+    display: inline-block;
+  }
+
+  .drop-item-el-button + .drop-item-el-button {
+    margin-left: 12px;
+  }
+
+  .drop-item {
+    box-sizing: border-box;
+    margin-bottom: 10px;
+  }
+
+  .el-date-editor.el-input {
+    width: 100%;
+  }
 }
 </style>

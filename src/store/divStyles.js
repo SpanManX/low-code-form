@@ -10,8 +10,12 @@ export default {
     },
 
     styleObjectToCssString(obj) {
+        obj['margin-bottom'] = '10px';
         return Object.entries(obj)
             .map(([key, value]) => {
+                if(value === undefined || value === null) {
+                    return '';
+                }
                 // 将驼峰命名转换为连字符命名
                 const cssKey = key.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
                 // 去除 value 末尾多余逗号，替换为分号

@@ -71,7 +71,7 @@ export const GridComponentConfigProps = [
 
 // div
 export const DivComponentConfigProps = [
-    {key: 'text-align', values: ['left', 'right', 'center'], name: '位置'},
+    {key: 'textAlign', values: ['left', 'right', 'center'], name: '位置'},
     {key: 'padding', value: '', name: '内边距', tip: '例如：10px 或 10px 20px 或 10px 20px 30px 40px'},
 ];
 

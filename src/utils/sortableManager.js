@@ -113,6 +113,10 @@ export function createSortableManager() {
                 id: generateRandomId(),
                 children: [newComp]
             }
+        }else {
+            if(newComp.componentName === 'DivComponent') {
+                newComp.props.class.push(`${newComp.props.class[0]}${newComp.id}`)
+            }
         }
 
         if (dropTarget) { // 如果存在目标元素，则添加到子组件列表中

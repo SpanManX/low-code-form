@@ -17,7 +17,7 @@ const props = defineProps({
   isPreview: {
     type: Boolean,
   },
-  'text-align': {
+  textAlign: {
     type: String,
   },
   padding: {
@@ -29,7 +29,7 @@ const newClass = ref('')
 
 const style = computed(() => {
   const obj = {
-    'text-align': props['text-align'],
+    textAlign: props.textAlign,
     padding: props.padding,
   }
   // const className = obj.class
@@ -38,7 +38,7 @@ const style = computed(() => {
   // delete obj.id
   // newClass.value = divStylesStore.GET_STYLE_NEW_KEY(props.class)
   // console.log(newClass.value)
-  divStylesStore.SET_STYLES(props.class, obj)
+  divStylesStore.SET_STYLES(props.class.split(' ')[1], obj)
   return obj
 })
 

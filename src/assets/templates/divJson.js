@@ -7,7 +7,7 @@ export default () => {
         noUseForm: true,
         text: '块元素',
         props: {
-            class:'block-element'
+            class:['block-element']
         },
         children: []
     }

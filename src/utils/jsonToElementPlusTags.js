@@ -28,7 +28,7 @@ function generateTag(item) {
         .map(([key, value]) => {
             // 合并条件判断，减少代码重复
             if (
-                (isDiv && (key === 'columns' || key === 'gap' || key === 'text-align')) ||
+                (isDiv && (key === 'columns' || key === 'gap' || key === 'textAlign')) ||
                 (isElCard && key === 'label') ||
                 ((isElRadioGroup || isElCheckboxGroup) && key === 'border') ||
                 key === 'rules' || key === 'icon'
@@ -37,10 +37,12 @@ function generateTag(item) {
             }
             let attrString = value
             let attrKey = key
-            if(typeof value === 'object'){
+            if (typeof value === 'object' && !Array.isArray(value)) {
                 attrString = JSON.stringify(value).replace(/"/g, "'")
+            } else if (Array.isArray(value)) {
+                attrString = value.join(' ');
             }
-            if(key === 'iconStyle'){
+            if (key === 'iconStyle') {
                 attrKey = 'style';
             }
             const attrPrefix = typeof value === 'boolean' || typeof value === 'number' || typeof value === 'object' ? ':' : '';

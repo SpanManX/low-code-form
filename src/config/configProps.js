@@ -101,6 +101,6 @@ export const ElUploadConfigProps = [
     {key: 'accept', value: '', name: '文件类型', tip: '例如：.jpg,.jpeg,.png,.gif'},
     {key: 'list-type', values: ['text', 'picture-card', 'picture'], name: '列表类型'},
     {key: 'text', value: false, name: '文字按钮'},
-    {key: 'size', value: 0, name: '图标大小'},
+    {key: 'fontSize', value: 0, name: '图标大小'},
     {key: 'color', value: '', name: '图标颜色',tip: '例如：#409EFF 或 red'},
 ];

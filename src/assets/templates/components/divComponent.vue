@@ -1,13 +1,15 @@
 <template>
-  <div class="element" :class="{[props.class]:props.class,['div-border']:!isPreview}" :style="style">
+  <div class="element" :class="{[props.class]:props.class,['div-border']:!isPreview}"
+       :style="style">
     <slot></slot>
   </div>
 </template>
 <script setup>
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import divStylesStore from "@/store/divStyles.js";
 
 const props = defineProps({
+  id: String,
   class: {
     type: String,
     required: true,
@@ -23,14 +25,20 @@ const props = defineProps({
   }
 })
 
+const newClass = ref('')
+
 const style = computed(() => {
   const obj = {
-    ...props
+    'text-align': props['text-align'],
+    padding: props.padding,
   }
-  const className = obj.class
-  delete obj.class
-  delete obj.isPreview
-  divStylesStore.SET_STYLES(className, obj)
+  // const className = obj.class
+  // delete obj.class
+  // delete obj.isPreview
+  // delete obj.id
+  // newClass.value = divStylesStore.GET_STYLE_NEW_KEY(props.class)
+  // console.log(newClass.value)
+  divStylesStore.SET_STYLES(props.class, obj)
   return obj
 })
 

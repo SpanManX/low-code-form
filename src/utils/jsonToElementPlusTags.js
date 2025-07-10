@@ -31,17 +31,21 @@ function generateTag(item) {
                 (isDiv && (key === 'columns' || key === 'gap' || key === 'text-align')) ||
                 (isElCard && key === 'label') ||
                 ((isElRadioGroup || isElCheckboxGroup) && key === 'border') ||
-                key === 'rules' || key === 'iconStyle' || key === 'icon'
+                key === 'rules' || key === 'icon'
             ) {
                 return '';
             }
             let attrString = value
+            let attrKey = key
             if(typeof value === 'object'){
                 attrString = JSON.stringify(value).replace(/"/g, "'")
             }
+            if(key === 'iconStyle'){
+                attrKey = 'style';
+            }
             const attrPrefix = typeof value === 'boolean' || typeof value === 'number' || typeof value === 'object' ? ':' : '';
 
-            return `${attrPrefix}${key}="${attrString}"`;
+            return `${attrPrefix}${attrKey}="${attrString}"`;
         })
         .join(' ');
 

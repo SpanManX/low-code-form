@@ -1,8 +1,21 @@
 export default {
-    styles:{},
+    styles: {},
 
-    SET_STYLES(key,value) {
+    SET_STYLES(key, value) {
         this.styles[key] = `{\n${this.styleObjectToCssString(value)}\n}`;
+    },
+
+    GET_STYLE_NEW_KEY(key) {
+        let newKey = key;
+        let counter = 1;
+
+        // 如果 key 已存在，则自动递增后缀直到找到未被使用的 key
+        while (this.styles.hasOwnProperty(newKey)) {
+            newKey = `${key}${counter}`;
+            counter++;
+        }
+
+        return newKey
     },
 
     DELETE_STYLES(key) {
@@ -10,10 +23,9 @@ export default {
     },
 
     styleObjectToCssString(obj) {
-        obj['margin-bottom'] = '10px';
         return Object.entries(obj)
             .map(([key, value]) => {
-                if(value === undefined || value === null) {
+                if (value === undefined || value === null) {
                     return '';
                 }
                 // 将驼峰命名转换为连字符命名
@@ -24,6 +36,7 @@ export default {
                     : value;
                 return `${cssKey}: ${cleanValue};`;
             })
+            .filter(Boolean)
             .join('\n');
     }
 }

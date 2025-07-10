@@ -297,7 +297,7 @@ async function updateVueCode() {
   const formData = ref(${JSON.stringify(formData.value, null, 2)})
 <\/script>
 <style scoped>
-.el-tabs, .el-card, .el-table {
+.el-tabs, .el-card, .el-table,.block-element {
     margin-bottom: 10px;
 }
 

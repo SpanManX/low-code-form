@@ -15,16 +15,17 @@ const props = defineProps({
   color: {
     type: String,
   },
-  size: {
+  fontSize: {
     type: [Number, String],
     default: 16,
   }
 })
 
 const style = computed(() => {
+  console.log('111111111')
   return {
     color: props.color,
-    fontSize: `${props.size || 16}px`,
+    fontSize: `${props.fontSize || 16}px`,
   }
 })
 

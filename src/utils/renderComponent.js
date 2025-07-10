@@ -8,6 +8,7 @@ import formStore from "../store/form.js";
 import {noNeedBind, useWrappedNames} from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";
 import componentDataStore from "@/store/componentData.js";
+import divStylesStore from "@/store/divStyles.js";
 
 /**
  * 创建渲染器函数
@@ -82,7 +83,7 @@ export function createRenderer({isPreview = false, callback}) {
 
         // 处理 icon 属性，将其转换为组件
         if (props.icon) {
-            props.icon = h(iconComponent, {icon: props.icon, ...props.iconStyle},{})
+            props.icon = h(iconComponent, {icon: props.icon, ...props.iconStyle}, {})
         }
 
         const key = value.id
@@ -110,7 +111,7 @@ export function createRenderer({isPreview = false, callback}) {
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(divComponent, {isPreview, ...value.props}, slots)
+                default: () => h(divComponent, {isPreview, ...value.props,id:value.id}, slots)
             }
         } else {
             wrappedComponentChild = {

@@ -165,7 +165,7 @@ const switchDynamicPropsModel = computed(() => {
 const numberDynamicPropsModel = computed(() => {
   return (item) => {
     // 根据条件返回不同的对象
-    if (useFormCurrentData.value.componentName === 'ElUpload' && item.key === 'size') {
+    if (useFormCurrentData.value.componentName === 'ElUpload' && item.key === 'fontSize') {
       return useFormCurrentData.value.children[0].props.iconStyle;
     }
     // 默认情况

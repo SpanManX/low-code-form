@@ -111,7 +111,7 @@ export function createRenderer({isPreview = false, callback}) {
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(divComponent, {isPreview, ...value.props,id:value.id}, slots)
+                default: () => h(divComponent, {isPreview, ...value.props}, slots)
             }
         } else {
             wrappedComponentChild = {

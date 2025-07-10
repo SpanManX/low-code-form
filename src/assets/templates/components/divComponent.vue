@@ -9,7 +9,6 @@ import {computed, ref} from "vue";
 import divStylesStore from "@/store/divStyles.js";
 
 const props = defineProps({
-  id: String,
   class: {
     type: String,
     required: true,
@@ -37,7 +36,6 @@ const style = computed(() => {
   // delete obj.isPreview
   // delete obj.id
   // newClass.value = divStylesStore.GET_STYLE_NEW_KEY(props.class)
-  // console.log(newClass.value)
   divStylesStore.SET_STYLES(props.class.split(' ')[1], obj)
   return obj
 })

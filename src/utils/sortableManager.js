@@ -100,16 +100,16 @@ export function createSortableManager() {
 
         let newComp = createComponent(compConfig, itemId); // 创建新组件配置对象
         if (!newComp.noUseForm) {
-            const name = newComp.componentName
+            // const name = newComp.componentName
             const id = newComp.id
             newComp = {
                 componentName: 'ElFormItem',
                 props: {label: newComp.text, prop: `field${id}`},
-                on: {
-                    onClick: (e) => {
-                        if (name !== 'ElRadioGroup' && name !== 'ElCheckboxGroup') e.preventDefault();
-                    }
-                },
+                // on: {
+                //     onClick: (e) => {
+                //         if (name !== 'ElRadioGroup' && name !== 'ElCheckboxGroup') e.preventDefault();
+                //     }
+                // },
                 id: generateRandomId(),
                 children: [newComp]
             }

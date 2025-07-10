@@ -1,7 +1,7 @@
 <template>
   <div class="low-code-form">
-    <edit-panel v-if="!isPreview"/>
-    <preview-panel :data="data" v-else/>
+    <edit-panel v-if="!isPreview" style="background-color: #f0f2f5"/>
+    <preview-panel :data="data" :callback="callback" v-else/>
   </div>
 </template>
 <script setup>
@@ -14,6 +14,7 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  callback: {type: Function},
 })
 </script>
 <style lang="scss" scoped>
@@ -26,7 +27,6 @@ const props = defineProps({
   height: 100%;
   padding: 5px;
   box-sizing: border-box;
-  background-color: #f0f2f5;
 }
 
 :deep() {

@@ -31,7 +31,7 @@
             v-if="shouldShowItem(item)"
             :label="item.name">
           <template #label v-if="item.tip">
-            {{item.name}}
+            {{ item.name }}
             <el-icon class="form-item-tip" :title="item.tip">
               <WarningFilled/>
             </el-icon>
@@ -46,12 +46,13 @@
           <template v-else>
             <el-switch
                 v-if="typeof item.value === 'boolean'"
-                v-model="useFormCurrentData.props[item.key]"
+                v-model="switchDynamicPropsModel(item)[item.key]"
                 @change="switchChange(item.key,useFormCurrentData.props[item.key])"/>
             <el-input-number v-else-if="typeof item.value === 'number'"
-                             v-model="useFormCurrentData.props[item.key]"
-                             @change="numberChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"/>
-            <el-input v-else v-model="useFormCurrentData.props[item.key]" :placeholder="`请输入${item.name}`"
+                             v-model="numberDynamicPropsModel(item)[item.key]"
+                             @change="numberChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"
+                             :min="0"/>
+            <el-input v-else v-model="inputDynamicPropsModel(item)[item.key]" :placeholder="`请输入${item.name}`"
                       :clearable="item.clearable"
                       @change="inputChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"/>
           </template>
@@ -124,8 +125,53 @@ const notGetChildren = ['ElCard', 'ElButton', 'ElDivider', 'GridComponent', 'Div
 
 const isShow = computed(() => {
   if (currentData.value) return !currentData.value.noUseForm;
-  else false
+  else return false
 })
+
+const inputDynamicPropsModel = computed(() => {
+  return (item) => {
+    // 根据条件返回不同的对象
+    if (useFormCurrentData.value.componentName === 'ElUpload') {
+      if (item.name === '提示内容') {
+        return useFormCurrentData.value.children[1].children[0];
+      } else if (item.name === '按钮文字') {
+        return useFormCurrentData.value.children[0];
+      } else if (item.key === 'text') {
+        return useFormCurrentData.value.children[0].props;
+      } else if (item.key === 'color') {
+        return useFormCurrentData.value.children[0].props.iconStyle;
+      }
+    } else if (useFormCurrentData.value.componentName === 'ElCard') {
+      return useFormCurrentData.value.staticChildren[0].staticChildren[0];
+    } else if (useFormCurrentData.value.componentName === 'ElButton' || useFormCurrentData.value.componentName === 'ElDivider') {
+      return useFormCurrentData.value
+    }
+    // 默认情况
+    return useFormCurrentData.value.props;
+  };
+});
+
+const switchDynamicPropsModel = computed(() => {
+  return (item) => {
+    // 根据条件返回不同的对象
+    if (useFormCurrentData.value.componentName === 'ElUpload' && item.key === 'text') {
+      return useFormCurrentData.value.children[0].props;
+    }
+    // 默认情况
+    return useFormCurrentData.value.props;
+  };
+});
+
+const numberDynamicPropsModel = computed(() => {
+  return (item) => {
+    // 根据条件返回不同的对象
+    if (useFormCurrentData.value.componentName === 'ElUpload' && item.key === 'size') {
+      return useFormCurrentData.value.children[0].props.iconStyle;
+    }
+    // 默认情况
+    return useFormCurrentData.value.props;
+  };
+});
 
 // 选中组件触发
 function select(val) {
@@ -176,16 +222,7 @@ function reset() {
 }
 
 function inputChange(val, key, name) {
-  if (name === 'ElCard') {
-    currentData.value.staticChildren[0].staticChildren[0].label = val
-    return
-  } else if (name === 'ElButton') {
-    useFormCurrentData.value.label = val
-    return;
-  }
-  if(name === 'ElDivider'){
-    useFormCurrentData.value[key] = val
-  }
+
 }
 
 function numberChange(val, key, name) {
@@ -293,7 +330,6 @@ function selectChange(key, key1, name) {
 
   if (key1 === 'type' && name === 'ElDatePicker') {
     formStore.SET_FORM_DATA([`field${currentData.value.children[0].id}`], null)
-    return
   }
 }
 
@@ -318,7 +354,6 @@ function switchChange(key, bool) {
         delete item.props['border']
       })
     }
-    return
   }
 }
 

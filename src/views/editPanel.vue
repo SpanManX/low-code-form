@@ -134,7 +134,7 @@ const {
 
 // 初始化 SortableJS
 onMounted(() => {
-  const renderComponent = createRenderer()
+  const renderComponent = createRenderer({})
   const app = createApp({
     mounted() {
       nextTick(() => {

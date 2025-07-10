@@ -11,6 +11,7 @@ import formStore from "@/store/form.js";
 
 const props = defineProps({
   data: {type: Object},
+  callback: {type: Function},
 })
 
 const formRef = ref(null);
@@ -19,7 +20,7 @@ const rules = formStore.rules;
 
 // 初始化 SortableJS
 onMounted(() => {
-  const renderComponent = createRenderer(true)
+  const renderComponent = createRenderer({isPreview: true, callback: props.callback})
   const app = createApp({
     render() {
       return h(

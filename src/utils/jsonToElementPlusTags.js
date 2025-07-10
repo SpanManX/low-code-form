@@ -31,7 +31,7 @@ function generateTag(item) {
                 (isDiv && (key === 'columns' || key === 'gap' || key === 'text-align')) ||
                 (isElCard && key === 'label') ||
                 ((isElRadioGroup || isElCheckboxGroup) && key === 'border') ||
-                key === 'rules'
+                key === 'rules' || key === 'iconStyle' || key === 'icon'
             ) {
                 return '';
             }

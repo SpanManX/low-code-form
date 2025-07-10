@@ -2,7 +2,10 @@ export function deepClone(value) {
     if (value === null || typeof value !== 'object') return value;
 
     // Skip functions (like render/setup)
-    if (typeof value === 'function') return undefined;
+    // if (typeof value === 'function'){
+    //     console.log(value)
+    //     return undefined;
+    // }
 
     if (Array.isArray(value)) {
         return value.map(item => deepClone(item)).filter(v => v !== undefined);

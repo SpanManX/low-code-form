@@ -1,8 +1,9 @@
 import {h} from 'vue'
 import * as ElementPlus from 'element-plus'
-import DropItemComponent from "@/assets/templates/components/dropItemComponent.vue";
-import DivComponent from "@/assets/templates/components/divComponent.vue";
+import dropItemComponent from "@/assets/templates/components/dropItemComponent.vue";
+import divComponent from "@/assets/templates/components/divComponent.vue";
 import gridComponent from "@/assets/templates/components/gridComponent.vue";
+import iconComponent from '@/assets/templates/components/iconComponent.vue'
 import formStore from "../store/form.js";
 import {noNeedBind, useWrappedNames} from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";
@@ -13,7 +14,7 @@ import componentDataStore from "@/store/componentData.js";
  *
  * @returns 返回渲染组件的函数
  */
-export function createRenderer(isPreview = false) {
+export function createRenderer({isPreview = false, callback}) {
     const formData = !isPreview ? formStore.formData : formStore.previewFormData // 表单数据（用于 v-model）
     const names = noNeedBind                                     // 不需要双向绑定的组件名列表
 
@@ -47,7 +48,8 @@ export function createRenderer(isPreview = false) {
         }
 
         const props = {...value.props}
-        const events = value.on || {}
+
+        const events = value.on && Object.keys(value.on) ? value.on : {}
 
         if (formData && names.indexOf(value.componentName) === -1) {
             props.modelValue = formData.value[`field${value.id}`]
@@ -73,14 +75,17 @@ export function createRenderer(isPreview = false) {
             slots.default = () => value.label
         }
 
-
-        // 特殊处理
+        // 设置 data-id 属性，以便在 DOM 获取到 id
         if (value.componentName === 'ElTabPane') {
             props['data-id'] = value.id
         }
 
-        const key = value.id
+        // 处理 icon 属性，将其转换为组件
+        if (props.icon) {
+            props.icon = h(iconComponent, {icon: props.icon, ...props.iconStyle},{})
+        }
 
+        const key = value.id
         // 特殊处理
         if (value.componentName === 'ElCard') {
             return h('div', {
@@ -97,7 +102,7 @@ export function createRenderer(isPreview = false) {
         const componentName = value.componentName === 'ElFormItem' ? value.children?.[0]?.componentName : value.componentName
 
         if (value.componentName === 'GridComponent') {
-            return h(DropItemComponent, {componentData: {...value, componentName}, key: key}, {
+            return h(dropItemComponent, {componentData: {...value, componentName}, key: key}, {
                 default: () => h(gridComponent, {isPreview, ...value.props}, slots)
             })
         }
@@ -105,24 +110,32 @@ export function createRenderer(isPreview = false) {
         let wrappedComponentChild;
         if (value.componentName === 'DivComponent') {
             wrappedComponentChild = {
-                default: () => h(DivComponent, {isPreview, ...value.props}, slots)
+                default: () => h(divComponent, {isPreview, ...value.props}, slots)
             }
         } else {
             wrappedComponentChild = {
                 default: () => h(ElementPlus[value.componentName], {
                     ...props,
-                    ...events
+                    ...events,
                 }, slots)
             }
         }
 
         if (useWrappedNames.indexOf(value.componentName) > -1 && !value.parentId) { // 包裹组件
-            return h(DropItemComponent, {
+            return h(dropItemComponent, {
                 componentData: {...value, componentName},
-                key: key
+                key: key,
             }, wrappedComponentChild)
         } else {
-            return h(ElementPlus[value.componentName] || value.componentName, {...props, ...events}, slots)
+            return h(ElementPlus[value.componentName] || value.componentName, {
+                ...props,
+                ...events,
+                onVnodeMounted(vnode) {
+                    if (callback && vnode.component) {
+                        callback(value.componentName, vnode.component)
+                    }
+                }
+            }, slots)
         }
     }
 

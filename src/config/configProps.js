@@ -79,8 +79,8 @@ export const DivComponentConfigProps = [
 export const ElButtonConfigProps = [
     {key: 'label', value: '', name: '按钮文字'},
     {key: 'type', values: ['primary', 'success', 'info', 'warning', 'danger'], name: '类型'},
-    {key: 'round', value: false, name: '圆角按钮',tip: '仅在“按钮文字”不为“文字按钮”时有效'},
-    {key: 'plain', value: false, name: '朴素按钮',tip: '仅在“按钮文字”不为“文字按钮”时有效'},
+    {key: 'round', value: false, name: '圆角按钮', tip: '仅在“按钮文字”不为“文字按钮”时有效'},
+    {key: 'plain', value: false, name: '朴素按钮', tip: '仅在“按钮文字”不为“文字按钮”时有效'},
     {key: 'text', value: false, name: '文字按钮'},
 ];
 
@@ -90,4 +90,17 @@ export const ElDividerConfigProps = [
     {key: 'direction', values: ['horizontal', 'vertical'], name: '分割线方向'},
     {key: 'border-style', values: ['none', 'solid', 'dashed'], name: '分隔符样式'},
     {key: 'content-position', values: ['left', 'right', 'center'], name: '内容位置'},
+];
+
+// upload
+export const ElUploadConfigProps = [
+    {key: 'label', value: '', name: '按钮文字'},
+    {key: 'label', value: '', name: '提示内容'},
+    {key: 'multiple', value: false, name: '是否多选'},
+    {key: 'limit', value: 0, name: '限制上传数'},
+    {key: 'accept', value: '', name: '文件类型', tip: '例如：.jpg,.jpeg,.png,.gif'},
+    {key: 'list-type', values: ['text', 'picture-card', 'picture'], name: '列表类型'},
+    {key: 'text', value: false, name: '文字按钮'},
+    {key: 'size', value: 0, name: '图标大小'},
+    {key: 'color', value: '', name: '图标颜色',tip: '例如：#409EFF 或 red'},
 ];

@@ -34,7 +34,7 @@ function open() {
   previewVisible.value = true
 
   nextTick(() => {
-    const renderComponent = createRenderer(true)
+    const renderComponent = createRenderer({isPreview:true})
     app = createApp({
       render() {
         const list = JSON.parse(JSON.stringify(schema.value.components)) // 响应式依赖，用于触发 updated 生命周期

@@ -5,19 +5,6 @@ export default {
         this.styles[key] = `{\n${this.styleObjectToCssString(value)}\n}`;
     },
 
-    GET_STYLE_NEW_KEY(key) {
-        let newKey = key;
-        let counter = 1;
-
-        // 如果 key 已存在，则自动递增后缀直到找到未被使用的 key
-        while (this.styles.hasOwnProperty(newKey)) {
-            newKey = `${key}${counter}`;
-            counter++;
-        }
-
-        return newKey
-    },
-
     DELETE_STYLES(key) {
         delete this.styles[key];
     },

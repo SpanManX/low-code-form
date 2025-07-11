@@ -8,7 +8,6 @@ import formStore from "../store/form.js";
 import {noNeedBind, useWrappedNames} from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";
 import componentDataStore from "@/store/componentData.js";
-import divStylesStore from "@/store/divStyles.js";
 
 /**
  * 创建渲染器函数
@@ -55,7 +54,6 @@ export function createRenderer({isPreview = false, callback}) {
         if (formData && names.indexOf(value.componentName) === -1) {
             props.modelValue = formData.value[`field${value.id}`]
             props['onUpdate:modelValue'] = (val) => {
-                console.log(funcKey)
                 formStore[funcKey](`field${value.id}`, val)
             }
         }
@@ -83,7 +81,7 @@ export function createRenderer({isPreview = false, callback}) {
 
         // 处理 icon 属性，将其转换为组件
         if (props.icon) {
-            props.icon = h(iconComponent, {icon: props.icon, ...props.iconStyle}, {})
+            props.icon = h(iconComponent, {icon: props.icon, ...props.iconStyle, class: props.class}, {})
         }
 
         const key = value.id

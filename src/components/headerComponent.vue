@@ -2,7 +2,7 @@
   <div class="header">
     <el-button link type="primary" @click="handleDragOrDrop">{{ dragOrDrop ? '开启' : '关闭' }}拖放</el-button>
     <el-button link type="primary" @click="clearAll">清空画布</el-button>
-    <el-button link type="primary" @click="exportJSON">导出JSON</el-button>
+    <el-button link type="primary" @click="getJSON">复制JSON</el-button>
     <el-button link type="primary" @click="openPreview">预览</el-button>
   </div>
   <preview-dialog ref="previewDialogRef"/>
@@ -13,6 +13,7 @@ import {ElMessageBox} from "element-plus";
 import componentDataStore from "../store/componentData";
 import previewDialog from "../components/previewDialog.vue";
 import formStore from "@/store/form.js";
+import {copyToClipboard} from "@/utils/copyToClipboard.js";
 
 const props = defineProps({
   json: [Object, Array],
@@ -30,7 +31,7 @@ function handleDragOrDrop() {
 /**
  * 导出JSON数据
  */
-async function exportJSON() {
+function getJSON() {
   const {labelPosition, labelWidth, inline} = formStore.formOptions
 
   const obj = {}
@@ -46,7 +47,10 @@ async function exportJSON() {
     obj.inline = inline
   }
 
-  console.log(JSON.stringify({formOptions: obj, forms: props.json}, null, 2));
+  const str = JSON.stringify({formOptions: obj, forms: props.json}, null, 2)
+  // copyToClipboard(str)
+  console.log(JSON.stringify(formStore.formData.value))
+  return str
 
   // let jsonStr = JSON.stringify(obj, null, 2) // 格式化 JSON 数据
   // let blob = new Blob([jsonStr], {type: "application/json"});

@@ -31,7 +31,7 @@ function generateTag(item) {
                 (isDiv && (key === 'columns' || key === 'gap' || key === 'textAlign')) ||
                 (isElCard && key === 'label') ||
                 ((isElRadioGroup || isElCheckboxGroup) && key === 'border') ||
-                key === 'rules' || key === 'icon'
+                key === 'rules' || key === 'iconStyle'
             ) {
                 return '';
             }
@@ -42,10 +42,7 @@ function generateTag(item) {
             } else if (Array.isArray(value)) {
                 attrString = value.join(' ');
             }
-            if (key === 'iconStyle') {
-                attrKey = 'style';
-            }
-            const attrPrefix = typeof value === 'boolean' || typeof value === 'number' || typeof value === 'object' ? ':' : '';
+            const attrPrefix = typeof value === 'boolean' || typeof value === 'number' || typeof value === 'object' || key === 'icon' ? ':' : '';
 
             return `${attrPrefix}${attrKey}="${attrString}"`;
         })

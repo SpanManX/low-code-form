@@ -10,16 +10,18 @@ import componentDataStore from "../store/componentData";
 import formStore from "@/store/form.js";
 
 const props = defineProps({
-  data: {type: Object},
+  data: {type: Object, required: true},
+  variables: {type: Object, required: true},
   callback: {type: Function},
 })
 
 const formRef = ref(null);
-const formData = formStore.formData;
+const formData = formStore.previewFormData;
 const rules = formStore.rules;
 
 // 初始化 SortableJS
 onMounted(() => {
+  formData.value = props.variables
   const renderComponent = createRenderer({isPreview: true, callback: props.callback})
   const app = createApp({
     render() {

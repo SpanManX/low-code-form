@@ -52,7 +52,7 @@
         <el-tab-pane label="表单设置" name="form"></el-tab-pane>
         <el-tab-pane label="代码" name="second">
           <el-button type="primary" link @click="updateVueCode">生成代码</el-button>
-          <el-button type="primary" link @click="copyToClipboard">一键复制</el-button>
+          <el-button type="primary" link @click="copy">一键复制</el-button>
         </el-tab-pane>
       </el-tabs>
       <div :class="{'panel-content':activeName1 !== 'second','panel-code':activeName1 === 'second'}">
@@ -68,16 +68,11 @@
 <script setup>
 import {createApp, h, nextTick, onMounted, ref, watch} from 'vue';
 import Sortable from 'sortablejs';
-import {basicSetup, EditorView} from 'codemirror'
-import {vue} from '@codemirror/lang-vue'
-import {html as beautifyHtml} from 'js-beautify'
 import * as ElementPlus from "element-plus";
-import {ElMessage} from "element-plus";
 import {zhCn} from "element-plus/es/locale/index";
 import {Delete} from '@element-plus/icons-vue'
 import {creatInitSortable, getSelectDOM, setSelectDOM} from "../utils/rendererUtils.js";
 import {removeComponentById} from "../utils/findComponentById.js";
-import {jsonToElementPlusTags} from "../utils/jsonToElementPlusTags.js";
 import {setData} from "../utils/setData.js";
 import {createSortableManager, resetSortable} from "../utils/sortableManager.js";
 import {createRenderer} from "../utils/renderComponent.js";
@@ -92,6 +87,8 @@ import teleportStore from "../store/teleport";
 import divStylesStore from "@/store/divStyles.js";
 import templateJson from "../assets/templates";
 import demo from '../demo'
+import {destroyVueCode, initVueCode} from "@/utils/initVueCode.js";
+import {copyToClipboard} from "@/utils/copyToClipboard.js";
 
 // 组件列表，用于左侧面板展示
 const componentList = templateJson
@@ -239,10 +236,7 @@ function createDemo(demoJSON) {
   formStore.SET_FORM_OPTIONS(demoJSON.formOptions)
   setFormRef.value.init(formStore.formOptions)
 
-  // schema.value.components = []
-  // nextTick(() => {
   schema.value.components = JSON.parse(JSON.stringify(demoJSON.forms))
-  // })
 }
 
 /**
@@ -259,87 +253,23 @@ function handleDragDrop(val) {
  */
 function tabsChange() {
   if (activeName1.value !== 'second' && vueView) {
-    vueView.destroy()
+    destroyVueCode()
     vueView = null
   }
 }
 
 /**
  * 更新 Vue 代码
- *
- * 使用指定的参数美化 HTML 字符串，并将其设置为 Vue 编辑器的文档内容。
- * 如果 Vue 编辑器尚未创建，则创建新的编辑器并将其添加到指定的父容器中。
- * 如果 Vue 编辑器已存在，则更新其文档内容。
  */
-async function updateVueCode() {
-  const {labelPosition, labelWidth} = formStore.formOptions
-
-  const labelPositionJoin = !labelPosition || (labelPosition === 'right' || labelPosition === '') ? '' : `label-position="${labelPosition}"`
-  const labelWidthJoin = labelWidth === 'auto' || !labelWidth ? '' : `label-width="${labelWidth}"`
-  const inlineJoin = formStore.formOptions.inline ? `:inline="${formStore.formOptions.inline}"` : ''
-
-  let str = ''
-  Object.keys(divStylesStore.styles).forEach((key) => {
-    str += `.${key}${divStylesStore.styles[key]}`
-  })
-
-  const htmlStr = `<template>
-<div>
-    <el-form :model="formData" :rules="rules" ${inlineJoin} ${labelPositionJoin} ${labelWidthJoin}>
-    ${(jsonToElementPlusTags(JSON.parse(JSON.stringify(schema.value.components))))}
-    </el-form>
-</div>
-</template>
-<script setup>
-  import {ref} from 'vue';
-
-  const rules = ${JSON.stringify(rules.value, null, 2)}
-  const formData = ref(${JSON.stringify(formData.value, null, 2)})
-<\/script>
-<style scoped>
-.el-tabs, .el-card, .el-table,.block-element {
-    margin-bottom: 10px;
+function updateVueCode() {
+  vueView = initVueCode(schema.value.components, templateRef)
 }
 
-.el-button{
-    width: fit-content;
-}
-
-${str}
-</style>`
-
-  const attrHtmlStr = beautifyHtml(htmlStr,
-      {
-        wrap_attributes: 'force-aligned', // 强制属性换行并对齐
-        indent_size: 4,
-        wrap_line_length: 50,
-        end_with_newline: true,
-      }
-  )
-  if (!vueView) {
-    vueView = new EditorView({
-      parent: templateRef.value,
-      doc: attrHtmlStr,
-      extensions: [basicSetup, vue()]
-    })
-  } else {
-    vueView.dispatch({
-      changes: {
-        from: 0,
-        to: vueView.state.doc.length,
-        insert: attrHtmlStr
-      }
-    })
-  }
-}
-
-async function copyToClipboard() {
-  try {
-    await navigator.clipboard.writeText(vueView.state.doc.toString());
-    ElMessage.success('复制成功');
-  } catch (err) {
-    ElMessage.error(`无法复制内容：${err}`);
-  }
+/**
+ * 复制代码
+ **/
+function copy() {
+  copyToClipboard(vueView.state.doc.toString())
 }
 
 /**
@@ -389,8 +319,8 @@ function remove(componentData) {
     }
   }
 
-  if (value.componentName === "GridComponent" || value.componentName === "DivComponent") {
-    divStylesStore.DELETE_STYLES(value.props.class)
+  if (value.componentName === "ElUpload") {
+    divStylesStore.DELETE_STYLES(`${value.children[0].props.class} ::v-deep(.el-icon)`)
   }
 
   if (value.children && value.children.length) {

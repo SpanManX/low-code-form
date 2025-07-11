@@ -1,10 +1,10 @@
 <template>
-  <div class="element" :class="{[props.class]:props.class,['grid-border']:!isPreview}" :style="style">
+  <div class="element grid" :class="{['grid-border']:!isPreview}" :style="style">
     <slot></slot>
   </div>
 </template>
 <script setup>
-import {computed} from "vue";
+import {computed, onUnmounted} from "vue";
 import divStylesStore from '../../../store/divStyles.js'
 
 const props = defineProps({
@@ -30,8 +30,12 @@ const style = computed(() => {
     'grid-template-columns': `repeat(${props.columns || 1}, calc(100% / ${props.columns || 1} - ${(props.gap ? props.gap : 0) + 'px'}))`,
     'grid-gap': `${props.gap}px`
   }
-  divStylesStore.SET_STYLES(props.class, {...obj, display: "grid"})
+  divStylesStore.SET_STYLES(props.class.split(' ')[1], {...obj, display: "grid"})
   return obj
+})
+
+onUnmounted(() => {
+  divStylesStore.DELETE_STYLES(props.class.split(' ')[1])
 })
 </script>
 <style scoped lang="scss">

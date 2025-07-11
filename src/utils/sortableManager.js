@@ -100,6 +100,9 @@ export function createSortableManager() {
 
         let newComp = createComponent(compConfig, itemId); // 创建新组件配置对象
         if (!newComp.noUseForm) {
+            if (newComp.componentName === 'ElUpload') {
+                newComp.children[0].props.class = `upload${newComp.id}`
+            }
             // const name = newComp.componentName
             const id = newComp.id
             newComp = {
@@ -113,9 +116,11 @@ export function createSortableManager() {
                 id: generateRandomId(),
                 children: [newComp]
             }
-        }else {
-            if(newComp.componentName === 'DivComponent') {
-                newComp.props.class.push(`${newComp.props.class[0]}${newComp.id}`)
+        } else {
+            if (newComp.componentName === 'DivComponent') {
+                newComp.props.class += ` block-element${newComp.id}`
+            } else if (newComp.componentName === 'GridComponent') {
+                newComp.props.class += ` grid${newComp.id}`
             }
         }
 

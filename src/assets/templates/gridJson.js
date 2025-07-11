@@ -7,7 +7,7 @@ export default () => {
         noUseForm: true,
         text: '栅格',
         props: {
-            class: 'grid',
+            class: 'grid'
         },
         children: []
     }

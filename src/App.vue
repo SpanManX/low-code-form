@@ -1,5 +1,5 @@
 <template>
-  <index :data="demo6" :callback="handleCallback" :isPreview="false"></index>
+  <index ref="indexRef" :data="demo6" :variables="testData" :callback="handleCallback" :isPreview="false"></index>
   <el-image-viewer
       v-if="showPreview !== ''"
       :url-list="[showPreview]"
@@ -9,10 +9,19 @@
 </template>
 <script setup>
 import index from "./views";
-import demo6 from './demo/demo6.js'
+import demo6 from './demo/demo7.js'
 import {ref} from "vue";
 
-let showPreview = ref('');
+const showPreview = ref('');
+const indexRef = ref(null);
+
+const testData = {
+  "field1752214307646320": "val1",
+  "field1752214306566359": 2,
+  "field1752214311914827": ["ValueB"],
+  "field1752214310595119": "2025-07-15T16:00:00.000Z",
+  "field1752214308776432": "11111111111"
+}
 
 function handleCallback(name, event) {
   if (name === 'ElUpload') {

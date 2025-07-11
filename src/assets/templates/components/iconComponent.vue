@@ -5,9 +5,15 @@
 </template>
 <script setup>
 import * as ElIcons from "@element-plus/icons-vue";
-import {computed} from "vue";
+import {computed, onMounted, onUnmounted} from "vue";
+import divStylesStore from "@/store/divStyles.js";
+import iconStore from "@/store/icon.js";
 
 const props = defineProps({
+  class: {
+    type: String,
+    required: true,
+  },
   icon: {
     type: String,
     required: true,
@@ -16,19 +22,33 @@ const props = defineProps({
     type: String,
   },
   fontSize: {
-    type: [Number, String],
-    default: 16,
+    type: [Number, String]
   }
 })
 
 const style = computed(() => {
-  console.log('111111111')
-  return {
-    color: props.color,
-    fontSize: `${props.fontSize || 16}px`,
+  const obj = {}
+  if (props.fontSize) {
+    obj.fontSize = `${props.fontSize}px`
   }
+  if (props.color) {
+    obj.color = props.color
+  }
+  if (Object.keys(obj).length) {
+    divStylesStore.SET_STYLES(`${props.class} ::v-deep(.el-icon)`, obj)
+  } else {
+    divStylesStore.DELETE_STYLES(`${props.class} ::v-deep(.el-icon)`)
+  }
+  return obj
 })
 
+onMounted(() => {
+  iconStore.SET_ICONS(props.class, props.icon)
+})
+
+onUnmounted(() => {
+  iconStore.DELETE_ICONS(props.class)
+})
 </script>
 <style scoped lang="scss">
 

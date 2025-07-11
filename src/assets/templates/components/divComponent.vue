@@ -1,11 +1,11 @@
 <template>
-  <div class="element" :class="{[props.class]:props.class,['div-border']:!isPreview}"
+  <div class="element block-element" :class="{['div-border']:!isPreview}"
        :style="style">
     <slot></slot>
   </div>
 </template>
 <script setup>
-import {computed, ref} from "vue";
+import {computed, onUnmounted} from "vue";
 import divStylesStore from "@/store/divStyles.js";
 
 const props = defineProps({
@@ -24,22 +24,18 @@ const props = defineProps({
   }
 })
 
-const newClass = ref('')
-
 const style = computed(() => {
   const obj = {
     textAlign: props.textAlign,
     padding: props.padding,
   }
-  // const className = obj.class
-  // delete obj.class
-  // delete obj.isPreview
-  // delete obj.id
-  // newClass.value = divStylesStore.GET_STYLE_NEW_KEY(props.class)
   divStylesStore.SET_STYLES(props.class.split(' ')[1], obj)
   return obj
 })
 
+onUnmounted(() => {
+  divStylesStore.DELETE_STYLES(props.class.split(' ')[1])
+})
 </script>
 <style scoped lang="scss">
 .div-border {

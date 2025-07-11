@@ -1,13 +1,15 @@
 export default {
-    "formOptions": {},
-    forms: [
+    "formOptions": {
+        "labelWidth": null
+    },
+    "forms": [
         {
             "componentName": "GridComponent",
             "icon": {},
             "noUseForm": true,
             "text": "栅格",
             "props": {
-                "class": "grid",
+                "class": "grid1752201480972420",
                 "columns": 2,
                 "gap": 20
             },
@@ -15,32 +17,10 @@ export default {
                 {
                     "componentName": "ElFormItem",
                     "props": {
-                        "label": "日期选择器",
-                        "prop": "field1751794508710833"
-                    },
-                    "on": {},
-                    "id": "1751794509764283",
-                    "children": [
-                        {
-                            "componentName": "ElDatePicker",
-                            "text": "日期选择器",
-                            "icon": {},
-                            "props": {
-                                "type": "date",
-                                "placeholder": "选择日期"
-                            },
-                            "id": "1751794508710833"
-                        }
-                    ]
-                },
-                {
-                    "componentName": "ElFormItem",
-                    "props": {
                         "label": "选择器",
-                        "prop": "field1751794507014377"
+                        "prop": "field1752201489982328"
                     },
-                    "on": {},
-                    "id": "1751794507740367",
+                    "id": "1752201490736657",
                     "children": [
                         {
                             "componentName": "ElSelect",
@@ -57,8 +37,8 @@ export default {
                                         "label": "First Option",
                                         "value": "val1"
                                     },
-                                    "id": "175179450773958",
-                                    "parentId": "1751794507014377"
+                                    "id": "1752201490736975",
+                                    "parentId": "1752201489982328"
                                 },
                                 {
                                     "componentName": "ElOption",
@@ -66,11 +46,53 @@ export default {
                                         "label": "Second Option",
                                         "value": "val2"
                                     },
-                                    "id": "175179450773915",
-                                    "parentId": "1751794507014377"
+                                    "id": "1752201490736176",
+                                    "parentId": "1752201489982328"
                                 }
                             ],
-                            "id": "1751794507014377"
+                            "id": "1752201489982328",
+                            "parentId": null
+                        }
+                    ]
+                },
+                {
+                    "componentName": "ElFormItem",
+                    "props": {
+                        "label": "输入框",
+                        "prop": "field1752201487374140"
+                    },
+                    "id": "175220148808889",
+                    "children": [
+                        {
+                            "componentName": "ElInput",
+                            "icon": {},
+                            "text": "输入框",
+                            "props": {
+                                "placeholder": "请输入内容"
+                            },
+                            "id": "1752201487374140",
+                            "parentId": null
+                        }
+                    ]
+                },
+                {
+                    "componentName": "ElFormItem",
+                    "props": {
+                        "label": "日期选择器",
+                        "prop": "field1752201491742758"
+                    },
+                    "id": "1752201493043449",
+                    "children": [
+                        {
+                            "componentName": "ElDatePicker",
+                            "text": "日期选择器",
+                            "icon": {},
+                            "props": {
+                                "type": "date",
+                                "placeholder": "选择日期"
+                            },
+                            "id": "1752201491742758",
+                            "parentId": null
                         }
                     ]
                 },
@@ -78,10 +100,9 @@ export default {
                     "componentName": "ElFormItem",
                     "props": {
                         "label": "复选框",
-                        "prop": "field175179451784489"
+                        "prop": "field1752201494840175"
                     },
-                    "on": {},
-                    "id": "1751794519335280",
+                    "id": "1752201495950978",
                     "children": [
                         {
                             "componentName": "ElCheckboxGroup",
@@ -95,8 +116,8 @@ export default {
                                         "label": "Option A",
                                         "value": "ValueA"
                                     },
-                                    "id": "1751794519335853",
-                                    "parentId": "175179451784489"
+                                    "id": "1752201495950612",
+                                    "parentId": "1752201494840175"
                                 },
                                 {
                                     "componentName": "ElCheckbox",
@@ -104,84 +125,217 @@ export default {
                                         "label": "Option B",
                                         "value": "ValueB"
                                     },
-                                    "id": "1751794519335722",
-                                    "parentId": "175179451784489"
+                                    "id": "1752201495950300",
+                                    "parentId": "1752201494840175"
                                 }
                             ],
-                            "id": "175179451784489"
-                        }
-                    ]
-                },
-                {
-                    "componentName": "ElFormItem",
-                    "props": {
-                        "label": "单选框",
-                        "prop": "field1751794519830222"
-                    },
-                    "on": {},
-                    "id": "1751794520805239",
-                    "children": [
-                        {
-                            "componentName": "ElRadioGroup",
-                            "text": "单选框",
-                            "icon": {},
-                            "props": {},
-                            "children": [
-                                {
-                                    "componentName": "ElRadio",
-                                    "props": {
-                                        "label": "Option 1",
-                                        "value": 1
-                                    },
-                                    "id": "1751794520805629",
-                                    "parentId": "1751794519830222"
-                                },
-                                {
-                                    "componentName": "ElRadio",
-                                    "props": {
-                                        "label": "Option 2",
-                                        "value": 2
-                                    },
-                                    "id": "1751794520805815",
-                                    "parentId": "1751794519830222"
-                                },
-                                {
-                                    "componentName": "ElRadio",
-                                    "props": {
-                                        "label": "Option 3",
-                                        "value": 3
-                                    },
-                                    "id": "175179452080544",
-                                    "parentId": "1751794519830222"
-                                }
-                            ],
-                            "id": "1751794519830222"
+                            "id": "1752201494840175",
+                            "parentId": null
                         }
                     ]
                 }
             ],
-            "id": "1751794504663543"
+            "id": "1752201480972420",
+            "parentId": null
+        },
+        {
+            "componentName": "ElTabs",
+            "text": "标签页",
+            "icon": {},
+            "noUseForm": true,
+            "props": {
+                "type": "border-card"
+            },
+            "children": [
+                {
+                    "componentName": "ElTabPane",
+                    "props": {
+                        "label": "标签",
+                        "name": "1"
+                    },
+                    "children": [
+                        {
+                            "componentName": "ElFormItem",
+                            "props": {
+                                "label": "选择器",
+                                "prop": "field1752201536455527"
+                            },
+                            "id": "1752201536928223",
+                            "children": [
+                                {
+                                    "componentName": "ElSelect",
+                                    "text": "选择器",
+                                    "icon": {},
+                                    "props": {
+                                        "style": "min-width: 196px",
+                                        "placeholder": "请选择"
+                                    },
+                                    "children": [
+                                        {
+                                            "componentName": "ElOption",
+                                            "props": {
+                                                "label": "First Option",
+                                                "value": "val1"
+                                            },
+                                            "id": "1752201536928455",
+                                            "parentId": "1752201536455527"
+                                        },
+                                        {
+                                            "componentName": "ElOption",
+                                            "props": {
+                                                "label": "Second Option",
+                                                "value": "val2"
+                                            },
+                                            "id": "1752201536928604",
+                                            "parentId": "1752201536455527"
+                                        }
+                                    ],
+                                    "id": "1752201536455527",
+                                    "parentId": null
+                                }
+                            ]
+                        }
+                    ],
+                    "id": "1752201524230726",
+                    "parentId": "17522015236982"
+                },
+                {
+                    "componentName": "ElTabPane",
+                    "id": "1752201527160270",
+                    "parentId": "17522015236982",
+                    "props": {
+                        "label": "TEST",
+                        "name": "123"
+                    },
+                    "children": [
+                        {
+                            "componentName": "ElFormItem",
+                            "props": {
+                                "label": "输入框",
+                                "prop": "field1752201538123592"
+                            },
+                            "id": "1752201538562154",
+                            "children": [
+                                {
+                                    "componentName": "ElInput",
+                                    "icon": {},
+                                    "text": "输入框",
+                                    "props": {
+                                        "placeholder": "请输入内容"
+                                    },
+                                    "id": "1752201538123592",
+                                    "parentId": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "id": "17522015236982",
+            "parentId": null
+        },
+        {
+            "componentName": "ElFormItem",
+            "props": {
+                "label": "单选框",
+                "prop": "field1752201638695907"
+            },
+            "id": "1752201639930220",
+            "children": [
+                {
+                    "componentName": "ElRadioGroup",
+                    "text": "单选框",
+                    "icon": {},
+                    "props": {},
+                    "children": [
+                        {
+                            "componentName": "ElRadio",
+                            "props": {
+                                "label": "Option 1",
+                                "value": 1
+                            },
+                            "id": "1752201639930494",
+                            "parentId": "1752201638695907"
+                        },
+                        {
+                            "componentName": "ElRadio",
+                            "props": {
+                                "label": "Option 2",
+                                "value": 2
+                            },
+                            "id": "1752201639930332",
+                            "parentId": "1752201638695907"
+                        },
+                        {
+                            "componentName": "ElRadio",
+                            "props": {
+                                "label": "Option 3",
+                                "value": 3
+                            },
+                            "id": "1752201639930657",
+                            "parentId": "1752201638695907"
+                        }
+                    ],
+                    "id": "1752201638695907",
+                    "parentId": null
+                }
+            ]
+        },
+        {
+            "componentName": "ElFormItem",
+            "props": {
+                "label": "复选框123",
+                "prop": "field1752201644707499"
+            },
+            "id": "1752201646164557",
+            "children": [
+                {
+                    "componentName": "ElCheckboxGroup",
+                    "text": "复选框",
+                    "icon": {},
+                    "props": {},
+                    "children": [
+                        {
+                            "componentName": "ElCheckbox",
+                            "props": {
+                                "label": "Option A",
+                                "value": "ValueA"
+                            },
+                            "id": "1752201646164937",
+                            "parentId": "1752201644707499"
+                        },
+                        {
+                            "componentName": "ElCheckbox",
+                            "props": {
+                                "label": "Option B",
+                                "value": "ValueB"
+                            },
+                            "id": "1752201646164366",
+                            "parentId": "1752201644707499"
+                        }
+                    ],
+                    "id": "1752201644707499",
+                    "parentId": null
+                }
+            ]
         },
         {
             "componentName": "ElCard",
             "text": "卡片",
             "icon": {},
             "noUseForm": true,
-            "props": {
-                "label": "卡片标题",
-                "shadow": "hover"
-            },
+            "props": {},
             "staticChildren": [
                 {
-                    "componentName": 'template',
-                    "slot": 'header',
+                    "componentName": "template",
+                    "slot": "header",
                     "staticChildren": [
                         {
                             "componentName": "div",
                             "props": {
                                 "class": "card-header"
                             },
-                            "label": "卡片标题",
+                            "label": "卡片标题"
                         }
                     ]
                 }
@@ -190,48 +344,27 @@ export default {
                 {
                     "componentName": "ElFormItem",
                     "props": {
-                        "label": "卡片输入框",
-                        "prop": "field1751794605972453"
+                        "label": "开关",
+                        "prop": "field1752201593926932"
                     },
-                    "on": {},
-                    "id": "1751794606735468",
+                    "id": "175220159442351",
                     "children": [
                         {
-                            "componentName": "ElInput",
+                            "componentName": "ElSwitch",
                             "icon": {},
-                            "text": "输入框",
+                            "text": "开关",
                             "props": {
-                                "placeholder": "请输入内容"
+                                "active-text": "开",
+                                "inactive-text": "关"
                             },
-                            "id": "1751794605972453"
-                        }
-                    ]
-                },
-                {
-                    "componentName": "ElFormItem",
-                    "props": {
-                        "label": "卡片输入框1",
-                        "prop": "field1751794618375374"
-                    },
-                    "on": {},
-                    "id": "1751794619105472",
-                    "children": [
-                        {
-                            "componentName": "ElInput",
-                            "icon": {},
-                            "text": "输入框",
-                            "props": {
-                                "placeholder": "请输入内容",
-                                "type": "textarea",
-                                "maxlength": 150,
-                                "show-word-limit": true
-                            },
-                            "id": "1751794618375374"
+                            "id": "1752201593926932",
+                            "parentId": null
                         }
                     ]
                 }
             ],
-            "id": "1751794577895824"
+            "id": "1752201543887173",
+            "parentId": null
         },
         {
             "componentName": "DivComponent",
@@ -239,34 +372,35 @@ export default {
             "noUseForm": true,
             "text": "块元素",
             "props": {
-                "class": "block-element",
-                "text-align": "right"
+                "class": "block-element1752201597100485",
+                "textAlign": "right"
             },
             "children": [
                 {
                     "componentName": "ElButton",
                     "icon": {},
                     "noUseForm": true,
-                    "label": "取消",
+                    "label": "按钮",
                     "props": {
-                        "type": "primary",
-                        "label": "取消"
+                        "type": "primary"
                     },
-                    "id": "1751794527295796"
+                    "id": "1752201613013561",
+                    "parentId": null
                 },
                 {
                     "componentName": "ElButton",
                     "icon": {},
                     "noUseForm": true,
-                    "label": "确认",
+                    "label": "按钮",
                     "props": {
-                        "type": "success",
-                        "label": "确认"
+                        "type": "success"
                     },
-                    "id": "1751794528295234"
+                    "id": "1752201614921965",
+                    "parentId": null
                 }
             ],
-            "id": "1751794524740450"
+            "id": "1752201597100485",
+            "parentId": null
         }
     ]
 }

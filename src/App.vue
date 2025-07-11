@@ -1,17 +1,19 @@
 <template>
-  <index ref="indexRef" :data="demo6" :variables="testData" :callback="handleCallback" :isPreview="false"></index>
+  <index ref="indexRef" :data="demo6" :variables="testData" :callback="handleCallback" :isPreview="isPreview"></index>
   <el-image-viewer
       v-if="showPreview !== ''"
       :url-list="[showPreview]"
       show-progress
       @close="showPreview = ''"
   />
-  <el-button @click="handleTest">校验</el-button>
+  <el-button @click="handleTest" v-if="isPreview">校验</el-button>
 </template>
 <script setup>
 import index from "./views";
 import demo6 from './demo/demo7.js'
 import {ref} from "vue";
+
+const isPreview = false;
 
 const showPreview = ref('');
 const indexRef = ref(null);

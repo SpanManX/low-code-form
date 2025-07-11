@@ -19,6 +19,10 @@ const formRef = ref(null);
 const formData = formStore.previewFormData;
 const rules = formStore.rules;
 
+defineExpose({
+  formRef
+})
+
 // 初始化 SortableJS
 onMounted(() => {
   formData.value = props.variables

@@ -1,16 +1,18 @@
 <template>
   <div class="low-code-form">
     <edit-panel v-if="!isPreview" style="background-color: #f0f2f5"/>
-    <preview-panel :data="data" :variables="variables" :callback="callback" v-else/>
+    <preview-panel ref="previewRef" :data="data" :variables="variables" :callback="callback" v-else/>
   </div>
 </template>
 <script setup>
 import editPanel from "./editPanel.vue";
 import previewPanel from "./previewPanel.vue";
 import formStore from "@/store/form.js";
+import {ref} from "vue";
 
 defineExpose({
-  getFormData
+  getFormData,
+  formRef
 })
 
 const props = defineProps({
@@ -26,8 +28,15 @@ const props = defineProps({
   callback: {type: Function},
 })
 
+const previewRef = ref(null)
+
+function formRef() {
+  // console.log(previewRef.value)
+  return previewRef.value.formRef
+}
+
 function getFormData() {
-  return formStore.formData.value
+  return formStore.previewFormData.value
 }
 </script>
 <style lang="scss" scoped>

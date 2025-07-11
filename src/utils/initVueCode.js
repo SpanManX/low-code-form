@@ -67,7 +67,6 @@ ${str}
             end_with_newline: true,
         }
     )
-    console.log(vueView)
     if (!vueView) {
         vueView = new EditorView({
             parent: templateRef.value,

@@ -1,4 +1,4 @@
-import {h} from 'vue'
+import {h, ref} from 'vue'
 import * as ElementPlus from 'element-plus'
 import dropItemComponent from "@/assets/templates/components/dropItemComponent.vue";
 import divComponent from "@/assets/templates/components/divComponent.vue";
@@ -8,6 +8,11 @@ import formStore from "../store/form.js";
 import {noNeedBind, useWrappedNames} from "../store/names.js";
 import {renderStaticChildren} from "./renderStaticChildren.js";
 import componentDataStore from "@/store/componentData.js";
+
+const modelMap = {
+    ElUpload: 'fileList',
+}
+
 
 /**
  * 创建渲染器函数
@@ -35,26 +40,28 @@ export function createRenderer({isPreview = false, callback}) {
             formStore.SET_FORM_RULES(`field${value.children[0].id}`, value.props.rules)
         }
 
+        const fieldName = `field${value.id}`
         const funcKey = !isPreview ? 'SET_FORM_DATA' : 'SET_PREVIEW_FORM_DATA' // 用于区分是设置表单数据还是预览表单数据
 
-        // value.id in formData.value 是 JavaScript 中的一个语法，用来判断一个对象是否包含某个属性
-        if (names.indexOf(value.componentName) === -1 && !(`field${value.id}` in formData.value)) {
+        // fieldName in formData.value 是 JavaScript 中的一个语法，用来判断一个对象是否包含某个属性
+        if (names.indexOf(value.componentName) === -1 && !(fieldName in formData.value)) {
             // 会触发render更新
             if (value.componentName === 'ElTabs') {
-                formStore[funcKey](`field${value.id}`, value.children[0].props.name || '')
+                formStore[funcKey](fieldName, value.children[0].props.name || '')
             } else {
-                formStore[funcKey](`field${value.id}`, value.componentName === 'ElCheckboxGroup' ? [] : '')
+                formStore[funcKey](fieldName, value.componentName === 'ElCheckboxGroup' || value.componentName === 'ElUpload' ? [] : '')
             }
         }
 
         const props = {...value.props}
-
         const events = value.on && Object.keys(value.on) ? value.on : {}
 
+        // 处理 v-model 双向绑定
         if (formData && names.indexOf(value.componentName) === -1) {
-            props.modelValue = formData.value[`field${value.id}`]
-            props['onUpdate:modelValue'] = (val) => {
-                formStore[funcKey](`field${value.id}`, val)
+            const modelKey = modelMap[value.componentName] || 'modelValue'
+            props[modelKey] = formData.value[fieldName]
+            props[`onUpdate:${modelKey}`] = (val) => {
+                formStore[funcKey](fieldName, val)
             }
         }
 
@@ -126,14 +133,11 @@ export function createRenderer({isPreview = false, callback}) {
                 key: key,
             }, wrappedComponentChild)
         } else {
+            // console.log(props)
             return h(ElementPlus[value.componentName] || value.componentName, {
                 ...props,
                 ...events,
-                onVnodeMounted(vnode) {
-                    if (callback && vnode.component) {
-                        callback(value.componentName, vnode.component)
-                    }
-                }
+                ...(callback && callback(value.componentName, value, fieldName))
             }, slots)
         }
     }

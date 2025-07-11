@@ -48,6 +48,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   iconStore.DELETE_ICONS(props.class)
+  divStylesStore.DELETE_STYLES(`${props.class} ::v-deep(.el-icon)`)
 })
 </script>
 <style scoped lang="scss">

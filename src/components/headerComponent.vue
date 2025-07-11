@@ -48,7 +48,7 @@ function getJSON() {
   }
 
   const str = JSON.stringify({formOptions: obj, forms: props.json}, null, 2)
-  // copyToClipboard(str)
+  copyToClipboard(str)
   console.log(JSON.stringify(formStore.formData.value))
   return str
 

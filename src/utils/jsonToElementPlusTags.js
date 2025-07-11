@@ -63,7 +63,11 @@ function generateTag(item) {
     // 处理 v-model，Element Plus 需要使用 v-model 绑定数据
     let vModelString = ''
     if (typeof formData.value[`field${item.id}`] !== 'undefined') {
-        vModelString = `v-model="formData.field${item.id}"`
+        if (item.componentName === 'ElUpload') {
+            vModelString = `v-model:file-list="formData.field${item.id}"`
+        } else {
+            vModelString = `v-model="formData.field${item.id}"`
+        }
     } else if (item.model) {
         vModelString = `:model="${item.model}"`
     }

@@ -98,6 +98,15 @@ export default {
                                     },
                                     "id": "1752214308185896",
                                     "parentId": "1752214307646320"
+                                },
+                                {
+                                    "componentName": "ElOption",
+                                    "id": "175224434217712",
+                                    "parentId": "1752214307646320",
+                                    "props": {
+                                        "label": "New Option",
+                                        "value": 1752244342177
+                                    }
                                 }
                             ],
                             "id": "1752214307646320",
@@ -254,7 +263,12 @@ export default {
             "componentName": "ElFormItem",
             "props": {
                 "label": "上传组件",
-                "prop": "field1752214314625551"
+                "prop": "field1752214314625551",
+                "rules": {
+                    "required": true,
+                    "message": "不能为空",
+                    "trigger": "change"
+                }
             },
             "id": "1752214315058275",
             "children": [

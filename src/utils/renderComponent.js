@@ -120,9 +120,10 @@ export function createRenderer({isPreview = false, callback}) {
             }
         } else {
             wrappedComponentChild = {
-                default: () => h(ElementPlus[value.componentName], {
+                default: () => h(ElementPlus[value.componentName] || value.componentName, {
                     ...props,
                     ...events,
+                    ...(callback && callback(value.componentName, value, fieldName))
                 }, slots)
             }
         }
@@ -133,12 +134,12 @@ export function createRenderer({isPreview = false, callback}) {
                 key: key,
             }, wrappedComponentChild)
         } else {
-            // console.log(props)
-            return h(ElementPlus[value.componentName] || value.componentName, {
-                ...props,
-                ...events,
-                ...(callback && callback(value.componentName, value, fieldName))
-            }, slots)
+            return wrappedComponentChild.default()
+            // return h(ElementPlus[value.componentName] || value.componentName, {
+            //     ...props,
+            //     ...events,
+            //     ...(callback && callback(value.componentName, value, fieldName))
+            // }, slots)
         }
     }
 

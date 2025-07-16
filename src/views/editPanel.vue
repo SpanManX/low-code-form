@@ -232,6 +232,7 @@ function handleClick(e) {
 function createDemo(demoJSON) {
   resetSortable()
   isExecuted = true
+  formStore.CLEAR_ALL()
   formStore.SET_FORM_OPTIONS_INIT(demoJSON.formOptions.inline)
   formStore.SET_FORM_OPTIONS(demoJSON.formOptions)
   setFormRef.value.init(formStore.formOptions)

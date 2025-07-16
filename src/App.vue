@@ -13,7 +13,7 @@ import index from "./views";
 import demo6 from './demo/demo7.js'
 import {ref} from "vue";
 
-const isPreview = false;
+const isPreview = true;
 
 const showPreview = ref('');
 const indexRef = ref(null);
@@ -29,6 +29,13 @@ const testData = {
 }
 
 function handleCallback(name, value, fieldName) {
+  if (name === 'ElButton' && (fieldName === 'field1752214304261429' || fieldName === 'field1752214305457614')) {
+    return {
+      onClick: () => {
+        console.log(value, fieldName);
+      }
+    }
+  }
   if (name === 'ElUpload') {
     return {
       httpRequest: (e) => {

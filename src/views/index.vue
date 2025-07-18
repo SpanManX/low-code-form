@@ -9,9 +9,11 @@ import editPanel from "./editPanel.vue";
 import previewPanel from "./previewPanel.vue";
 import formStore from "@/store/form.js";
 import {ref} from "vue";
+import {schema} from "@/utils/sortableManager.js";
 
 defineExpose({
   getFormData,
+  getJson,
   formRef
 })
 
@@ -37,6 +39,25 @@ function formRef() {
 
 function getFormData() {
   return formStore.previewFormData.value
+}
+
+function getJson() {
+  const {labelPosition, labelWidth, inline} = formStore.formOptions
+
+  const obj = {}
+  if (labelPosition !== 'right' && labelPosition !== '') {
+    obj.labelPosition = labelPosition
+  }
+
+  if (labelWidth !== '' && labelWidth !== 'auto') {
+    obj.labelWidth = labelWidth
+  }
+
+  if (inline) {
+    obj.inline = inline
+  }
+
+  return JSON.stringify({formOptions: obj, forms: schema.value.components}, null, 2)
 }
 </script>
 <style lang="scss" scoped>

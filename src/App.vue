@@ -28,29 +28,26 @@ const testData = {
   "field1752214316464511": []
 }
 
-function handleCallback(name, value, fieldName) {
+function handleCallback(name, fieldName, vm) {
   if (name === 'ElButton' && (fieldName === 'field1752214304261429' || fieldName === 'field1752214305457614')) {
-    return {
-      onClick: () => {
-        console.log(value, fieldName);
-      }
+    vm.props.onClick = () => {
+      console.log(fieldName);
     }
   }
   if (name === 'ElUpload') {
-    return {
-      httpRequest: (e) => {
-        console.log(e.file, '自定义上传行为');
-      },
-      onPreview: (e) => {
-        showPreview.value = e.url
-        console.log(e);
-      }
+    vm.props.httpRequest = (e) => {
+      console.log(e.file, '自定义上传行为');
+    }
+    vm.props.onPreview = (e) => {
+      showPreview.value = e.url
+      console.log(e);
     }
   }
 }
 
 function handleTest() {
   console.log(indexRef.value.getFormData());
+  console.log(indexRef.value.getJson());
   indexRef.value.formRef().validate((valid) => {
 
   });

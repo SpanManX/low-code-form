@@ -119,13 +119,14 @@ export function createRenderer({isPreview = false, callback}) {
                 default: () => h(divComponent, {isPreview, ...value.props}, slots)
             }
         } else {
+            const vm = h(ElementPlus[value.componentName] || value.componentName, {
+                ...props,
+                ...events,
+            }, slots)
             wrappedComponentChild = {
-                default: () => h(ElementPlus[value.componentName] || value.componentName, {
-                    ...props,
-                    ...events,
-                    ...(callback && callback(value.componentName, value, fieldName))
-                }, slots)
+                default: () => vm
             }
+            callback && callback(value.componentName, fieldName,vm)
         }
 
         if (useWrappedNames.indexOf(value.componentName) > -1 && !value.parentId) { // 包裹组件

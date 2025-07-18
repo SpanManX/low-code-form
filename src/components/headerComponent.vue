@@ -15,6 +15,10 @@ import previewDialog from "../components/previewDialog.vue";
 import formStore from "@/store/form.js";
 import {copyToClipboard} from "@/utils/copyToClipboard.js";
 
+defineExpose({
+  getJSON
+})
+
 const props = defineProps({
   json: [Object, Array],
 })

@@ -36,7 +36,7 @@
     <!-- 画布 -->
     <el-main class="canvas">
       <el-header height="50px">
-        <headerComponent :json="schema.components" @on-drag-drop="handleDragDrop"
+        <headerComponent :json="schema.components" ref="headerRef" @on-drag-drop="handleDragDrop"
                          @clear-all="clearAll"></headerComponent>
       </el-header>
       <div class="canvas-content">
@@ -101,16 +101,18 @@ templateJson.forEach(item => {
 
 componentMapStore.SET_COMPONENT_MAP(componentMap)
 
-const activeName = ref("first");
-const activeName1 = ref("first")
 const componentListRef = ref(null);
+const headerRef = ref(null);
 const setFormRef = ref(null);
 const canvasRef = ref(null);
 const formRef = ref(null);
 const templateRef = ref(null);
 const toolbarRef = ref(null);
 const setComponentRef = ref(null);
+
 const isMask = ref(false);
+const activeName = ref("first");
+const activeName1 = ref("first")
 
 const formData = formStore.formData;
 const rules = formStore.rules;

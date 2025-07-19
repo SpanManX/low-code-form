@@ -11,14 +11,14 @@
 <script setup>
 import index from "./views";
 import demo6 from './demo/demo7.js'
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 
 const isPreview = true;
 
 const showPreview = ref('');
 const indexRef = ref(null);
 
-const testData = {
+const testData = reactive({
   "field1752214307646320": 1752244342177,
   "field1752214306566359": 2,
   "field1752214311914827": ["ValueB"],
@@ -26,7 +26,7 @@ const testData = {
   "field1752214308776432": "123",
   "field1752214314625551": [],
   "field1752214316464511": []
-}
+})
 
 function handleCallback(name, fieldName, vm) {
   if (name === 'ElButton' && (fieldName === 'field1752214304261429' || fieldName === 'field1752214305457614')) {
@@ -46,11 +46,14 @@ function handleCallback(name, fieldName, vm) {
 }
 
 function handleTest() {
-  console.log(indexRef.value.getFormData());
-  console.log(indexRef.value.getJson());
-  indexRef.value.formRef().validate((valid) => {
+  if (isPreview) {
+    indexRef.value.formRef().validate((valid) => {
 
-  });
+    });
+  } else {
+    console.log(indexRef.value.getFormData()); // 编辑模式时用于获取form表单变量
+    console.log(indexRef.value.getJson()); // 编辑模式时用于获取JSON数据
+  }
 }
 </script>
 <style>

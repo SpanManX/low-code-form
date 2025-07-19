@@ -38,7 +38,7 @@ function formRef() {
 }
 
 function getFormData() {
-  return formStore.previewFormData.value
+  return formStore.formData.value
 }
 
 function getJson() {

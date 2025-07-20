@@ -10,7 +10,7 @@
 
 ## 使用
 > import lowCodeForm from "low-code-form-generator";
-
+>
 > import 'low-code-form-generator/dist/low-code-form-generator.css'
 
 ## 项目目录结构

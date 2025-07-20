@@ -46,13 +46,13 @@ function handleCallback(name, fieldName, vm) {
 }
 
 function handleTest() {
-  if (isPreview) {
+  if (isPreview) { // 预览
     indexRef.value.formRef().validate((valid) => {
 
     });
-  } else {
-    console.log(indexRef.value.getFormData()); // 编辑模式时用于获取form表单变量
-    console.log(indexRef.value.getJson()); // 编辑模式时用于获取JSON数据
+  } else { // 用于编辑模式时用于获取数据
+    console.log(indexRef.value.getFormData());  // 获取表单变量
+    console.log(indexRef.value.getJson());      // 获取表单json数据
   }
 }
 </script>

@@ -6,11 +6,12 @@
 > https://github.com/SpanManX/low-code-form-demo
 
 ## 安装依赖
-> npm i @vue3/low-code-form
+> npm i low-code-form-generator
 
 ## 使用
-> import lowCodeForm from "@vue3/low-code-form";
-> import 'low-code-form/dist/low-code-form.css'
+> import lowCodeForm from "low-code-form-generator";
+
+> import 'low-code-form-generator/dist/low-code-form-generator.css'
 
 ## 项目目录结构
 ```

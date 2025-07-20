@@ -1,6 +1,6 @@
 <template>
   <div class="low-code-form">
-    <edit-panel v-if="!isPreview" style="background-color: #f0f2f5"/>
+    <edit-panel v-if="!isPreview"/>
     <preview-panel ref="previewRef" :data="data" :variables="variables" :callback="callback" v-else/>
   </div>
 </template>
@@ -67,6 +67,7 @@ function getJson() {
 }
 
 .low-code-form {
+  background-color: #f0f2f5;
   height: 100%;
   padding: 5px;
   box-sizing: border-box;

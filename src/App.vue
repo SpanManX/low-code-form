@@ -13,7 +13,7 @@ import index from "./views";
 import demo6 from './demo/demo7.js'
 import {reactive, ref} from "vue";
 
-const isPreview = true;
+const isPreview = false;
 
 const showPreview = ref('');
 const indexRef = ref(null);

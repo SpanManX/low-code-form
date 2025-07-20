@@ -353,6 +353,18 @@ function clearAll() {
   overflow: auto;
 }
 
+.panel {
+  height: 100%;
+
+  ::v-deep(.el-tabs) {
+    height: 100%;
+
+    .el-tabs__content, .el-tab-pane {
+      height: 100%;
+    }
+  }
+}
+
 .editor-panel {
   ::v-deep(.el-form-item__label) {
     font-size: 13px;
@@ -382,7 +394,7 @@ function clearAll() {
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 10px;
-  max-height: calc(100vh - 100px);
+  max-height: calc(100% - 10px);
   overflow-y: auto;
   overflow-x: hidden;
 

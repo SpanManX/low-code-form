@@ -45,7 +45,7 @@
       </div>
     </el-main>
 
-    <!-- 代码编辑器 -->
+    <!-- 设置项 -->
     <el-aside width="400px" class="editor-panel">
       <el-tabs v-model="activeName1" @tab-change="tabsChange">
         <el-tab-pane label="组件设置" name="first"></el-tab-pane>

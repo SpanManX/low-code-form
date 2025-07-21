@@ -21,13 +21,13 @@
         <el-form-item label="是否必填">
           <el-switch v-model="required" @change="checkChange"/>
         </el-form-item>
+        <el-form-item label="必填提示" v-if="required">
+          <el-input v-model="currentData.props.rules.message"/>
+        </el-form-item>
       </template>
       <el-divider v-show="configPropsList && configPropsList.length">
         <p>组件属性</p>
       </el-divider>
-      <el-form-item label="必填提示" v-if="required">
-        <el-input v-model="currentData.props.rules.message"/>
-      </el-form-item>
       <!-- 根据组件类型展示不同设置项 -->
       <template v-for="item in configPropsList">
         <el-form-item

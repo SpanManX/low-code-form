@@ -53,11 +53,9 @@
                 @change="switchChange(item.key,useFormCurrentData.props[item.key])"/>
             <el-input-number v-else-if="typeof item.value === 'number'"
                              v-model="numberDynamicPropsModel(item)[item.key]"
-                             @change="numberChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"
                              :min="0"/>
             <el-input v-else v-model="inputDynamicPropsModel(item)[item.key]" :placeholder="`请输入${item.name}`"
-                      :clearable="item.clearable"
-                      @change="inputChange(useFormCurrentData.props[item.key],item.key,useFormCurrentData.componentName)"/>
+                      :clearable="item.clearable"/>
           </template>
         </el-form-item>
       </template>
@@ -222,13 +220,6 @@ function reset() {
   currentData.value = null
   configPropsList.value = []
   options.value = []
-}
-
-function inputChange(val, key, name) {
-
-}
-
-function numberChange(val, key, name) {
 }
 
 /**

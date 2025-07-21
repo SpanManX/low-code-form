@@ -25,6 +25,9 @@
       <el-divider v-show="configPropsList && configPropsList.length">
         <p>组件属性</p>
       </el-divider>
+      <el-form-item label="必填提示" v-if="required">
+        <el-input v-model="currentData.props.rules.message"/>
+      </el-form-item>
       <!-- 根据组件类型展示不同设置项 -->
       <template v-for="item in configPropsList">
         <el-form-item
@@ -260,6 +263,7 @@ function checkChange() {
   const fieldKey = `field${firstChild?.id}`;
 
   if (!required.value && formStore.rules.value[fieldKey]) {
+    // delete useFormCurrentData.value.props.ruleMessage
     delete currentData.value.props.rules
     formStore.DELETE_FORM_DATA(fieldKey)
     formStore.DELETE_RULES(fieldKey)
@@ -270,11 +274,12 @@ function checkChange() {
   }
 
   if (required.value) {
+    // if (!useFormCurrentData.value.props.ruleMessage) useFormCurrentData.value.props.ruleMessage = '该项为必填项!'
     currentData.value.props.rules = {
       required: required.value,
-      message: `不能为空`,
+      // message: ()=> useFormCurrentData.value.props.ruleMessage,
+      message: '该项为必填项!',
       trigger: firstChild.children ? 'change' : 'blur',
-      // trigger: 'change',
     }
     formStore.SET_FORM_RULES(fieldKey, JSON.parse(JSON.stringify(currentData.value.props.rules)))
     setTimeout(() => {

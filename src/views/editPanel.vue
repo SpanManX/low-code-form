@@ -403,6 +403,7 @@ function clearAll() {
     font-weight: bold;
     font-size: 15px;
     margin-bottom: 10px;
+    color: #333;
 
     &:not(:first-child) {
       margin-top: 20px;

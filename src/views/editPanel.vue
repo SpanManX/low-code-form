@@ -113,10 +113,11 @@ const setComponentRef = ref(null);
 const isMask = ref(false);
 const activeName = ref("first");
 const activeName1 = ref("first")
+const to = ref(teleportStore.teleportTo.value);
 
 const formData = formStore.formData;
 const rules = formStore.rules;
-const to = ref(teleportStore.teleportTo.value);
+
 let vueView = null;
 let currentComponentData = null;
 let isExecuted = false;

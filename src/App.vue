@@ -51,8 +51,8 @@ function handleTest() {
 
     });
   } else { // 用于编辑模式时用于获取数据
-    console.log(indexRef.value.getFormData());  // 获取表单变量
-    console.log(indexRef.value.getJson());      // 获取表单json数据
+    console.log(indexRef.value.getFormVariable());  // 获取表单变量
+    console.log(indexRef.value.getForm());      // 获取表单json数据
   }
 }
 </script>

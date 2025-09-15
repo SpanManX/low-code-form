@@ -12,8 +12,8 @@ import {ref} from "vue";
 import {schema} from "@/utils/sortableManager.js";
 
 defineExpose({
-  getFormData,
-  getJson,
+  getFormVariable,
+  getForm,
   formRef
 })
 
@@ -37,11 +37,11 @@ function formRef() {
   return previewRef.value.formRef
 }
 
-function getFormData() {
+function getFormVariable() {
   return formStore.formData.value
 }
 
-function getJson() {
+function getForm() {
   const {labelPosition, labelWidth, inline} = formStore.formOptions
 
   const obj = {}
@@ -57,7 +57,7 @@ function getJson() {
     obj.inline = inline
   }
 
-  return JSON.stringify({formOptions: obj, forms: schema.value.components}, null, 2)
+  return {formOptions: obj, forms: schema.value.components}
 }
 </script>
 <style lang="scss" scoped>

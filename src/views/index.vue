@@ -57,7 +57,7 @@ function getForm() {
     obj.inline = inline
   }
 
-  return {formOptions: obj, forms: schema.value.components}
+  return JSON.stringify({formOptions: obj, forms: schema.value.components}, null, 2)
 }
 </script>
 <style lang="scss" scoped>

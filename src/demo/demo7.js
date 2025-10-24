@@ -4,6 +4,49 @@ export default {
     },
     "forms": [
         {
+            "componentName": "ElTable",
+            "text": "表格",
+            "icon": {},
+            "noUseForm": true,
+            "props": {
+                "border": true,
+                "stripe": true,
+                "show-header": true,
+                "data": []
+            },
+            "children": [
+                {
+                    "componentName": "ElTableColumn",
+                    "props": {
+                        "prop": "date",
+                        "label": "日期"
+                    },
+                    "id": "1761322749042124",
+                    "parentId": "1761322748863924"
+                },
+                {
+                    "componentName": "ElTableColumn",
+                    "props": {
+                        "prop": "name",
+                        "label": "姓名"
+                    },
+                    "id": "1761322749042368",
+                    "parentId": "1761322748863924"
+                },
+                {
+                    "componentName": "ElTableColumn",
+                    "props": {
+                        "prop": "address",
+                        "label": "地址"
+                    },
+                    "id": "1761322749042148",
+                    "parentId": "1761322748863924"
+                }
+            ],
+            "id": "1761322748863924",
+            "parentId": null
+        },
+        {
             "componentName": "DivComponent",
             "icon": {},
             "noUseForm": true,

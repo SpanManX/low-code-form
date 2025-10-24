@@ -29,6 +29,15 @@ const testData = reactive({
 })
 
 function handleCallback(name, fieldName, vm) {
+  if(name === 'ElTable'){
+    vm.props.data = [
+      {
+        date: '2016-05-04',
+        name: 'Tom',
+        address: 'No. 189, Grove St, Los Angeles',
+      }
+    ]
+  }
   if (name === 'ElButton' && (fieldName === 'field1752214304261429' || fieldName === 'field1752214305457614')) {
     vm.props.onClick = () => {
       console.log(fieldName);

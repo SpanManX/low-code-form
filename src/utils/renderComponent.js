@@ -68,7 +68,9 @@ export function createRenderer({isPreview = false, callback}) {
         // 处理子节点
         let slots = {}
         if (value.children && Array.isArray(value.children)) {
-            value.children.forEach(child => {
+            for (const child of value.children) {
+                if (!child) continue;
+
                 if (child.componentName === 'template' && child.slot) {
                     slots[child.slot] = () => child.children?.map(renderComponent)
                 } else {
@@ -76,7 +78,7 @@ export function createRenderer({isPreview = false, callback}) {
                     // 累加 default slot 子元素
                     slots.default = ((prev => () => [...prev(), renderComponent(child)])(slots.default))
                 }
-            })
+            }
         } else if (value.label) {
             slots.default = () => value.label
         }
@@ -126,7 +128,7 @@ export function createRenderer({isPreview = false, callback}) {
             wrappedComponentChild = {
                 default: () => vm
             }
-            callback && callback(value.componentName, fieldName,vm)
+            callback && callback(value.componentName, fieldName, vm)
         }
 
         if (useWrappedNames.indexOf(value.componentName) > -1 && !value.parentId) { // 包裹组件

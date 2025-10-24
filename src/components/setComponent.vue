@@ -87,7 +87,7 @@
             <el-form-item label="值（name）" v-else-if="useFormCurrentData.componentName !== 'ElButton'">
               <el-input v-model="item.name" @change="nameChange(item.name,i)"/>
             </el-form-item>
-            <div class="toolbar">
+            <div class="toolbar" v-if="options.length > 1">
               <el-icon class="delete" @click="removeOptions(i)" title="删除">
                 <Delete/>
               </el-icon>
@@ -135,6 +135,9 @@ const inputs = ref([])
 
 const joinTag = ['ElTabs']
 const notGetChildren = ['ElCard', 'ElButton', 'ElDivider', 'GridComponent', 'DivComponent']
+
+let isTable = false
+let isTabs = false
 
 const isShow = computed(() => {
   if (currentData.value) return !currentData.value.noUseForm;
@@ -188,8 +191,8 @@ const numberDynamicPropsModel = computed(() => {
 
 // 选中组件触发
 function select(val) {
-  const isTable = val.componentName === 'ElTable'
-
+  isTable = val.componentName === 'ElTable'
+  isTabs = val.componentName === 'ElTabs'
   configPropsList.value = []
   currentData.value = val
   useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 || isTable ? currentData.value : currentData.value.children[0]
@@ -367,7 +370,11 @@ function switchChange(key, bool) {
 }
 
 function removeOptions(i) {
-  currentData.value.children[0].children.splice(i, 1)
+  if (isTable || isTabs) {
+    currentData.value.children.splice(i, 1)
+  } else {
+    currentData.value.children[0].children.splice(i, 1)
+  }
   options.value.splice(i, 1)
   inputs.value.splice(i, 1)
   showToolbar(getSelectDOM());
@@ -382,14 +389,14 @@ function moveElement(value, index, moveIndex) {
 function moveUp(index,) {
   moveElement(options.value, index, index - 1)
   moveElement(inputs.value, index, index - 1)
-  moveElement(currentData.value.children[0].children, index, index - 1)
+  moveElement(isTabs || isTable ? currentData.value.children : currentData.value.children[0].children, index, index - 1)
   showToolbar(getSelectDOM());
 }
 
 function moveDown(index) {
   moveElement(options.value, index, index + 1)
   moveElement(inputs.value, index, index + 1)
-  moveElement(currentData.value.children[0].children, index, index + 1)
+  moveElement(isTabs || isTable ? currentData.value.children : currentData.value.children[0].children, index, index + 1)
   showToolbar(getSelectDOM());
 }
 
@@ -411,8 +418,6 @@ function add() {
     return
   }
 
-  const isTabs = joinTag.indexOf(currentData.value.componentName) > -1
-  const isTable = currentData.value.componentName === 'ElTable'
   const targetChildren = isTabs || isTable
       ? currentData.value.children
       : currentData.value.children[0]?.children

@@ -5,10 +5,12 @@ export default () => {
         "componentName": "ElTable",
         "text": "表格",
         "icon": table,
-        noUseForm:true,
+        noUseForm: true,
         "props": {
             "border": true,
-            "stripe": true
+            "stripe": true,
+            "show-header": true,
+            data: []
         },
         "children": [
             {
@@ -16,7 +18,6 @@ export default () => {
                 "props": {
                     "prop": "date",
                     "label": "日期",
-                    "width": "180"
                 }
             },
             {
@@ -24,7 +25,6 @@ export default () => {
                 "props": {
                     "prop": "name",
                     "label": "姓名",
-                    "width": "180"
                 }
             },
             {

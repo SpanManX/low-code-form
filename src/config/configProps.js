@@ -104,3 +104,11 @@ export const ElUploadConfigProps = [
     {key: 'fontSize', value: 0, name: '图标大小'},
     {key: 'color', value: '', name: '图标颜色',tip: '例如：#409EFF 或 red'},
 ];
+
+// table
+export const ElTableConfigProps = [
+    {key: 'height', value: '', name: '高度(PX)'},
+    {key: 'border', value: true, name: '边框'},
+    {key: 'stripe', value: true, name: '斑马纹'},
+    {key: 'show-header', value: true, name: '是否显示表头'},
+]

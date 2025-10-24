@@ -462,7 +462,7 @@ function clearAll() {
 
 .toolbar {
   position: absolute;
-  z-index: 100;
+  z-index: 100 !important;
   background: #409EFF;
   padding: 3px 15px;
   border-top-left-radius: 5px;

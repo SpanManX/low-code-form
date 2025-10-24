@@ -72,6 +72,18 @@
             <el-form-item label="值（value）" v-if="typeof item.value !== 'undefined'">
               <el-input v-model="item.value"/>
             </el-form-item>
+            <template v-else-if="useFormCurrentData.componentName === 'ElTable'">
+              <el-form-item label="值（prop）">
+                <el-input v-model="item.prop"/>
+              </el-form-item>
+              <el-form-item label="对齐方式">
+                <el-select v-model="item.align" placeholder="请选择" clearable>
+                  <el-option value="center" label="center"></el-option>
+                  <el-option value="right" label="right"></el-option>
+                  <el-option value="left" label="left"></el-option>
+                </el-select>
+              </el-form-item>
+            </template>
             <el-form-item label="值（name）" v-else-if="useFormCurrentData.componentName !== 'ElButton'">
               <el-input v-model="item.name" @change="nameChange(item.name,i)"/>
             </el-form-item>
@@ -176,10 +188,11 @@ const numberDynamicPropsModel = computed(() => {
 
 // 选中组件触发
 function select(val) {
+  const isTable = val.componentName === 'ElTable'
+
   configPropsList.value = []
-  console.log(val, 'setComponent.vue')
   currentData.value = val
-  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 ? currentData.value : currentData.value.children[0]
+  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 || isTable ? currentData.value : currentData.value.children[0]
 
   if (val.props) {
     labelText.value = val.props.label
@@ -193,7 +206,7 @@ function select(val) {
   // 如果有子组件，则设置 options 数据
   if ((val.children && val.children[0] && val.children[0]?.componentName !== 'ElUpload') && !val.parentId) {
     let arr
-    if (joinTag.indexOf(val.componentName) > -1) {
+    if (joinTag.indexOf(val.componentName) > -1 || isTable) {
       arr = val.children
     } else if (val.componentName === 'ElFormItem') {
       arr = val.children[0].children
@@ -206,7 +219,7 @@ function select(val) {
   }
 
   // 根据组件类型展示不同设置项
-  if (isShow.value && val.children[0] || notGetChildren.indexOf(useFormCurrentData.value.componentName) > -1) {
+  if (isShow.value && val.children[0] || (notGetChildren.indexOf(useFormCurrentData.value.componentName) > -1 || isTable)) {
     configPropsList.value = configProps[`${useFormCurrentData.value.componentName}ConfigProps`]
   }
 }
@@ -340,7 +353,7 @@ function switchChange(key, bool) {
     return
   }
 
-  if (key === 'border') {
+  if (key === 'border' && useFormCurrentData.value.componentName !== 'ElTable') {
     if (bool) {
       currentData.value.children[0].children.forEach((item) => {
         item.props['border'] = true
@@ -399,7 +412,8 @@ function add() {
   }
 
   const isTabs = joinTag.indexOf(currentData.value.componentName) > -1
-  const targetChildren = isTabs
+  const isTable = currentData.value.componentName === 'ElTable'
+  const targetChildren = isTabs || isTable
       ? currentData.value.children
       : currentData.value.children[0]?.children
 
@@ -411,14 +425,14 @@ function add() {
   const timestamp = new Date().getTime()
   const newOption = {
     label: 'New Option',
-    ...(isTabs ? {name: timestamp} : {value: timestamp})
+    ...(isTabs ? {name: timestamp} : {[isTable ? 'prop' : 'value']: timestamp.toString()})
   }
 
   if (currentData.value.children[0]?.props?.border) {
     newOption.border = true
   }
 
-  const componentType = isTabs
+  const componentType = isTabs || isTable
       ? currentData.value.children[0].componentName
       : currentData.value.children[0]?.children[0]?.componentName
 

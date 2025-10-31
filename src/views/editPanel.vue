@@ -89,6 +89,7 @@ import templateJson from "../assets/templates";
 import demo from '../demo'
 import {destroyVueCode, initVueCode} from "@/utils/initVueCode.js";
 import {copyToClipboard} from "@/utils/copyToClipboard.js";
+import tableDataStore from "@/store/tableData.js";
 
 // 组件列表，用于左侧面板展示
 const componentList = templateJson
@@ -225,6 +226,36 @@ function handleClick(e) {
   currentComponentData = componentDataMap[container.dataset.id]
   setComponentRef.value.select(componentDataMap[container.dataset.id])
   showToolbar(container)
+
+  // 设置 table cell 内容可编辑
+  const isCell = e.target.className === 'cell'
+  if ((e.target.parentElement.tagName !== 'TH' && e.target.tagName !== 'TH') && (e.target.className.indexOf('el-table__cell') > -1 || isCell)) {
+    let cell
+    if (isCell) {
+      cell = e.target
+    } else {
+      cell = e.target.querySelector('.cell')
+    }
+
+    let inputDOM = document.createElement('input')
+    inputDOM.style.width = '100%'
+    inputDOM.style.height = '100%'
+    inputDOM.style.boxSizing = 'border-box'
+    inputDOM.style.border = '1px solid rgba(0, 0, 0, 0.1)'
+    inputDOM.style.outline = 'none'
+    inputDOM.style.minHeight = '21px'
+    if (cell.innerText !== '') {
+      inputDOM.value = cell.innerText
+      tableDataStore.SET_TABLE_DATA_ITEM(e.target.closest('tr').rowIndex, e.target.closest('td').cellIndex, '')
+    }
+    cell.appendChild(inputDOM)
+    inputDOM.focus()
+    inputDOM.onblur = () => {
+      tableDataStore.SET_TABLE_DATA_ITEM(e.target.closest('tr').rowIndex, e.target.closest('td').cellIndex, inputDOM.value)
+      cell.removeChild(inputDOM)
+      inputDOM = null
+    }
+  }
 }
 
 /**

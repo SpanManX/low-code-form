@@ -94,5 +94,9 @@ function getForm() {
   .el-date-editor.el-input {
     width: 100%;
   }
+
+  .el-table td.el-table__cell .cell{
+    min-height: 23px;
+  }
 }
 </style>

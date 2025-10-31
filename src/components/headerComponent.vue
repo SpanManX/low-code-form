@@ -53,7 +53,6 @@ function getJSON() {
 
   const str = JSON.stringify({formOptions: obj, forms: props.json}, null, 2)
   copyToClipboard(str)
-  console.log(JSON.stringify(formStore.formData.value))
   return str
 
   // let jsonStr = JSON.stringify(obj, null, 2) // 格式化 JSON 数据

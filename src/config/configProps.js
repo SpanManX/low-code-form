@@ -107,6 +107,7 @@ export const ElUploadConfigProps = [
 
 // table
 export const ElTableConfigProps = [
+    {key: 'rows', value: 0, name: '行数'},
     {key: 'height', value: '', name: '高度(PX)'},
     {key: 'border', value: true, name: '边框'},
     {key: 'stripe', value: true, name: '斑马纹'},

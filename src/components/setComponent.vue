@@ -53,6 +53,7 @@
                 @change="switchChange(item.key,useFormCurrentData.props[item.key])"/>
             <el-input-number v-else-if="typeof item.value === 'number'"
                              v-model="numberDynamicPropsModel(item)[item.key]"
+                             @change="inputNumberChange(item.key,numberDynamicPropsModel(item)[item.key])"
                              :min="0"/>
             <el-input v-else v-model="inputDynamicPropsModel(item)[item.key]" :placeholder="`请输入${item.name}`"
                       :clearable="item.clearable"/>
@@ -62,7 +63,7 @@
 
       <div class="options" v-if="options.length">
         <el-divider>
-          <p>Options</p>
+          <p>{{ isTable ? '表头' : 'Options' }}</p>
         </el-divider>
         <ul>
           <li v-for="(item,i) in options">
@@ -72,7 +73,7 @@
             <el-form-item label="值（value）" v-if="typeof item.value !== 'undefined'">
               <el-input v-model="item.value"/>
             </el-form-item>
-            <template v-else-if="useFormCurrentData.componentName === 'ElTable'">
+            <template v-else-if="isTable">
               <el-form-item label="值（prop）">
                 <el-input v-model="item.prop"/>
               </el-form-item>
@@ -113,9 +114,10 @@ import {computed, nextTick, reactive, ref} from "vue";
 import {Delete, Download, Upload, WarningFilled} from '@element-plus/icons-vue'
 import * as configProps from "@/config/configProps.js";
 import {getSelectDOM} from "../utils/rendererUtils.js";
-import formStore from "../store/form.js";
 import {showToolbar} from "../utils/showToolbar.js";
 import {generateRandomId} from "../utils/generateRandomId.js";
+import formStore from "../store/form.js";
+import tableDataStore from "../store/tableData.js";
 
 defineExpose({reset, select});
 
@@ -132,11 +134,11 @@ const useFormCurrentData = ref(null)
 const configPropsList = ref([])
 const options = ref([])
 const inputs = ref([])
+const isTable = ref(false)
 
 const joinTag = ['ElTabs']
 const notGetChildren = ['ElCard', 'ElButton', 'ElDivider', 'GridComponent', 'DivComponent']
 
-let isTable = false
 let isTabs = false
 
 const isShow = computed(() => {
@@ -191,11 +193,11 @@ const numberDynamicPropsModel = computed(() => {
 
 // 选中组件触发
 function select(val) {
-  isTable = val.componentName === 'ElTable'
+  isTable.value = val.componentName === 'ElTable'
   isTabs = val.componentName === 'ElTabs'
   configPropsList.value = []
   currentData.value = val
-  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 || isTable ? currentData.value : currentData.value.children[0]
+  useFormCurrentData.value = notGetChildren.indexOf(val.componentName) > -1 || isTable.value ? currentData.value : currentData.value.children[0]
 
   if (val.props) {
     labelText.value = val.props.label
@@ -209,7 +211,7 @@ function select(val) {
   // 如果有子组件，则设置 options 数据
   if ((val.children && val.children[0] && val.children[0]?.componentName !== 'ElUpload') && !val.parentId) {
     let arr
-    if (joinTag.indexOf(val.componentName) > -1 || isTable) {
+    if (joinTag.indexOf(val.componentName) > -1 || isTable.value) {
       arr = val.children
     } else if (val.componentName === 'ElFormItem') {
       arr = val.children[0].children
@@ -222,7 +224,7 @@ function select(val) {
   }
 
   // 根据组件类型展示不同设置项
-  if (isShow.value && val.children[0] || (notGetChildren.indexOf(useFormCurrentData.value.componentName) > -1 || isTable)) {
+  if (isShow.value && val.children[0] || (notGetChildren.indexOf(useFormCurrentData.value.componentName) > -1 || isTable.value)) {
     configPropsList.value = configProps[`${useFormCurrentData.value.componentName}ConfigProps`]
   }
 }
@@ -236,6 +238,16 @@ function reset() {
   currentData.value = null
   configPropsList.value = []
   options.value = []
+}
+
+/**
+ * 更新表格数据
+ */
+function updateTableData() {
+  if (isTable) {
+    tableDataStore.SET_TABLE_DATA(useFormCurrentData.value.props.data)
+    tableDataStore.SET_TABLE_DATA_KEYS(currentData.value.children.map(item => item.props.prop))
+  }
 }
 
 /**
@@ -345,6 +357,21 @@ function selectChange(key, key1, name) {
   }
 }
 
+function inputNumberChange(key, value) {
+  if (isTable && key === 'rows') {
+    const obj = {}
+    useFormCurrentData.value.children.forEach(item => {
+      obj[item.props.prop] = ''
+    })
+
+    for (let i = 0; i <= value - 1; i++) {
+      useFormCurrentData.value.props.data.push({...obj})
+    }
+
+    updateTableData()
+  }
+}
+
 function switchChange(key, bool) {
   if (key === 'collapse-tags') {
     if (typeof currentData.value.children[0].props['collapse-tags-tooltip'] === 'boolean' && !bool) {
@@ -370,7 +397,7 @@ function switchChange(key, bool) {
 }
 
 function removeOptions(i) {
-  if (isTable || isTabs) {
+  if (isTable.value || isTabs) {
     currentData.value.children.splice(i, 1)
   } else {
     currentData.value.children[0].children.splice(i, 1)
@@ -389,15 +416,17 @@ function moveElement(value, index, moveIndex) {
 function moveUp(index,) {
   moveElement(options.value, index, index - 1)
   moveElement(inputs.value, index, index - 1)
-  moveElement(isTabs || isTable ? currentData.value.children : currentData.value.children[0].children, index, index - 1)
+  moveElement(isTabs || isTable.value ? currentData.value.children : currentData.value.children[0].children, index, index - 1)
   showToolbar(getSelectDOM());
+  updateTableData()
 }
 
 function moveDown(index) {
   moveElement(options.value, index, index + 1)
   moveElement(inputs.value, index, index + 1)
-  moveElement(isTabs || isTable ? currentData.value.children : currentData.value.children[0].children, index, index + 1)
+  moveElement(isTabs || isTable.value ? currentData.value.children : currentData.value.children[0].children, index, index + 1)
   showToolbar(getSelectDOM());
+  updateTableData()
 }
 
 function textChange(val, i) {
@@ -418,7 +447,7 @@ function add() {
     return
   }
 
-  const targetChildren = isTabs || isTable
+  const targetChildren = isTabs || isTable.value
       ? currentData.value.children
       : currentData.value.children[0]?.children
 
@@ -430,14 +459,14 @@ function add() {
   const timestamp = new Date().getTime()
   const newOption = {
     label: 'New Option',
-    ...(isTabs ? {name: timestamp} : {[isTable ? 'prop' : 'value']: timestamp.toString()})
+    ...(isTabs ? {name: timestamp} : {[isTable.value ? 'prop' : 'value']: timestamp.toString()})
   }
 
   if (currentData.value.children[0]?.props?.border) {
     newOption.border = true
   }
 
-  const componentType = isTabs || isTable
+  const componentType = isTabs || isTable.value
       ? currentData.value.children[0].componentName
       : currentData.value.children[0]?.children[0]?.componentName
 

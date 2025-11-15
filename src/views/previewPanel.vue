@@ -2,7 +2,7 @@
   <div id="preview-panel"></div>
 </template>
 <script setup>
-import {createApp, h, onMounted, ref} from "vue";
+import {createApp, h, onMounted, ref, watch} from "vue";
 import * as ElementPlus from "element-plus";
 import {zhCn} from "element-plus/es/locale/index";
 import {createRenderer} from "../utils/renderComponent.js";
@@ -23,9 +23,12 @@ defineExpose({
   formRef
 })
 
+watch(() => props.variables, (newVal) => {
+  formData.value = newVal;
+}, {immediate: true})
+
 // 初始化 SortableJS
 onMounted(() => {
-  formData.value = props.variables
   const renderComponent = createRenderer({isPreview: true, callback: props.callback})
   const app = createApp({
     render() {
